@@ -16,7 +16,12 @@
 #include <ocidl.h>
 #include <winuser.h>
 #include <stdbool.h>
+#include "example_sprite.h"
+#include "sprite.h"
 
 void Main() {
     InitGraphics();
+    Sprite *obj = ConstructExampleSprite();
+    obj->renderer.Render(obj);
+    obj->Destruct(obj);
 }
