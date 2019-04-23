@@ -1,16 +1,16 @@
+#include <stdlib.h>
+#include <genlib.h>
 #include "graphics.h"
 #include "vector2.h"
 #include "sprite.h"
+#include "drawing.h"
 
 void RenderExampleSprite(Sprite *this) {
-    MovePen(this->position.x, this->position.y);
-    DrawLine(0, this->size.y);
-    DrawLine(this->size.x, 0);
-    DrawLine(0, -this->size.y);
-    DrawLine(-this->size.x, 0);
+    DrawVectorRectangle(this->position, this->size, TRUE);
 }
 
 Sprite *ConstructExampleSprite() {
-    Sprite *obj = ConstructSprite(ZERO_VECTOR, (Vector2) {0.2, 0.2}, (Vector2) {0.1, 0});
-    //obj->renderer.Render = RenderExampleSprite;
+    Sprite *obj = ConstructSprite((Vector2) {0, 0}, (Vector2) {0.2, 0.2}, (Vector2) {0.001, 0.001});
+    obj->renderer.Render = RenderExampleSprite;
+    return obj;
 }

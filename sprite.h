@@ -10,8 +10,6 @@ typedef struct sprite Sprite;
 struct animator;
 typedef struct animator Animator;
 
-typedef void (*Destructor)(Sprite *this);
-
 struct animator {
     unsigned int currentFrame;
     unsigned int *intervals;
@@ -34,7 +32,7 @@ struct sprite {
         Animator animator;
     } renderer;
 
-    Destructor Destruct;
+    void (*Destruct)(Sprite *this);
 };
 
 void _DestructSprite(Sprite *this);

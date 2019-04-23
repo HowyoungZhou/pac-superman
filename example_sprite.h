@@ -3,7 +3,7 @@
 
 #include "sprite.h"
 
-void RenderExampleSprite(Sprite *this);
+void RenderExampleSprite(Sprite *this, double frameInterval);
 
 Sprite *ConstructExampleSprite();
 

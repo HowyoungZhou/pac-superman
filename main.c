@@ -15,13 +15,10 @@
 #include <ole2.h>
 #include <ocidl.h>
 #include <winuser.h>
-#include <stdbool.h>
-#include "example_sprite.h"
-#include "sprite.h"
+#include "engine.h"
 
 void Main() {
     InitGraphics();
-    Sprite *obj = ConstructExampleSprite();
-    obj->renderer.Render(obj);
-    obj->Destruct(obj);
+    registerTimerEvent(MainTimerHandler);
+    startTimer(MAIN_TIMER_ID, MAIN_TIMER_INTERVAL);
 }

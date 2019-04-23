@@ -7,4 +7,8 @@ typedef struct {
     double y;
 } Vector2;
 
+Vector2 Add(Vector2 v1, Vector2 v2);
+
+Vector2 Multiply(double k, Vector2 v);
+
 #endif //PAC_SUPERMAN_VECTOR2_H
