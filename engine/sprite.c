@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "sprite.h"
 
-void _RenderSprite(Sprite *this) {
+void _RenderSpriteDefault(Sprite *this) {
     fputs("A sprite without animation must implement Render method of its renderer.", stderr);
     exit(EXIT_FAILURE);
 }
@@ -21,7 +21,7 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     obj->hasAnimation = false;
     obj->solid = false;
 
-    obj->renderer.Render = _RenderSprite;
+    obj->renderer.Render = _RenderSpriteDefault;
     obj->Destruct = _DestructSprite;
 
     return obj;

@@ -37,7 +37,7 @@ struct sprite {
 
 void _DestructSprite(Sprite *this);
 
-void _RenderSprite(Sprite *this);
+void _RenderSpriteDefault(Sprite *this);
 
 Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity);
 
