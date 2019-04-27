@@ -26,9 +26,9 @@ void InitEngine() {
 
 void MainTimerHandler(int timerID) {
     _GetInterval();
-    _ClearScreen();
     //TODO: 碰撞检测
     ForEachSprite(_UpdatePosition);
+    _ClearScreen();
     ForEachSprite(_RenderSprite);
 }
 

@@ -1156,7 +1156,9 @@ static LONG FAR PASCAL GraphicsEventProc(HWND hwnd, UINT msg,
     		return 0;
         case WM_DESTROY:
             PostQuitMessage(0);
-            return 0;   
+            return 0;
+        case WM_ERASEBKGND:
+            return 1;
         default:
             return DefWindowProc(hwnd, msg, wParam, lParam);
     }                                     
