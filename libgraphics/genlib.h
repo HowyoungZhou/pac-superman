@@ -46,6 +46,7 @@
  * may still be flagged as errors.
  */
 
+#include <stdbool.h>
 #ifdef THINK_C
    typedef int bool;
 #else

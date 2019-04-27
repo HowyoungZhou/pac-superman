@@ -3,41 +3,28 @@
 
 #include <stdbool.h>
 #include "vector2.h"
+#include "animator.h"
 
 struct sprite;
 typedef struct sprite Sprite;
-
-struct animator;
-typedef struct animator Animator;
-
-struct animator {
-    unsigned int currentFrame;
-    unsigned int *intervals;
-    unsigned int framesCount;
-
-    void (*Animate)(Sprite *this);
-};
 
 struct sprite {
     Vector2 position;
     Vector2 size;
     Vector2 velocity;
+    bool visible;
     bool collidable;
     bool solid;
     bool hasAnimation;
 
     union {
-        void (*Render)(Sprite *this);
+        void (*Render)(Sprite *this, double interval);
 
-        Animator animator;
+        Animator *animator;
     } renderer;
 
     void (*Destruct)(Sprite *this);
 };
-
-void _DestructSprite(Sprite *this);
-
-void _RenderSpriteDefault(Sprite *this);
 
 Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity);
 

@@ -2,12 +2,11 @@
 #include <stdio.h>
 #include "sprite.h"
 
-void _RenderSpriteDefault(Sprite *this) {
-    fputs("A sprite without animation must implement Render method of its renderer.", stderr);
-    exit(EXIT_FAILURE);
-}
+static void _DestructSprite(Sprite *this);
 
-void _DestructSprite(Sprite *this) {
+static void _DestructSprite(Sprite *this) {
+    if (this->hasAnimation && this->renderer.animator != NULL)
+        DestructAnimator(this->renderer.animator);
     free(this);
 }
 
@@ -20,8 +19,8 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     obj->collidable = false;
     obj->hasAnimation = false;
     obj->solid = false;
-
-    obj->renderer.Render = _RenderSpriteDefault;
+    obj->visible = true;
+    obj->renderer.Render = NULL;
     obj->Destruct = _DestructSprite;
 
     return obj;
