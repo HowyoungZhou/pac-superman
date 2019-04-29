@@ -7,7 +7,7 @@
 #include "sprites_list.h"
 #include "drawing.h"
 
-static void _ClearScreen();
+static inline void _ClearScreen();
 
 static void _UpdatePosition(Sprite *sprite);
 
@@ -15,16 +15,20 @@ static void _RenderSprite(Sprite *sprite);
 
 static inline double _GetInterval();
 
+static void _MainTimerHandler(int timerID);
+
 static LARGE_INTEGER _frequency;
 static LARGE_INTEGER _lastUpdated;
 static double _interval;
 
 void InitEngine() {
+    registerTimerEvent(_MainTimerHandler);
     QueryPerformanceFrequency(&_frequency);
     QueryPerformanceCounter(&_lastUpdated);
+    startTimer(MAIN_TIMER_ID, MAIN_TIMER_INTERVAL);
 }
 
-void MainTimerHandler(int timerID) {
+static void _MainTimerHandler(int timerID) {
     _GetInterval();
     //TODO: 碰撞检测
     ForEachSprite(_UpdatePosition);
@@ -33,7 +37,7 @@ void MainTimerHandler(int timerID) {
 }
 
 static void _UpdatePosition(Sprite *sprite) {
-    sprite->position = Vector2Add(sprite->position, Vector2Multiply(_interval, sprite->velocity));
+    sprite->position = VAdd(sprite->position, VMultiply(_interval, sprite->velocity));
 }
 
 static void _RenderSprite(Sprite *sprite) {
@@ -50,7 +54,7 @@ static void _RenderSprite(Sprite *sprite) {
     }
 }
 
-static void _ClearScreen() {
+static inline void _ClearScreen() {
     SetEraseMode(TRUE);
     StartFilledRegion(1.);
     DrawRectangle(0, 0, GetWindowWidth(), GetWindowHeight());

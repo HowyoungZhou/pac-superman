@@ -29,6 +29,4 @@ void Main() {
     RegisterSprites();
     InitController();
     InitEngine();
-    registerTimerEvent(MainTimerHandler);
-    startTimer(MAIN_TIMER_ID, MAIN_TIMER_INTERVAL);
 }

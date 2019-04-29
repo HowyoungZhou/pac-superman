@@ -9,6 +9,4 @@
 
 void InitEngine();
 
-void MainTimerHandler(int timerID);
-
 #endif //PAC_SUPERMAN_ENGINE_H

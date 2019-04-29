@@ -7,4 +7,14 @@ void DrawVectorRectangle(Vector2 position, Vector2 size);
 
 void DrawRectangle(double x, double y, double width, double height);
 
+void TurnPolarAngle(double angle);
+
+void TurnPolarAngleTo(double angle);
+
+double GetPolarAngle();
+
+void MovePolarPen(double distance);
+
+void DrawPolarLine(double distance);
+
 #endif //PAC_SUPERMAN_DRAWING_H

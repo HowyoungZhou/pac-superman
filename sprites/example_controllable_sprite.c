@@ -14,7 +14,7 @@ static void _RenderExampleControllableSprite(Sprite *this, double interval) {
     DrawVectorRectangle(this->position, this->size);
     EndFilledRegion();
     // 通过 Controller 更新速度
-    this->velocity = Vector2Multiply(SPEED, GetNormalizedControllerVector());
+    this->velocity = VMultiply(SPEED, GetNormalizedControllerVector());
 }
 
 Sprite *ConstructExampleControllableSprite() {

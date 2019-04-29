@@ -27,7 +27,7 @@ Vector2 GetControllerVector() {
 }
 
 Vector2 GetNormalizedControllerVector() {
-    return Vector2Normalize(_controllerVector);
+    return VNormalize(_controllerVector);
 }
 
 static void _ControllerCallback(int key, int event) {
