@@ -3,9 +3,10 @@
 
 #include "sprite.h"
 
-#define MAIN_TIMER_INTERVAL 7
-
-#define MAIN_TIMER_ID 0
+#define RENDERER_TIMER_ID 0
+#define PHYSICAL_ENGINE_TIMER_ID 1
+#define RENDERER_TIMER_INTERVAL 5
+#define PHYSICAL_ENGINE_TIMER_INTERVAL 1
 
 void InitEngine();
 

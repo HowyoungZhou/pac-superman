@@ -1,24 +1,12 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <exception.h>
 #include <time.h>
 #include "animator.h"
 #include "sprite.h"
 
-static uint16_t _GetActualFrame(uint16_t currentFrame, uint16_t framesCount, bool reverse);
-
-static uint16_t _GetActualFrame(uint16_t currentFrame, uint16_t framesCount, bool reverse) {
-    if (currentFrame < framesCount)return currentFrame;
-    if (reverse) return 2 * framesCount - 1 - currentFrame;
-    else return currentFrame - framesCount;
-}
-
-void TickAnimator(Animator *this, Sprite *sprite, double interval) {
+void TickAnimator(Animator *this, double interval) {
     // 计算真实帧数并调用 Animate() 方法
-    const uint16_t frame = _GetActualFrame(this->currentFrame, this->framesCount, this->reverse);
-    extern exception MethodNotImplementedException;
-    if (this->Animate == NULL)raise(MethodNotImplementedException);
-    this->Animate(this, sprite, frame, interval);
+    const frame frame = GetActualFrame(this);
 
     // 如暂停则不更新计时器
     if (this->paused)return;
@@ -44,6 +32,15 @@ void TickAnimator(Animator *this, Sprite *sprite, double interval) {
     }
 }
 
+frame GetActualFrame(Animator *this) {
+    frame currentFrame = this->currentFrame;
+    frame framesCount = this->framesCount;
+    bool reverse = this->reverse;
+    if (currentFrame < framesCount)return currentFrame;
+    if (reverse) return 2 * framesCount - 1 - currentFrame;
+    else return currentFrame - framesCount;
+}
+
 void DestructAnimator(Animator *this) {
     free(this);
 }
@@ -61,7 +58,7 @@ void ResetAnimator(Animator *this) {
     this->currentFrame = 0;
 }
 
-Animator *ConstructAnimator(uint16_t framesCount) {
+Animator *ConstructAnimator(frame framesCount) {
     Animator *obj = malloc(sizeof(Animator) + sizeof(int) * framesCount);
     obj->interval = 0;
     obj->currentFrame = 0;

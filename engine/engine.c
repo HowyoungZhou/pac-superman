@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <extgraph.h>
 #include <exception.h>
 #include <profileapi.h>
@@ -9,13 +8,20 @@
 
 static inline void _ClearScreen();
 
+static void _UpdateSprite(Sprite *sprite);
+
 static void _UpdatePosition(Sprite *sprite);
+
+static void _UpdateAnimator(Sprite *sprite);
 
 static void _RenderSprite(Sprite *sprite);
 
 static inline double _GetInterval();
 
 static void _MainTimerHandler(int timerID);
+
+extern exception NullArgumentException;
+extern exception MethodNotImplementedException;
 
 static LARGE_INTEGER _frequency;
 static LARGE_INTEGER _lastUpdated;
@@ -25,32 +31,55 @@ void InitEngine() {
     registerTimerEvent(_MainTimerHandler);
     QueryPerformanceFrequency(&_frequency);
     QueryPerformanceCounter(&_lastUpdated);
-    startTimer(MAIN_TIMER_ID, MAIN_TIMER_INTERVAL);
+    startTimer(RENDERER_TIMER_ID, RENDERER_TIMER_INTERVAL);
+    startTimer(PHYSICAL_ENGINE_TIMER_ID, PHYSICAL_ENGINE_TIMER_INTERVAL);
 }
 
 static void _MainTimerHandler(int timerID) {
-    _GetInterval();
-    //TODO: 碰撞检测
-    ForEachSprite(_UpdatePosition);
-    _ClearScreen();
-    ForEachSprite(_RenderSprite);
+    switch (timerID) {
+        case RENDERER_TIMER_ID:
+            _ClearScreen();
+            ForEachSprite(_RenderSprite);
+            break;
+        case PHYSICAL_ENGINE_TIMER_ID:
+            _GetInterval();
+            ForEachSprite(_UpdateAnimator);
+            ForEachSprite(_UpdateSprite);
+            //TODO: 碰撞检测
+            ForEachSprite(_UpdatePosition);
+            break;
+        default:
+            break;
+    }
+}
+
+static void _UpdateSprite(Sprite *sprite) {
+    if (sprite->Update == NULL)return;
+    sprite->Update(sprite, _interval);
 }
 
 static void _UpdatePosition(Sprite *sprite) {
-    sprite->position = VAdd(sprite->position, VMultiply(_interval, sprite->velocity));
+    sprite->position = VAdd(sprite->position, VMultiply(_interval / 1000.0, sprite->velocity));
+}
+
+static void _UpdateAnimator(Sprite *sprite) {
+    if (!sprite->hasAnimation)return;
+    Animator *animator = sprite->renderer.animator;
+    if (animator == NULL)raise(NullArgumentException);
+    TickAnimator(animator, _interval);
 }
 
 static void _RenderSprite(Sprite *sprite) {
     if (!sprite->visible)return;
-    extern exception NullArgumentException;
-    extern exception MethodNotImplementedException;
+    MovePen(sprite->position.x, sprite->position.y);
     if (sprite->hasAnimation) {
         Animator *animator = sprite->renderer.animator;
-        if (animator == NULL)raise(NullArgumentException);
-        TickAnimator(animator, sprite, _interval);
+        if (animator->Animate == NULL)raise(MethodNotImplementedException);
+        frame frame = GetActualFrame(animator);
+        animator->Animate(animator, sprite, frame);
     } else {
         if (sprite->renderer.Render == NULL)raise(MethodNotImplementedException);
-        sprite->renderer.Render(sprite, _interval);
+        sprite->renderer.Render(sprite);
     }
 }
 

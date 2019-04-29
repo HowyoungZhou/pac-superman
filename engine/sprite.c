@@ -21,6 +21,7 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     obj->solid = false;
     obj->visible = true;
     obj->renderer.Render = NULL;
+    obj->Update = NULL;
     obj->Destruct = _DestructSprite;
 
     return obj;

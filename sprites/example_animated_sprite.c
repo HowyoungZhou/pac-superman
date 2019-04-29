@@ -4,11 +4,11 @@
 #include <animator.h>
 #include "example_animated_sprite.h"
 
-static void _AnimateExampleSprite(Animator *this, Sprite *sprite, uint16_t frame, double interval);
+static void _AnimateExampleSprite(Animator *this, Sprite *sprite, frame frame);
 
-static void _AnimateExampleSprite(Animator *this, Sprite *sprite, uint16_t frame, double interval) {
-    StartFilledRegion((frame + 1) / 5.);
-    DrawVectorRectangle(sprite->position, sprite->size);
+static void _AnimateExampleSprite(Animator *this, Sprite *sprite, frame frame) {
+    StartFilledRegion(0);
+    DrawVectorRectangle(sprite->position, VMultiply((frame + 1) / 5., sprite->size));
     EndFilledRegion();
 }
 
@@ -19,7 +19,7 @@ Sprite *ConstructExampleAnimatedSprite() {
     obj->renderer.animator = animator;
     animator->reverse = true;
     for (int i = 0; i < 5; i++)
-        animator->intervals[i] = 100;
+        animator->intervals[i] = 1000;
     animator->Animate = _AnimateExampleSprite;
     return obj;
 }

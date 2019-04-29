@@ -14,8 +14,8 @@ void RegisterSprites() {
     Sprite *exampleSprite3 = ConstructExampleSprite();
     Sprite *exampleSprite4 = ConstructExampleControllableSprite();
 
-    exampleSprite2->velocity = (Vector2) {0, 0.001};
-    exampleSprite3->velocity = (Vector2) {0.001, 0.001};
+    exampleSprite2->velocity = (Vector2) {0, 1};
+    exampleSprite3->velocity = (Vector2) {1, 1};
 
     RegisterSprite(exampleSprite1);
     RegisterSprite(exampleSprite2);

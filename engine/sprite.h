@@ -18,10 +18,12 @@ struct sprite {
     bool hasAnimation;
 
     union {
-        void (*Render)(Sprite *this, double interval);
+        void (*Render)(Sprite *this);
 
         Animator *animator;
     } renderer;
+
+    void (*Update)(Sprite *this, double interval);
 
     void (*Destruct)(Sprite *this);
 };
