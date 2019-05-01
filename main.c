@@ -5,6 +5,7 @@
 #include "sprites_list.h"
 #include <example_animated_sprite.h>
 #include <example_controllable_sprite.h>
+#include <example_collidable_sprite.h>
 #include <controller.h>
 
 // 仅做测试，随后删除
@@ -21,6 +22,8 @@ void RegisterSprites() {
     RegisterSprite(exampleSprite2);
     RegisterSprite(exampleSprite3);
     RegisterSprite(exampleSprite4);
+
+    RegisterSprite(ConstructExampleCollidableSprite((Vector2) {0.5, 0.5}, (Vector2) {0.5, 0.5}, ZERO_VECTOR));
 }
 
 void Main() {

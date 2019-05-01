@@ -7,6 +7,10 @@ void DrawVectorRectangle(Vector2 position, Vector2 size);
 
 void DrawRectangle(double x, double y, double width, double height);
 
+void DrawCircle(double x, double y, double radius);
+
+void DrawVectorCircle(Vector2 centre, double radius);
+
 void TurnPolarAngle(double angle);
 
 void TurnPolarAngleTo(double angle);

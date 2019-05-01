@@ -22,6 +22,6 @@ void ForEachSprite(ForEachSpriteCallback callback) {
     }
 }
 
-SpritesList GetSpritesList() {
-    return _spritesList;
+SpritesListNode *GetSpritesListHead() {
+    return _spritesList.head;
 }

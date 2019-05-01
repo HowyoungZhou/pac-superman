@@ -21,6 +21,6 @@ void RegisterSprite(Sprite *sprite);
 
 void ForEachSprite(ForEachSpriteCallback callback);
 
-SpritesList GetSpritesList();
+SpritesListNode *GetSpritesListHead();
 
 #endif //PAC_SUPERMAN_SPRITES_LIST_H

@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include "sprite.h"
 
 static void _DestructSprite(Sprite *this);
@@ -16,13 +15,55 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     obj->position = position;
     obj->size = size;
     obj->velocity = velocity;
-    obj->collidable = false;
     obj->hasAnimation = false;
-    obj->solid = false;
     obj->visible = true;
     obj->renderer.Render = NULL;
+    obj->colliders = (CollidersList) {NULL, NULL};
+    obj->Collide = NULL;
     obj->Update = NULL;
     obj->Destruct = _DestructSprite;
 
     return obj;
+}
+
+void RegisterCollider(Sprite *sprite, Collider collider) {
+    ColliderNode *node = malloc(sizeof(ColliderNode));
+    node->collider = collider;
+    node->next = NULL;
+    if (sprite->colliders.head == NULL) {
+        sprite->colliders.head = node;
+        sprite->colliders.tail = node;
+    } else {
+        sprite->colliders.tail->next = node;
+        sprite->colliders.tail = node;
+    }
+}
+
+bool UnregisterCollider(Sprite *sprite, int id) {
+    ColliderNode *current = sprite->colliders.head, *last = NULL;
+    while (current) {
+        if (current->collider.id == id) {
+            if (last == NULL) {
+                sprite->colliders.head = current->next;
+            } else last->next = current->next;
+            free(current);
+            return true;
+        } else {
+            last = current;
+            current = current->next;
+        }
+    }
+    return false;
+}
+
+void RegisterBoxCollider(Sprite *sprite, int id, bool solid, Vector2 size, Vector2 position) {
+    Collider collider = {id, solid, BOX_COLLIDER};
+    collider.shape.boxCollider = (BoxCollider) {size, position};
+    RegisterCollider(sprite, collider);
+}
+
+void RegisterCircleCollider(Sprite *sprite, int id, bool solid, Vector2 centre, double radius) {
+    Collider collider = {id, solid, CIRCLE_COLLIDER};
+    collider.shape.circleCollider = (CircleCollider) {centre, radius};
+    RegisterCollider(sprite, collider);
 }

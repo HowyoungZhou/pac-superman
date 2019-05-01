@@ -25,6 +25,7 @@ static void _Update(Sprite *this, double interval) {
 Sprite *ConstructExampleControllableSprite() {
     // 创建一个 Sprite
     Sprite *obj = ConstructSprite((Vector2) {0, 0.5}, (Vector2) {0.5, 0.5}, ZERO_VECTOR);
+    RegisterBoxCollider(obj, 0, true, (Vector2) {0.5, 0.5}, ZERO_VECTOR);
     obj->renderer.Render = _Render;
     obj->Update = _Update;
     return obj;

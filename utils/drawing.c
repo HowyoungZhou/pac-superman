@@ -18,6 +18,15 @@ void DrawVectorRectangle(Vector2 position, Vector2 size) {
     DrawRectangle(position.x, position.y, size.x, size.y);
 }
 
+void DrawCircle(double x, double y, double radius) {
+    MovePen(x + radius, y);
+    DrawArc(radius, 0, 360);
+}
+
+void DrawVectorCircle(Vector2 centre, double radius) {
+    DrawCircle(centre.x, centre.y, radius);
+}
+
 void DrawPolarLine(double distance) {
     DrawLine(distance * cos(_theta), distance * sin(_theta));
 }

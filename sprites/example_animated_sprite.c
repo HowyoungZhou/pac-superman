@@ -4,9 +4,9 @@
 #include <animator.h>
 #include "example_animated_sprite.h"
 
-static void _AnimateExampleSprite(Animator *this, Sprite *sprite, frame frame);
+static void _AnimateExampleSprite(Animator *this, Sprite *sprite, Frame frame);
 
-static void _AnimateExampleSprite(Animator *this, Sprite *sprite, frame frame) {
+static void _AnimateExampleSprite(Animator *this, Sprite *sprite, Frame frame) {
     StartFilledRegion(0);
     DrawVectorRectangle(sprite->position, VMultiply((frame + 1) / 5., sprite->size));
     EndFilledRegion();

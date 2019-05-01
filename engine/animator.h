@@ -10,22 +10,22 @@ typedef struct sprite Sprite;
 struct animator;
 typedef struct animator Animator;
 
-typedef uint16_t frame;
+typedef uint16_t Frame;
 
 struct animator {
-    frame currentFrame;
-    frame framesCount;
+    Frame currentFrame;
+    Frame framesCount;
     double interval;
     bool repeated;
     bool reverse;
     bool paused;
 
-    void (*Animate)(Animator *this, Sprite *sprite, frame frame);
+    void (*Animate)(Animator *this, Sprite *sprite, Frame frame);
 
     int intervals[];
 };
 
-Animator *ConstructAnimator(frame framesCount);
+Animator *ConstructAnimator(Frame framesCount);
 
 void DestructAnimator(Animator *this);
 
@@ -37,6 +37,6 @@ void ResetAnimator(Animator *this);
 
 void TickAnimator(Animator *this, double interval);
 
-frame GetActualFrame(Animator *this);
+Frame GetActualFrame(Animator *this);
 
 #endif //PAC_SUPERMAN_ANIMATOR_H

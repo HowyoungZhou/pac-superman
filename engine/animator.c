@@ -6,7 +6,7 @@
 
 void TickAnimator(Animator *this, double interval) {
     // 计算真实帧数并调用 Animate() 方法
-    const frame frame = GetActualFrame(this);
+    const Frame frame = GetActualFrame(this);
 
     // 如暂停则不更新计时器
     if (this->paused)return;
@@ -32,9 +32,9 @@ void TickAnimator(Animator *this, double interval) {
     }
 }
 
-frame GetActualFrame(Animator *this) {
-    frame currentFrame = this->currentFrame;
-    frame framesCount = this->framesCount;
+Frame GetActualFrame(Animator *this) {
+    Frame currentFrame = this->currentFrame;
+    Frame framesCount = this->framesCount;
     bool reverse = this->reverse;
     if (currentFrame < framesCount)return currentFrame;
     if (reverse) return 2 * framesCount - 1 - currentFrame;
@@ -58,7 +58,7 @@ void ResetAnimator(Animator *this) {
     this->currentFrame = 0;
 }
 
-Animator *ConstructAnimator(frame framesCount) {
+Animator *ConstructAnimator(Frame framesCount) {
     Animator *obj = malloc(sizeof(Animator) + sizeof(int) * framesCount);
     obj->interval = 0;
     obj->currentFrame = 0;

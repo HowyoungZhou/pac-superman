@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <graphics.h>
 #include <vector2.h>
 #include "controller.h"

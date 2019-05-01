@@ -10,6 +10,8 @@ static inline void _ClearScreen();
 
 static void _UpdateSprite(Sprite *sprite);
 
+static void _DetectCollision();
+
 static void _UpdatePosition(Sprite *sprite);
 
 static void _UpdateAnimator(Sprite *sprite);
@@ -45,7 +47,7 @@ static void _MainTimerHandler(int timerID) {
             _GetInterval();
             ForEachSprite(_UpdateAnimator);
             ForEachSprite(_UpdateSprite);
-            //TODO: 碰撞检测
+            _DetectCollision();
             ForEachSprite(_UpdatePosition);
             break;
         default:
@@ -56,6 +58,14 @@ static void _MainTimerHandler(int timerID) {
 static void _UpdateSprite(Sprite *sprite) {
     if (sprite->Update == NULL)return;
     sprite->Update(sprite, _interval);
+}
+
+static void _DetectCollision() {
+    for (SpritesListNode *s1 = GetSpritesListHead(); s1 != NULL; s1 = s1->next) {
+        for (SpritesListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
+            DetectCollision(s1->sprite, s2->sprite, _interval);
+        }
+    }
 }
 
 static void _UpdatePosition(Sprite *sprite) {
@@ -75,7 +85,7 @@ static void _RenderSprite(Sprite *sprite) {
     if (sprite->hasAnimation) {
         Animator *animator = sprite->renderer.animator;
         if (animator->Animate == NULL)raise(MethodNotImplementedException);
-        frame frame = GetActualFrame(animator);
+        Frame frame = GetActualFrame(animator);
         animator->Animate(animator, sprite, frame);
     } else {
         if (sprite->renderer.Render == NULL)raise(MethodNotImplementedException);
