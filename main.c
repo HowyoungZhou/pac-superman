@@ -3,32 +3,21 @@
 #include "sprite.h"
 #include "example_sprite.h"
 #include "sprites_list.h"
-#include <example_animated_sprite.h>
 #include <example_controllable_sprite.h>
-#include <example_collidable_sprite.h>
+#include <pellet.h>
 #include <controller.h>
+#include <colors.h>
 
 // 仅做测试，随后删除
 void RegisterSprites() {
-    Sprite *exampleSprite1 = ConstructExampleAnimatedSprite();
-    Sprite *exampleSprite2 = ConstructExampleSprite();
-    Sprite *exampleSprite3 = ConstructExampleSprite();
-    Sprite *exampleSprite4 = ConstructExampleControllableSprite();
-
-    exampleSprite2->velocity = (Vector2) {0, 1};
-    exampleSprite3->velocity = (Vector2) {1, 1};
-
-    RegisterSprite(exampleSprite1);
-    RegisterSprite(exampleSprite2);
-    RegisterSprite(exampleSprite3);
-    RegisterSprite(exampleSprite4);
-
-    RegisterSprite(ConstructExampleCollidableSprite((Vector2) {0.5, 0.5}, (Vector2) {0.5, 0.5}, ZERO_VECTOR));
+    RegisterSprite(ConstructExampleControllableSprite());
+    RegisterSprite(ConstructPellet((Vector2) {1, 1}, (Vector2) {0.1, 0.1}));
 }
 
 void Main() {
     InitConsole();
     InitGraphics();
+    DefineColors();
     RegisterSprites();
     InitController();
     InitEngine();

@@ -9,7 +9,8 @@ set(SOURCE_FILES libgraphics/exceptio.c libgraphics/genlib.c libgraphics/graphic
         utils/drawing.h engine/sprites_list.c engine/sprites_list.h engine/animator.c engine/animator.h
         utils/exceptions.c sprites/example_animated_sprite.c sprites/example_animated_sprite.h engine/controller.c
         engine/controller.h sprites/example_controllable_sprite.c sprites/example_controllable_sprite.h
-        engine/collider.c engine/collider.h sprites/example_collidable_sprite.c sprites/example_collidable_sprite.h)
+        engine/collider.c engine/collider.h sprites/example_collidable_sprite.c sprites/example_collidable_sprite.h
+        sprites/pellet.c sprites/pellet.h utils/colors.c utils/colors.h)
 
 include_directories(libgraphics)
 include_directories(engine)

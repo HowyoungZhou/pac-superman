@@ -27,8 +27,8 @@ static bool _BoxIntersect(BoxCollider c1, BoxCollider c2) {
 
 static bool _BoxCircleIntersect(BoxCollider c1, CircleCollider c2) {
     Vector2 boxCentre = VAdd(c1.position, VMultiply(0.5, c1.size));
-    Vector2 fisrtQuadrant = VAbs(VSubtract(c2.centre, boxCentre));
-    Vector2 shortest = VMax(VSubtract(fisrtQuadrant, VMultiply(0.5, c1.size)), ZERO_VECTOR);
+    Vector2 firstQuadrant = VAbs(VSubtract(c2.centre, boxCentre));
+    Vector2 shortest = VMax(VSubtract(firstQuadrant, VMultiply(0.5, c1.size)), ZERO_VECTOR);
     return VLengthSquared(shortest) < c2.radius * c2.radius;
 }
 

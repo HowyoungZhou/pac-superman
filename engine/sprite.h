@@ -41,4 +41,10 @@ void RegisterBoxCollider(Sprite *sprite, int id, bool solid, Vector2 size, Vecto
 
 void RegisterCircleCollider(Sprite *sprite, int id, bool solid, Vector2 centre, double radius);
 
+Vector2 CalcCentre(Sprite *sprite);
+
+Vector2 CalcRelativeCentre(Sprite *sprite);
+
+double CalcIncircleRadius(Sprite *sprite);
+
 #endif //PAC_SUPERMAN_SPRITE_H

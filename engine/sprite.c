@@ -1,4 +1,6 @@
+#include <math.h>
 #include <stdlib.h>
+#include <tgmath.h>
 #include "sprite.h"
 
 static void _DestructSprite(Sprite *this);
@@ -66,4 +68,16 @@ void RegisterCircleCollider(Sprite *sprite, int id, bool solid, Vector2 centre, 
     Collider collider = {id, solid, CIRCLE_COLLIDER};
     collider.shape.circleCollider = (CircleCollider) {centre, radius};
     RegisterCollider(sprite, collider);
+}
+
+Vector2 CalcCentre(Sprite *sprite) {
+    return VAdd(sprite->position, VMultiply(0.5, sprite->size));
+}
+
+Vector2 CalcRelativeCentre(Sprite *sprite) {
+    return VMultiply(0.5, sprite->size);
+}
+
+double CalcIncircleRadius(Sprite *sprite) {
+    return fmin(sprite->size.x, sprite->size.y) / 2.;
 }

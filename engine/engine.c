@@ -81,6 +81,7 @@ static void _UpdateAnimator(Sprite *sprite) {
 
 static void _RenderSprite(Sprite *sprite) {
     if (!sprite->visible)return;
+    SaveGraphicsState();
     MovePen(sprite->position.x, sprite->position.y);
     if (sprite->hasAnimation) {
         Animator *animator = sprite->renderer.animator;
@@ -91,6 +92,7 @@ static void _RenderSprite(Sprite *sprite) {
         if (sprite->renderer.Render == NULL)raise(MethodNotImplementedException);
         sprite->renderer.Render(sprite);
     }
+    RestoreGraphicsState();
 }
 
 static inline void _ClearScreen() {

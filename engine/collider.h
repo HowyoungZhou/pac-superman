@@ -3,6 +3,8 @@
 
 #include <vector2.h>
 
+#define DEFAULT_COLLIDER_ID 0
+
 struct sprite;
 typedef struct sprite Sprite;
 
