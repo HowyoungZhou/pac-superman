@@ -3,9 +3,7 @@
 #include <tgmath.h>
 #include "sprite.h"
 
-static void _DestructSprite(Sprite *this);
-
-static void _DestructSprite(Sprite *this) {
+void DestructSprite(Sprite *this) {
     if (this->hasAnimation && this->renderer.animator != NULL)
         DestructAnimator(this->renderer.animator);
     free(this);
@@ -19,11 +17,12 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     obj->velocity = velocity;
     obj->hasAnimation = false;
     obj->visible = true;
+    obj->property = NULL;
     obj->renderer.Render = NULL;
     obj->colliders = (CollidersList) {NULL, NULL};
     obj->Collide = NULL;
     obj->Update = NULL;
-    obj->Destruct = _DestructSprite;
+    obj->Destruct = DestructSprite;
 
     return obj;
 }

@@ -15,6 +15,7 @@ struct sprite {
     Vector2 velocity;
     bool visible;
     bool hasAnimation;
+    void *property;
 
     union {
         void (*Render)(Sprite *this);
@@ -32,6 +33,8 @@ struct sprite {
 };
 
 Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity);
+
+void DestructSprite(Sprite *this);
 
 void RegisterCollider(Sprite *sprite, Collider collider);
 
