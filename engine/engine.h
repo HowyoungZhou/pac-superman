@@ -10,4 +10,12 @@
 
 void InitEngine();
 
+void RegisterSprite(Sprite *sprite);
+
+void RegisterUISprite(Sprite *uiSprite);
+
+void PauseGame();
+
+void ResumeGame();
+
 #endif //PAC_SUPERMAN_ENGINE_H

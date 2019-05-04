@@ -2,7 +2,6 @@
 #include "engine.h"
 #include "sprite.h"
 #include "example_sprite.h"
-#include "sprites_list.h"
 #include <example_controllable_sprite.h>
 #include <pellet.h>
 #include <controller.h>

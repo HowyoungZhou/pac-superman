@@ -1,12 +1,19 @@
 #include <extgraph.h>
 #include <exception.h>
 #include <profileapi.h>
+#include <linked_list.h>
+#include <imgui.h>
 #include "engine.h"
 #include "sprite.h"
-#include "sprites_list.h"
 #include "drawing.h"
 
+typedef void (*ForEachSpriteCallback)(Sprite *sprite);
+
+static inline void _InitUI();
+
 static inline void _ClearScreen();
+
+static inline void _ForEachSprite(LinkedList *list, ForEachSpriteCallback callback);
 
 static void _UpdateSprite(Sprite *sprite);
 
@@ -29,26 +36,59 @@ static LARGE_INTEGER _frequency;
 static LARGE_INTEGER _lastUpdated;
 static double _interval;
 
+static LinkedList _spritesList = {NULL, NULL, 0};
+static LinkedList _uiSpritesList = {NULL, NULL, 0};
+
 void InitEngine() {
     registerTimerEvent(_MainTimerHandler);
     QueryPerformanceFrequency(&_frequency);
     QueryPerformanceCounter(&_lastUpdated);
     startTimer(RENDERER_TIMER_ID, RENDERER_TIMER_INTERVAL);
     startTimer(PHYSICAL_ENGINE_TIMER_ID, PHYSICAL_ENGINE_TIMER_INTERVAL);
+    _InitUI();
+}
+
+void RegisterSprite(Sprite *sprite) {
+    AddElement(&_spritesList, sprite);
+}
+
+void RegisterUISprite(Sprite *uiSprite) {
+    AddElement(&_uiSpritesList, uiSprite);
+}
+
+void PauseGame() {
+    cancelTimer(PHYSICAL_ENGINE_TIMER_ID);
+}
+
+void ResumeGame() {
+    startTimer(PHYSICAL_ENGINE_TIMER_ID, PHYSICAL_ENGINE_TIMER_INTERVAL);
+}
+
+static inline void _InitUI() {
+    registerMouseEvent(uiGetMouse);
+    registerKeyboardEvent(uiGetKeyboard);
+    registerCharEvent(uiGetChar);
+}
+
+static inline void _ForEachSprite(LinkedList *list, ForEachSpriteCallback callback) {
+    for (LinkedListNode *node = list->head; node != NULL; node = node->next) {
+        callback(node->element);
+    }
 }
 
 static void _MainTimerHandler(int timerID) {
     switch (timerID) {
         case RENDERER_TIMER_ID:
             _ClearScreen();
-            ForEachSprite(_RenderSprite);
+            _ForEachSprite(&_spritesList, _RenderSprite);
+            _ForEachSprite(&_uiSpritesList, _RenderSprite);
             break;
         case PHYSICAL_ENGINE_TIMER_ID:
             _GetInterval();
-            ForEachSprite(_UpdateAnimator);
-            ForEachSprite(_UpdateSprite);
+            _ForEachSprite(&_spritesList, _UpdateAnimator);
+            _ForEachSprite(&_spritesList, _UpdateSprite);
             _DetectCollision();
-            ForEachSprite(_UpdatePosition);
+            _ForEachSprite(&_spritesList, _UpdatePosition);
             break;
         default:
             break;
@@ -61,9 +101,9 @@ static void _UpdateSprite(Sprite *sprite) {
 }
 
 static void _DetectCollision() {
-    for (SpritesListNode *s1 = GetSpritesListHead(); s1 != NULL; s1 = s1->next) {
-        for (SpritesListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
-            DetectCollision(s1->sprite, s2->sprite, _interval);
+    for (LinkedListNode *s1 = _spritesList.head; s1 != NULL; s1 = s1->next) {
+        for (LinkedListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
+            DetectCollision(s1->element, s2->element, _interval);
         }
     }
 }
