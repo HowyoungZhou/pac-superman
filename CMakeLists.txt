@@ -10,11 +10,12 @@ set(SOURCE_FILES libgraphics/exceptio.c libgraphics/genlib.c libgraphics/graphic
         utils/exceptions.c sprites/example_animated_sprite.c sprites/example_animated_sprite.h engine/controller.c
         engine/controller.h sprites/example_controllable_sprite.c sprites/example_controllable_sprite.h
         engine/collider.c engine/collider.h sprites/example_collidable_sprite.c sprites/example_collidable_sprite.h
-        sprites/pellet.c sprites/pellet.h utils/colors.c utils/colors.h)
+        sprites/pellet.c sprites/pellet.h utils/colors.c utils/colors.h ui/imgui.c)
 
 include_directories(libgraphics)
 include_directories(engine)
 include_directories(sprites)
 include_directories(utils)
+include_directories(ui)
 
 add_executable(pac_superman ${SOURCE_FILES})
