@@ -1,5 +1,5 @@
-#include <graphics.h>
 #include <vector2.h>
+#include <events.h>
 #include "controller.h"
 
 static void _ControllerCallback(int key, int event);
@@ -18,7 +18,7 @@ enum DirectionKeys {
 static Vector2 _controllerVector = ZERO_VECTOR;
 
 void InitController() {
-    registerKeyboardEvent(_ControllerCallback);
+    RegisterKeyboardEvent(_ControllerCallback);
 }
 
 Vector2 GetControllerVector() {

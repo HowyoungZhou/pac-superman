@@ -3,6 +3,7 @@
 #include <profileapi.h>
 #include <linked_list.h>
 #include <imgui.h>
+#include <events.h>
 #include "engine.h"
 #include "sprite.h"
 #include "drawing.h"
@@ -25,7 +26,7 @@ static void _UpdateAnimator(Sprite *sprite);
 
 static void _RenderSprite(Sprite *sprite);
 
-static inline double _GetInterval();
+static inline double _UpdateInterval();
 
 static void _MainTimerHandler(int timerID);
 
@@ -39,8 +40,10 @@ static double _interval;
 static LinkedList _spritesList = {NULL, NULL, 0};
 static LinkedList _uiSpritesList = {NULL, NULL, 0};
 
+static bool _paused = false;
+
 void InitEngine() {
-    registerTimerEvent(_MainTimerHandler);
+    RegisterTimerEvent(_MainTimerHandler);
     QueryPerformanceFrequency(&_frequency);
     QueryPerformanceCounter(&_lastUpdated);
     startTimer(RENDERER_TIMER_ID, RENDERER_TIMER_INTERVAL);
@@ -58,16 +61,23 @@ void RegisterUISprite(Sprite *uiSprite) {
 
 void PauseGame() {
     cancelTimer(PHYSICAL_ENGINE_TIMER_ID);
+    _paused = true;
 }
 
 void ResumeGame() {
+    _UpdateInterval();
     startTimer(PHYSICAL_ENGINE_TIMER_ID, PHYSICAL_ENGINE_TIMER_INTERVAL);
+    _paused = false;
+}
+
+bool IsPaused() {
+    return _paused;
 }
 
 static inline void _InitUI() {
-    registerMouseEvent(uiGetMouse);
-    registerKeyboardEvent(uiGetKeyboard);
-    registerCharEvent(uiGetChar);
+    RegisterMouseEvent(uiGetMouse);
+    RegisterKeyboardEvent(uiGetKeyboard);
+    RegisterCharEvent(uiGetChar);
 }
 
 static inline void _ForEachSprite(LinkedList *list, ForEachSpriteCallback callback) {
@@ -84,7 +94,7 @@ static void _MainTimerHandler(int timerID) {
             _ForEachSprite(&_uiSpritesList, _RenderSprite);
             break;
         case PHYSICAL_ENGINE_TIMER_ID:
-            _GetInterval();
+            _UpdateInterval();
             _ForEachSprite(&_spritesList, _UpdateAnimator);
             _ForEachSprite(&_spritesList, _UpdateSprite);
             _DetectCollision();
@@ -143,7 +153,7 @@ static inline void _ClearScreen() {
     SetEraseMode(FALSE);
 }
 
-static inline double _GetInterval() {
+static inline double _UpdateInterval() {
     LARGE_INTEGER timestamp;
     QueryPerformanceCounter(&timestamp);
     _interval = (timestamp.QuadPart - _lastUpdated.QuadPart) * 1000.0 / _frequency.QuadPart;

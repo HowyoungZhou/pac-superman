@@ -7,21 +7,29 @@
 #include <controller.h>
 #include <colors.h>
 #include <button.h>
+#include <events.h>
 
 void PauseCallback(Sprite *button) {
-    PauseGame();
+    if (IsPaused()) {
+        ResumeGame();
+        ((Button *) button->property)->label = "Pause";
+    } else {
+        PauseGame();
+        ((Button *) button->property)->label = "Resume";
+    }
 }
 
 // 仅做测试，随后删除
 void RegisterSprites() {
     RegisterSprite(ConstructExampleControllableSprite());
     RegisterSprite(ConstructPellet((Vector2) {1, 1}, (Vector2) {0.1, 0.1}));
-    RegisterSprite(ConstructButtonSprite(0, (Vector2) {1, 2}, (Vector2) {1, 0.6}, "", PauseCallback));
+    RegisterUISprite(ConstructButtonSprite(1, (Vector2) {1, 2}, (Vector2) {1, 0.6}, "Pause", PauseCallback));
 }
 
 void Main() {
     InitConsole();
     InitGraphics();
+    InitEvents();
     DefineColors();
     RegisterSprites();
     InitController();

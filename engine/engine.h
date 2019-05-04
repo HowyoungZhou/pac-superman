@@ -18,4 +18,6 @@ void PauseGame();
 
 void ResumeGame();
 
+bool IsPaused();
+
 #endif //PAC_SUPERMAN_ENGINE_H

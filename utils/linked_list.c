@@ -17,7 +17,7 @@ void AddElement(LinkedList *list, void *element) {
 void *RemoveElement(LinkedList *list, void *element, ElementComparer comparer) {
     LinkedListNode *current = list->head, *last = NULL;
     while (current) {
-        if (comparer(current->element, element)) {
+        if (comparer(current->element, element) == 0) {
             if (last == NULL) {
                 list->head = current->next;
             } else last->next = current->next;
@@ -37,5 +37,9 @@ void ForEachElement(LinkedList *list, ForEachElementCallback callback) {
     for (LinkedListNode *node = list->head; node != NULL; node = node->next) {
         callback(node->element);
     }
+}
+
+int PointerComparer(void *e1, void *e2) {
+    return e1 - e2;
 }
 

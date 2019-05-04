@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-typedef bool (*ElementComparer)(void *e1, void *e2);
+typedef int (*ElementComparer)(void *e1, void *e2);
 
 typedef void (*ForEachElementCallback)(void *sprite);
 
@@ -23,5 +23,7 @@ void AddElement(LinkedList *list, void *element);
 void *RemoveElement(LinkedList *list, void *element, ElementComparer comparer);
 
 void ForEachElement(LinkedList *list, ForEachElementCallback callback);
+
+int PointerComparer(void *e1, void *e2);
 
 #endif //PAC_SUPERMAN_LINKED_LIST_H
