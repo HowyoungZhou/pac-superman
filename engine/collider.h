@@ -1,3 +1,6 @@
+/**@file collider.h
+ * @brief 该文件包含了 Collider 类的定义及相关方法。
+ */
 #ifndef PAC_SUPERMAN_COLLIDER_H
 #define PAC_SUPERMAN_COLLIDER_H
 
@@ -42,6 +45,12 @@ typedef struct {
     ColliderNode *tail;
 } CollidersList;
 
+/**@brief 执行碰撞检测，该方法由引擎调用。
+ *
+ * @param s1 Sprite 对象 1
+ * @param s2 Sprite 对象 2
+ * @param interval 当前渲染时间间隔
+ */
 void DetectCollision(Sprite *s1, Sprite *s2, double interval);
 
 #endif //PAC_SUPERMAN_COLLIDER_H

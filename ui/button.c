@@ -3,13 +3,13 @@
 #include "button.h"
 #include "imgui.h"
 
-static inline Button *_ConstructButton(int id, char *label, OnClickCallback onClick);
+static inline Button *_ConstructButton(int id, string label, OnClickCallback onClick);
 
 static void _Destruct(Sprite *this);
 
 static void _Render(Sprite *this);
 
-static inline Button *_ConstructButton(int id, char *label, OnClickCallback onClick) {
+static inline Button *_ConstructButton(int id, string label, OnClickCallback onClick) {
     Button *obj = malloc(sizeof(Button));
     obj->id = id;
     obj->label = label;
@@ -29,7 +29,7 @@ static void _Render(Sprite *this) {
     if (buttonObj->OnClick != NULL)buttonObj->OnClick(this);
 }
 
-Sprite *ConstructButtonSprite(int id, Vector2 position, Vector2 size, char *label, OnClickCallback onClick) {
+Sprite *ConstructButtonSprite(int id, Vector2 position, Vector2 size, string label, OnClickCallback onClick) {
     Sprite *obj = ConstructSprite(position, size, ZERO_VECTOR);
     obj->property = _ConstructButton(id, label, onClick);
     obj->Destruct = _Destruct;
