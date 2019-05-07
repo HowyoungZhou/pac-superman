@@ -1,7 +1,6 @@
 #include <extgraph.h>
 #include <exception.h>
 #include <profileapi.h>
-#include <linked_list.h>
 #include <imgui.h>
 #include <events.h>
 #include "engine.h"
@@ -10,11 +9,13 @@
 
 typedef void (*ForEachSpriteCallback)(Sprite *sprite);
 
+static void _uiGetChar(char c);
+
 static inline void _InitUI();
 
 static inline void _ClearScreen();
 
-static inline void _ForEachSprite(LinkedList *list, ForEachSpriteCallback callback);
+static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callback);
 
 static void _UpdateSprite(Sprite *sprite);
 
@@ -37,8 +38,8 @@ static LARGE_INTEGER _frequency;
 static LARGE_INTEGER _lastUpdated;
 static double _interval;
 
-static LinkedList _spritesList = {NULL, NULL, 0};
-static LinkedList _uiSpritesList = {NULL, NULL, 0};
+static SpritesList _spritesList = {NULL, NULL, 0};
+static SpritesList _uiSpritesList = {NULL, NULL, 0};
 
 static bool _paused = false;
 
@@ -74,14 +75,18 @@ bool IsPaused() {
     return _paused;
 }
 
+static void _uiGetChar(char c) {
+    uiGetChar(c);
+}
+
 static inline void _InitUI() {
     RegisterMouseEvent(uiGetMouse);
     RegisterKeyboardEvent(uiGetKeyboard);
-    RegisterCharEvent(uiGetChar);
+    RegisterCharEvent(_uiGetChar);
 }
 
-static inline void _ForEachSprite(LinkedList *list, ForEachSpriteCallback callback) {
-    for (LinkedListNode *node = list->head; node != NULL; node = node->next) {
+static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callback) {
+    for (SpritesListNode *node = list->head; node != NULL; node = node->next) {
         callback(node->element);
     }
 }
@@ -111,8 +116,8 @@ static void _UpdateSprite(Sprite *sprite) {
 }
 
 static void _DetectCollision() {
-    for (LinkedListNode *s1 = _spritesList.head; s1 != NULL; s1 = s1->next) {
-        for (LinkedListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
+    for (SpritesListNode *s1 = _spritesList.head; s1 != NULL; s1 = s1->next) {
+        for (SpritesListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
             DetectCollision(s1->element, s2->element, _interval);
         }
     }

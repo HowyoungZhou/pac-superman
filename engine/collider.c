@@ -56,15 +56,27 @@ static bool _DetectIntersection(Collider c1, Collider c2) {
     }
 }
 
+Collider *ConstructCollider(int id, ColliderType type, bool solid) {
+    Collider *obj = malloc(sizeof(Collider));
+    obj->id = id;
+    obj->type = type;
+    obj->solid = solid;
+    return obj;
+}
+
+void DestructCollider(Collider *this) {
+    free(this);
+}
+
 void DetectCollision(Sprite *s1, Sprite *s2, double interval) {
     if (s1->colliders.head == NULL || s2->colliders.head == NULL)return;
     for (ColliderNode *n1 = s1->colliders.head; n1 != NULL; n1 = n1->next) {
         for (ColliderNode *n2 = s2->colliders.head; n2 != NULL; n2 = n2->next) {
-            if (!_DetectIntersection(_CalcAbsolutePosition(s1, n1->collider, interval),
-                                     _CalcAbsolutePosition(s2, n2->collider, interval)))
+            if (!_DetectIntersection(_CalcAbsolutePosition(s1, *(Collider*)n1->element, interval),
+                                     _CalcAbsolutePosition(s2, *(Collider*)n2->element, interval)))
                 continue;
-            if (s1->Collide != NULL) s1->Collide(s1, n1->collider.id, s2);
-            if (s2->Collide != NULL)s2->Collide(s2, n2->collider.id, s1);
+            if (s1->Collide != NULL) s1->Collide(s1, ((Collider *) n1->element)->id, s2);
+            if (s2->Collide != NULL)s2->Collide(s2, ((Collider *) n2->element)->id, s1);
         }
     }
 }

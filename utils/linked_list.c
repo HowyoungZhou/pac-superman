@@ -18,9 +18,12 @@ void *RemoveElement(LinkedList *list, void *element, ElementComparer comparer) {
     LinkedListNode *current = list->head, *last = NULL;
     while (current) {
         if (comparer(current->element, element) == 0) {
+            // 如果 last 为 NULL，则修改首节点为下一个节点
             if (last == NULL) {
                 list->head = current->next;
             } else last->next = current->next;
+            // 如果要删除的是尾节点，则更新 tail
+            if (current == list->tail)list->tail = last;
             void *e = current->element;
             free(current);
             list->length--;

@@ -5,6 +5,7 @@
 #define PAC_SUPERMAN_SPRITE_H
 
 #include <stdbool.h>
+#include <linked_list.h>
 #include "vector2.h"
 #include "animator.h"
 #include "collider.h"
@@ -55,7 +56,7 @@ void DestructSprite(Sprite *this);
  * @param sprite 碰撞器所属的 Sprite
  * @param collider 要注册的碰撞器
  */
-void RegisterCollider(Sprite *sprite, Collider collider);
+void RegisterCollider(Sprite *sprite, Collider *collider);
 
 /**@brief 删除一个碰撞器。
  *

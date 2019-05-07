@@ -5,6 +5,7 @@
 #define PAC_SUPERMAN_COLLIDER_H
 
 #include <vector2.h>
+#include <linked_list.h>
 
 #define DEFAULT_COLLIDER_ID 0
 
@@ -35,15 +36,24 @@ typedef struct {
     } shape;
 } Collider;
 
-typedef struct colliderNode {
-    Collider collider;
-    struct colliderNode *next;
-} ColliderNode;
+typedef LinkedListNode ColliderNode;
 
-typedef struct {
-    ColliderNode *head;
-    ColliderNode *tail;
-} CollidersList;
+typedef LinkedList CollidersList;
+
+/**@brief Collider 的构造函数。
+ *
+ * @param id Collider 的 ID
+ * @param type Collider 的类型
+ * @param solid Collider 是否是坚固的（即是否可以穿过）
+ * @return 构造的 Collider
+ */
+Collider *ConstructCollider(int id, ColliderType type, bool solid);
+
+/**@brief Collider 的析构函数。
+ *
+ * @param this Collider 对象
+ */
+void DestructCollider(Collider *this);
 
 /**@brief 执行碰撞检测，该方法由引擎调用。
  *

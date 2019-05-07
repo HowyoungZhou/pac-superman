@@ -3,6 +3,8 @@
 #include <tgmath.h>
 #include "sprite.h"
 
+static int _ColliderIDComparer(void *collider, void *id);
+
 void DestructSprite(Sprite *this) {
     if (this->hasAnimation && this->renderer.animator != NULL)
         DestructAnimator(this->renderer.animator);
@@ -19,7 +21,7 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     obj->visible = true;
     obj->property = NULL;
     obj->renderer.Render = NULL;
-    obj->colliders = (CollidersList) {NULL, NULL};
+    obj->colliders = EMPTY_LINKED_LIST;
     obj->Collide = NULL;
     obj->Update = NULL;
     obj->Destruct = DestructSprite;
@@ -27,45 +29,30 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     return obj;
 }
 
-void RegisterCollider(Sprite *sprite, Collider collider) {
-    ColliderNode *node = malloc(sizeof(ColliderNode));
-    node->collider = collider;
-    node->next = NULL;
-    if (sprite->colliders.head == NULL) {
-        sprite->colliders.head = node;
-        sprite->colliders.tail = node;
-    } else {
-        sprite->colliders.tail->next = node;
-        sprite->colliders.tail = node;
-    }
+void RegisterCollider(Sprite *sprite, Collider *collider) {
+    AddElement(&sprite->colliders, collider);
+}
+
+static int _ColliderIDComparer(void *collider, void *id) {
+    return ((Collider *) collider)->id - *(int *) id;
 }
 
 bool UnregisterCollider(Sprite *sprite, int id) {
-    ColliderNode *current = sprite->colliders.head, *last = NULL;
-    while (current) {
-        if (current->collider.id == id) {
-            if (last == NULL) {
-                sprite->colliders.head = current->next;
-            } else last->next = current->next;
-            free(current);
-            return true;
-        } else {
-            last = current;
-            current = current->next;
-        }
-    }
-    return false;
+    Collider *collider = RemoveElement(&sprite->colliders, &id, _ColliderIDComparer);
+    if (collider == NULL)return false;
+    DestructCollider(collider);
+    return true;
 }
 
 void RegisterBoxCollider(Sprite *sprite, int id, bool solid, Vector2 size, Vector2 position) {
-    Collider collider = {id, solid, BOX_COLLIDER};
-    collider.shape.boxCollider = (BoxCollider) {size, position};
+    Collider *collider = ConstructCollider(id, BOX_COLLIDER, solid);
+    collider->shape.boxCollider = (BoxCollider) {size, position};
     RegisterCollider(sprite, collider);
 }
 
 void RegisterCircleCollider(Sprite *sprite, int id, bool solid, Vector2 centre, double radius) {
-    Collider collider = {id, solid, CIRCLE_COLLIDER};
-    collider.shape.circleCollider = (CircleCollider) {centre, radius};
+    Collider *collider = ConstructCollider(id, CIRCLE_COLLIDER, solid);
+    collider->shape.circleCollider = (CircleCollider) {centre, radius};
     RegisterCollider(sprite, collider);
 }
 

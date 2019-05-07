@@ -2,7 +2,7 @@
 #define PAC_SUPERMAN_LINKED_LIST_H
 
 #include <stdbool.h>
-
+#define EMPTY_LINKED_LIST (LinkedList){NULL, NULL, 0}
 typedef int (*ElementComparer)(void *e1, void *e2);
 
 typedef void (*ForEachElementCallback)(void *sprite);

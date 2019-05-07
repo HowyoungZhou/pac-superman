@@ -11,6 +11,9 @@
 #define RENDERER_TIMER_INTERVAL 5
 #define PHYSICAL_ENGINE_TIMER_INTERVAL 1
 
+typedef LinkedList SpritesList;
+typedef LinkedListNode SpritesListNode;
+
 /**@brief 初始化游戏引擎
  *
  */
