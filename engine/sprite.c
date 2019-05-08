@@ -6,8 +6,12 @@
 static int _ColliderIDComparer(void *collider, void *id);
 
 void DestructSprite(Sprite *this) {
+    // 如果 Sprite 有动画，则析构动画器
     if (this->hasAnimation && this->renderer.animator != NULL)
         DestructAnimator(this->renderer.animator);
+    // 析构碰撞器
+    ClearList(&this->colliders, free);
+    // 析构自身
     free(this);
 }
 

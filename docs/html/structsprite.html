@@ -91,50 +91,212 @@ $(document).ready(function(){initNavTree('structsprite.html','');});
 <div class="title">sprite Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Sprite 结构包含了 Sprite 的基本属性。  
+ <a href="structsprite.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="sprite_8h_source.html">sprite.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a568c4f7cea202cebb7430ebac674107a"><td class="memItemLeft" align="right" valign="top"><a id="a568c4f7cea202cebb7430ebac674107a"></a>
-<a class="el" href="struct_vector2.html">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>position</b></td></tr>
+<tr class="memitem:a568c4f7cea202cebb7430ebac674107a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vector2.html">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#a568c4f7cea202cebb7430ebac674107a">position</a></td></tr>
 <tr class="separator:a568c4f7cea202cebb7430ebac674107a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef1d073726fc4b857570fbae3230b8dd"><td class="memItemLeft" align="right" valign="top"><a id="aef1d073726fc4b857570fbae3230b8dd"></a>
-<a class="el" href="struct_vector2.html">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>size</b></td></tr>
+<tr class="memitem:aef1d073726fc4b857570fbae3230b8dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vector2.html">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#aef1d073726fc4b857570fbae3230b8dd">size</a></td></tr>
 <tr class="separator:aef1d073726fc4b857570fbae3230b8dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab173eafbd76f9d340b5dd1accfeb27e7"><td class="memItemLeft" align="right" valign="top"><a id="ab173eafbd76f9d340b5dd1accfeb27e7"></a>
-<a class="el" href="struct_vector2.html">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>velocity</b></td></tr>
+<tr class="memitem:ab173eafbd76f9d340b5dd1accfeb27e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vector2.html">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#ab173eafbd76f9d340b5dd1accfeb27e7">velocity</a></td></tr>
 <tr class="separator:ab173eafbd76f9d340b5dd1accfeb27e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa54a57ae048476d840caf6d4d2c47aa3"><td class="memItemLeft" align="right" valign="top"><a id="aa54a57ae048476d840caf6d4d2c47aa3"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>visible</b></td></tr>
+<tr class="memitem:aa54a57ae048476d840caf6d4d2c47aa3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#aa54a57ae048476d840caf6d4d2c47aa3">visible</a></td></tr>
 <tr class="separator:aa54a57ae048476d840caf6d4d2c47aa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f31235b7ffc6f8b42abeeb73b407086"><td class="memItemLeft" align="right" valign="top"><a id="a2f31235b7ffc6f8b42abeeb73b407086"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasAnimation</b></td></tr>
+<tr class="memitem:a2f31235b7ffc6f8b42abeeb73b407086"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#a2f31235b7ffc6f8b42abeeb73b407086">hasAnimation</a></td></tr>
 <tr class="separator:a2f31235b7ffc6f8b42abeeb73b407086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad523f022033a9d1d4c54100b6ef71dc9"><td class="memItemLeft" align="right" valign="top"><a id="ad523f022033a9d1d4c54100b6ef71dc9"></a>
-void *&#160;</td><td class="memItemRight" valign="bottom"><b>property</b></td></tr>
+<tr class="memitem:ad523f022033a9d1d4c54100b6ef71dc9"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#ad523f022033a9d1d4c54100b6ef71dc9">property</a></td></tr>
 <tr class="separator:ad523f022033a9d1d4c54100b6ef71dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a523d5e7f9856014b8807e33ea64f1fd2"><td class="memItemLeft" ><a id="a523d5e7f9856014b8807e33ea64f1fd2"></a>
-union {</td></tr>
+<tr class="memitem:a523d5e7f9856014b8807e33ea64f1fd2"><td class="memItemLeft" >union {</td></tr>
 <tr class="memitem:a82da0e5f86859ff2d63ef23b3ef1b6f2"><td class="memItemLeft" >
 &#160;&#160;&#160;void(*&#160;&#160;&#160;<b>Render</b> )(<a class="el" href="structsprite.html">Sprite</a> *this)</td></tr>
 <tr class="separator:a82da0e5f86859ff2d63ef23b3ef1b6f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac48dc532a874c1b9af471cbb5af39a20"><td class="memItemLeft" >
 &#160;&#160;&#160;<a class="el" href="structanimator.html">Animator</a> *&#160;&#160;&#160;<b>animator</b></td></tr>
 <tr class="separator:ac48dc532a874c1b9af471cbb5af39a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a523d5e7f9856014b8807e33ea64f1fd2"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><b>renderer</b></td></tr>
+<tr class="memitem:a523d5e7f9856014b8807e33ea64f1fd2"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#a523d5e7f9856014b8807e33ea64f1fd2">renderer</a></td></tr>
 <tr class="separator:a523d5e7f9856014b8807e33ea64f1fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bebe4bfef1e1822e59ea4748c6acb80"><td class="memItemLeft" align="right" valign="top"><a id="a8bebe4bfef1e1822e59ea4748c6acb80"></a>
-<a class="el" href="struct_colliders_list.html">CollidersList</a>&#160;</td><td class="memItemRight" valign="bottom"><b>colliders</b></td></tr>
+<tr class="memitem:a8bebe4bfef1e1822e59ea4748c6acb80"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structlinked_list.html">CollidersList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#a8bebe4bfef1e1822e59ea4748c6acb80">colliders</a></td></tr>
 <tr class="separator:a8bebe4bfef1e1822e59ea4748c6acb80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65aecabef159e14ffa795c3775239e7f"><td class="memItemLeft" align="right" valign="top"><a id="a65aecabef159e14ffa795c3775239e7f"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> )(<a class="el" href="structsprite.html">Sprite</a> *this, double interval)</td></tr>
+<tr class="memitem:a65aecabef159e14ffa795c3775239e7f"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#a65aecabef159e14ffa795c3775239e7f">Update</a> )(<a class="el" href="structsprite.html">Sprite</a> *this, double interval)</td></tr>
 <tr class="separator:a65aecabef159e14ffa795c3775239e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f522880ac98aa16e538e733d40c1900"><td class="memItemLeft" align="right" valign="top"><a id="a2f522880ac98aa16e538e733d40c1900"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>Collide</b> )(<a class="el" href="structsprite.html">Sprite</a> *this, int id, <a class="el" href="structsprite.html">Sprite</a> *other)</td></tr>
+<tr class="memitem:a2f522880ac98aa16e538e733d40c1900"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#a2f522880ac98aa16e538e733d40c1900">Collide</a> )(<a class="el" href="structsprite.html">Sprite</a> *this, int id, <a class="el" href="structsprite.html">Sprite</a> *other)</td></tr>
 <tr class="separator:a2f522880ac98aa16e538e733d40c1900"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad94a759bf1375992a7bc93b65a4565f3"><td class="memItemLeft" align="right" valign="top"><a id="ad94a759bf1375992a7bc93b65a4565f3"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>Destruct</b> )(<a class="el" href="structsprite.html">Sprite</a> *this)</td></tr>
+<tr class="memitem:ad94a759bf1375992a7bc93b65a4565f3"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html#ad94a759bf1375992a7bc93b65a4565f3">Destruct</a> )(<a class="el" href="structsprite.html">Sprite</a> *this)</td></tr>
 <tr class="separator:ad94a759bf1375992a7bc93b65a4565f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Sprite 结构包含了 Sprite 的基本属性。 </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="a2f522880ac98aa16e538e733d40c1900"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f522880ac98aa16e538e733d40c1900">&#9670;&nbsp;</a></span>Collide</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void(* Collide) (<a class="el" href="structsprite.html">Sprite</a> *this, int id, <a class="el" href="structsprite.html">Sprite</a> *other)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Collide 方法，当 Sprite 发生碰撞时被调用，可为 NULL </p>
+
+</div>
+</div>
+<a id="a8bebe4bfef1e1822e59ea4748c6acb80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bebe4bfef1e1822e59ea4748c6acb80">&#9670;&nbsp;</a></span>colliders</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structlinked_list.html">CollidersList</a> colliders</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>碰撞器列表 </p>
+
+</div>
+</div>
+<a id="ad94a759bf1375992a7bc93b65a4565f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad94a759bf1375992a7bc93b65a4565f3">&#9670;&nbsp;</a></span>Destruct</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void(* Destruct) (<a class="el" href="structsprite.html">Sprite</a> *this)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>析构函数，不能为 NULL </p>
+
+</div>
+</div>
+<a id="a2f31235b7ffc6f8b42abeeb73b407086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f31235b7ffc6f8b42abeeb73b407086">&#9670;&nbsp;</a></span>hasAnimation</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool hasAnimation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>是否拥有动画 </p>
+
+</div>
+</div>
+<a id="a568c4f7cea202cebb7430ebac674107a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a568c4f7cea202cebb7430ebac674107a">&#9670;&nbsp;</a></span>position</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_vector2.html">Vector2</a> position</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>位置矢量，由屏幕左下角指向 Sprite 的左下角 </p>
+
+</div>
+</div>
+<a id="ad523f022033a9d1d4c54100b6ef71dc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad523f022033a9d1d4c54100b6ef71dc9">&#9670;&nbsp;</a></span>property</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* property</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>独有属性，可以为任意对象或为 NULL </p>
+
+</div>
+</div>
+<a id="a523d5e7f9856014b8807e33ea64f1fd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a523d5e7f9856014b8807e33ea64f1fd2">&#9670;&nbsp;</a></span>renderer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">union { ... }   renderer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>渲染器，如果 hasAnimation 为 true 则为 Animator，否则为 Render 方法，不能为 NULL </p>
+
+</div>
+</div>
+<a id="aef1d073726fc4b857570fbae3230b8dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef1d073726fc4b857570fbae3230b8dd">&#9670;&nbsp;</a></span>size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_vector2.html">Vector2</a> size</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>大小矢量，由 Sprite 的左下角指向右上角 </p>
+
+</div>
+</div>
+<a id="a65aecabef159e14ffa795c3775239e7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65aecabef159e14ffa795c3775239e7f">&#9670;&nbsp;</a></span>Update</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void(* Update) (<a class="el" href="structsprite.html">Sprite</a> *this, double interval)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Update 方法，用于更新物理属性，如位置、速度等，可为 NULL </p>
+
+</div>
+</div>
+<a id="ab173eafbd76f9d340b5dd1accfeb27e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab173eafbd76f9d340b5dd1accfeb27e7">&#9670;&nbsp;</a></span>velocity</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_vector2.html">Vector2</a> velocity</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>速度矢量 </p>
+
+</div>
+</div>
+<a id="aa54a57ae048476d840caf6d4d2c47aa3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa54a57ae048476d840caf6d4d2c47aa3">&#9670;&nbsp;</a></span>visible</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool visible</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>是否可见，即是否会被渲染到屏幕上 </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>engine/<a class="el" href="sprite_8h_source.html">sprite.h</a></li>
 </ul>

@@ -13,27 +13,30 @@
 struct sprite;
 typedef struct sprite Sprite;
 
+/**@brief Sprite 结构包含了 Sprite 的基本属性。
+ *
+ */
 struct sprite {
-    Vector2 position;
-    Vector2 size;
-    Vector2 velocity;
-    bool visible;
-    bool hasAnimation;
-    void *property;
+    Vector2 position; /**< 位置矢量，由屏幕左下角指向 Sprite 的左下角 */
+    Vector2 size; /**< 大小矢量，由 Sprite 的左下角指向右上角 */
+    Vector2 velocity; /**< 速度矢量 */
+    bool visible; /**< 是否可见，即是否会被渲染到屏幕上 */
+    bool hasAnimation; /**< 是否拥有动画 */
+    void *property; /**< 独有属性，可以为任意对象或为 NULL */
 
     union {
         void (*Render)(Sprite *this);
 
         Animator *animator;
-    } renderer;
+    } renderer; /**< 渲染器，如果 hasAnimation 为 true 则为 Animator，否则为 Render 方法，不能为 NULL */
 
-    CollidersList colliders;
+    CollidersList colliders; /**< 碰撞器列表 */
 
-    void (*Update)(Sprite *this, double interval);
+    void (*Update)(Sprite *this, double interval); /**< Update 方法，用于更新物理属性，如位置、速度等，可为 NULL */
 
-    void (*Collide)(Sprite *this, int id, Sprite *other);
+    void (*Collide)(Sprite *this, int id, Sprite *other); /**< Collide 方法，当 Sprite 发生碰撞时被调用，可为 NULL */
 
-    void (*Destruct)(Sprite *this);
+    void (*Destruct)(Sprite *this); /**< 析构函数，不能为 NULL */
 };
 
 /**@brief Sprite 的构造函数，要实现自定义的 Sprite 类型往往需要通过此方法创建新的 Sprite。

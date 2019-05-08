@@ -17,6 +17,8 @@ static inline void _ClearScreen();
 
 static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callback);
 
+static void _DestructSprite(void *sprite);
+
 static void _UpdateSprite(Sprite *sprite);
 
 static void _DetectCollision();
@@ -45,6 +47,7 @@ static bool _paused = false;
 
 void InitEngine() {
     RegisterTimerEvent(_MainTimerHandler);
+    // 记录当前时间戳
     QueryPerformanceFrequency(&_frequency);
     QueryPerformanceCounter(&_lastUpdated);
     startTimer(RENDERER_TIMER_ID, RENDERER_TIMER_INTERVAL);
@@ -60,7 +63,16 @@ void RegisterUISprite(Sprite *uiSprite) {
     AddElement(&_uiSpritesList, uiSprite);
 }
 
+void ClearSprites() {
+    ClearList(&_spritesList, _DestructSprite);
+}
+
+void ClearUISprites() {
+    ClearList(&_uiSpritesList, _DestructSprite);
+}
+
 void PauseGame() {
+    // 停止物理引擎更新
     cancelTimer(PHYSICAL_ENGINE_TIMER_ID);
     _paused = true;
 }
@@ -91,6 +103,10 @@ static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callb
     }
 }
 
+static void _DestructSprite(void *sprite) {
+    ((Sprite *) sprite)->Destruct(sprite);
+}
+
 static void _MainTimerHandler(int timerID) {
     switch (timerID) {
         case RENDERER_TIMER_ID:
@@ -100,10 +116,10 @@ static void _MainTimerHandler(int timerID) {
             break;
         case PHYSICAL_ENGINE_TIMER_ID:
             _UpdateInterval();
-            _ForEachSprite(&_spritesList, _UpdateAnimator);
-            _ForEachSprite(&_spritesList, _UpdateSprite);
-            _DetectCollision();
-            _ForEachSprite(&_spritesList, _UpdatePosition);
+            _ForEachSprite(&_spritesList, _UpdateAnimator); // 更新动画器
+            _ForEachSprite(&_spritesList, _UpdateSprite); // 调用 Sprite 的 Update 函数
+            _DetectCollision(); // 碰撞检测
+            _ForEachSprite(&_spritesList, _UpdatePosition); // 更新位置
             break;
         default:
             break;
@@ -136,8 +152,9 @@ static void _UpdateAnimator(Sprite *sprite) {
 
 static void _RenderSprite(Sprite *sprite) {
     if (!sprite->visible)return;
-    SaveGraphicsState();
+    SaveGraphicsState(); // 保存当前图形库状态避免不同 Sprite 之间干扰
     MovePen(sprite->position.x, sprite->position.y);
+    // 如果 Sprite 有动画则渲染动画
     if (sprite->hasAnimation) {
         Animator *animator = sprite->renderer.animator;
         if (animator->Animate == NULL)raise(MethodNotImplementedException);
@@ -147,7 +164,7 @@ static void _RenderSprite(Sprite *sprite) {
         if (sprite->renderer.Render == NULL)raise(MethodNotImplementedException);
         sprite->renderer.Render(sprite);
     }
-    RestoreGraphicsState();
+    RestoreGraphicsState(); // 恢复图形库状态
 }
 
 static inline void _ClearScreen() {

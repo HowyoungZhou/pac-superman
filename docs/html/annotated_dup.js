@@ -6,8 +6,6 @@ var annotated_dup =
     [ "Button", "struct_button.html", "struct_button" ],
     [ "CircleCollider", "struct_circle_collider.html", "struct_circle_collider" ],
     [ "Collider", "struct_collider.html", "struct_collider" ],
-    [ "colliderNode", "structcollider_node.html", "structcollider_node" ],
-    [ "CollidersList", "struct_colliders_list.html", "struct_colliders_list" ],
     [ "colorEntryT", "structcolor_entry_t.html", "structcolor_entry_t" ],
     [ "ctx_block", "structctx__block.html", "structctx__block" ],
     [ "exception", "structexception.html", "structexception" ],

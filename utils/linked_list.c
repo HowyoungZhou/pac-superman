@@ -36,6 +36,19 @@ void *RemoveElement(LinkedList *list, void *element, ElementComparer comparer) {
     return NULL;
 }
 
+void ClearList(LinkedList *list, ElementDestructor destruct) {
+    LinkedListNode *node = list->head;
+    while (node) {
+        LinkedListNode *next = node->next;
+        destruct(node->element);
+        free(node);
+        node = next;
+    }
+    list->head = NULL;
+    list->tail = NULL;
+    list->length = 0;
+}
+
 void ForEachElement(LinkedList *list, ForEachElementCallback callback) {
     for (LinkedListNode *node = list->head; node != NULL; node = node->next) {
         callback(node->element);

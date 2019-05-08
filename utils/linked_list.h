@@ -2,8 +2,12 @@
 #define PAC_SUPERMAN_LINKED_LIST_H
 
 #include <stdbool.h>
+
 #define EMPTY_LINKED_LIST (LinkedList){NULL, NULL, 0}
+
 typedef int (*ElementComparer)(void *e1, void *e2);
+
+typedef void (*ElementDestructor)(void *obj);
 
 typedef void (*ForEachElementCallback)(void *sprite);
 
@@ -21,6 +25,8 @@ typedef struct linkedList {
 void AddElement(LinkedList *list, void *element);
 
 void *RemoveElement(LinkedList *list, void *element, ElementComparer comparer);
+
+void ClearList(LinkedList *list, ElementDestructor destruct);
 
 void ForEachElement(LinkedList *list, ForEachElementCallback callback);
 

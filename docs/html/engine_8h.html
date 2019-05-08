@@ -87,6 +87,7 @@ $(document).ready(function(){initNavTree('engine_8h.html','');});
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">engine.h File Reference</div>  </div>
@@ -114,17 +115,32 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PHYSICAL_ENGINE_TIMER_INTERVAL</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:a803ddb9d3b78ef30552a1aa42be497b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a47ff15a327c99f84fa198603342a7894"><td class="memItemLeft" align="right" valign="top"><a id="a47ff15a327c99f84fa198603342a7894"></a>
+typedef <a class="el" href="structlinked_list.html">LinkedList</a>&#160;</td><td class="memItemRight" valign="bottom"><b>SpritesList</b></td></tr>
+<tr class="separator:a47ff15a327c99f84fa198603342a7894"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a23cce8cc8d61ed70e7200e902ec0e5"><td class="memItemLeft" align="right" valign="top"><a id="a8a23cce8cc8d61ed70e7200e902ec0e5"></a>
+typedef <a class="el" href="structlinked_list_node.html">LinkedListNode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>SpritesListNode</b></td></tr>
+<tr class="separator:a8a23cce8cc8d61ed70e7200e902ec0e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a252ae027b264ece2b5a4f05d159f8468"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="engine_8h.html#a252ae027b264ece2b5a4f05d159f8468">InitEngine</a> ()</td></tr>
-<tr class="memdesc:a252ae027b264ece2b5a4f05d159f8468"><td class="mdescLeft">&#160;</td><td class="mdescRight">初始化游戏引擎  <a href="#a252ae027b264ece2b5a4f05d159f8468">More...</a><br /></td></tr>
+<tr class="memdesc:a252ae027b264ece2b5a4f05d159f8468"><td class="mdescLeft">&#160;</td><td class="mdescRight">初始化游戏引擎。  <a href="#a252ae027b264ece2b5a4f05d159f8468">More...</a><br /></td></tr>
 <tr class="separator:a252ae027b264ece2b5a4f05d159f8468"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae68e8e66db63348e17d02225072b0b67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="engine_8h.html#ae68e8e66db63348e17d02225072b0b67">RegisterSprite</a> (<a class="el" href="structsprite.html">Sprite</a> *<a class="el" href="structsprite.html">sprite</a>)</td></tr>
-<tr class="memdesc:ae68e8e66db63348e17d02225072b0b67"><td class="mdescLeft">&#160;</td><td class="mdescRight">注册新的 Sprite，新的 Sprite 将会被渲染到屏幕上  <a href="#ae68e8e66db63348e17d02225072b0b67">More...</a><br /></td></tr>
+<tr class="memdesc:ae68e8e66db63348e17d02225072b0b67"><td class="mdescLeft">&#160;</td><td class="mdescRight">注册新的 Sprite，新的 Sprite 将会被渲染到屏幕上。  <a href="#ae68e8e66db63348e17d02225072b0b67">More...</a><br /></td></tr>
 <tr class="separator:ae68e8e66db63348e17d02225072b0b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0648473eb56ac9e38d314a32c985634"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="engine_8h.html#af0648473eb56ac9e38d314a32c985634">RegisterUISprite</a> (<a class="el" href="structsprite.html">Sprite</a> *uiSprite)</td></tr>
 <tr class="memdesc:af0648473eb56ac9e38d314a32c985634"><td class="mdescLeft">&#160;</td><td class="mdescRight">注册新的 UI Sprite，新的 Sprite 将会被渲染到屏幕上。  <a href="#af0648473eb56ac9e38d314a32c985634">More...</a><br /></td></tr>
 <tr class="separator:af0648473eb56ac9e38d314a32c985634"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0724097bc4e3d938f6db0f75abe5ad46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="engine_8h.html#a0724097bc4e3d938f6db0f75abe5ad46">ClearSprites</a> ()</td></tr>
+<tr class="memdesc:a0724097bc4e3d938f6db0f75abe5ad46"><td class="mdescLeft">&#160;</td><td class="mdescRight">清除所有 Sprite。  <a href="#a0724097bc4e3d938f6db0f75abe5ad46">More...</a><br /></td></tr>
+<tr class="separator:a0724097bc4e3d938f6db0f75abe5ad46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6171225cff4cb03b19e1d0bb417ef738"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="engine_8h.html#a6171225cff4cb03b19e1d0bb417ef738">ClearUISprites</a> ()</td></tr>
+<tr class="memdesc:a6171225cff4cb03b19e1d0bb417ef738"><td class="mdescLeft">&#160;</td><td class="mdescRight">清除所有 Sprite。  <a href="#a6171225cff4cb03b19e1d0bb417ef738">More...</a><br /></td></tr>
+<tr class="separator:a6171225cff4cb03b19e1d0bb417ef738"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a426aeef836203b725ffe02df6a9a9299"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="engine_8h.html#a426aeef836203b725ffe02df6a9a9299">PauseGame</a> ()</td></tr>
 <tr class="memdesc:a426aeef836203b725ffe02df6a9a9299"><td class="mdescLeft">&#160;</td><td class="mdescRight">暂停游戏，位置更新和碰撞检测将会被暂停，但 UI 并不会受到影响。  <a href="#a426aeef836203b725ffe02df6a9a9299">More...</a><br /></td></tr>
 <tr class="separator:a426aeef836203b725ffe02df6a9a9299"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,12 +148,52 @@ Functions</h2></td></tr>
 <tr class="memdesc:aee098bf293585e7cbdfce89f88f46167"><td class="mdescLeft">&#160;</td><td class="mdescRight">继续游戏。  <a href="#aee098bf293585e7cbdfce89f88f46167">More...</a><br /></td></tr>
 <tr class="separator:aee098bf293585e7cbdfce89f88f46167"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c468b244d216c3258139458e3c797e5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="engine_8h.html#a8c468b244d216c3258139458e3c797e5">IsPaused</a> ()</td></tr>
-<tr class="memdesc:a8c468b244d216c3258139458e3c797e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">获取当前游戏状态，即是否被暂停  <a href="#a8c468b244d216c3258139458e3c797e5">More...</a><br /></td></tr>
+<tr class="memdesc:a8c468b244d216c3258139458e3c797e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">获取当前游戏状态，即是否被暂停。  <a href="#a8c468b244d216c3258139458e3c797e5">More...</a><br /></td></tr>
 <tr class="separator:a8c468b244d216c3258139458e3c797e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>该文件包含了游戏引擎的相关方法。 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a0724097bc4e3d938f6db0f75abe5ad46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0724097bc4e3d938f6db0f75abe5ad46">&#9670;&nbsp;</a></span>ClearSprites()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ClearSprites </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>清除所有 Sprite。 </p>
+<p>注意：该方法不能在 Render, Animate 或 Update 方法中调用，因为该方法会破坏正常的物理引擎计算和渲染流程。 </p>
+
+</div>
+</div>
+<a id="a6171225cff4cb03b19e1d0bb417ef738"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6171225cff4cb03b19e1d0bb417ef738">&#9670;&nbsp;</a></span>ClearUISprites()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ClearUISprites </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>清除所有 Sprite。 </p>
+<p>注意：该方法不能在 Render, Animate 或 Update 方法中调用，因为该方法会破坏正常的物理引擎计算和渲染流程。 </p>
+
+</div>
+</div>
 <a id="a252ae027b264ece2b5a4f05d159f8468"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a252ae027b264ece2b5a4f05d159f8468">&#9670;&nbsp;</a></span>InitEngine()</h2>
 
@@ -153,7 +209,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>初始化游戏引擎 </p>
+<p>初始化游戏引擎。 </p>
 
 </div>
 </div>
@@ -172,7 +228,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>获取当前游戏状态，即是否被暂停 </p>
+<p>获取当前游戏状态，即是否被暂停。 </p>
 <dl class="section return"><dt>Returns</dt><dd>如果游戏被暂停则返回 true </dd></dl>
 
 </div>
@@ -212,7 +268,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>注册新的 Sprite，新的 Sprite 将会被渲染到屏幕上 </p>
+<p>注册新的 Sprite，新的 Sprite 将会被渲染到屏幕上。 </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sprite</td><td>要注册的 Sprite </td></tr>

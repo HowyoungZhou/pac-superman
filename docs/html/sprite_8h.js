@@ -9,6 +9,6 @@ var sprite_8h =
     [ "DestructSprite", "sprite_8h.html#abbb24500d5bd6fcde44f903287d263e7", null ],
     [ "RegisterBoxCollider", "sprite_8h.html#a67be6a0a565715ef8cd0267130712290", null ],
     [ "RegisterCircleCollider", "sprite_8h.html#a2a32e085f71c6a7e0c14a61129d6c4e5", null ],
-    [ "RegisterCollider", "sprite_8h.html#a6a7bda0ea9c01ea78ab99b629539bfc9", null ],
+    [ "RegisterCollider", "sprite_8h.html#afeb50c1f160f63862a49d881eb0c0847", null ],
     [ "UnregisterCollider", "sprite_8h.html#a24d58cb909cd08477fa79222e8ca43fa", null ]
 ];

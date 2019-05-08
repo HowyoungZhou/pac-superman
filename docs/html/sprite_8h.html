@@ -97,6 +97,7 @@ $(document).ready(function(){initNavTree('sprite_8h.html','');});
 <p>该文件包含了 Sprite 类的定义及相关方法。  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &lt;linked_list.h&gt;</code><br />
 <code>#include &quot;vector2.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="animator_8h_source.html">animator.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="collider_8h_source.html">collider.h</a>&quot;</code><br />
@@ -106,6 +107,7 @@ $(document).ready(function(){initNavTree('sprite_8h.html','');});
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsprite.html">sprite</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sprite 结构包含了 Sprite 的基本属性。  <a href="structsprite.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -122,9 +124,9 @@ Functions</h2></td></tr>
 <tr class="memitem:abbb24500d5bd6fcde44f903287d263e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sprite_8h.html#abbb24500d5bd6fcde44f903287d263e7">DestructSprite</a> (<a class="el" href="structsprite.html">Sprite</a> *this)</td></tr>
 <tr class="memdesc:abbb24500d5bd6fcde44f903287d263e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sprite 的默认析构函数。  <a href="#abbb24500d5bd6fcde44f903287d263e7">More...</a><br /></td></tr>
 <tr class="separator:abbb24500d5bd6fcde44f903287d263e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a7bda0ea9c01ea78ab99b629539bfc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sprite_8h.html#a6a7bda0ea9c01ea78ab99b629539bfc9">RegisterCollider</a> (<a class="el" href="structsprite.html">Sprite</a> *<a class="el" href="structsprite.html">sprite</a>, <a class="el" href="struct_collider.html">Collider</a> collider)</td></tr>
-<tr class="memdesc:a6a7bda0ea9c01ea78ab99b629539bfc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">注册一个碰撞器。  <a href="#a6a7bda0ea9c01ea78ab99b629539bfc9">More...</a><br /></td></tr>
-<tr class="separator:a6a7bda0ea9c01ea78ab99b629539bfc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afeb50c1f160f63862a49d881eb0c0847"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sprite_8h.html#afeb50c1f160f63862a49d881eb0c0847">RegisterCollider</a> (<a class="el" href="structsprite.html">Sprite</a> *<a class="el" href="structsprite.html">sprite</a>, <a class="el" href="struct_collider.html">Collider</a> *collider)</td></tr>
+<tr class="memdesc:afeb50c1f160f63862a49d881eb0c0847"><td class="mdescLeft">&#160;</td><td class="mdescRight">注册一个碰撞器。  <a href="#afeb50c1f160f63862a49d881eb0c0847">More...</a><br /></td></tr>
+<tr class="separator:afeb50c1f160f63862a49d881eb0c0847"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24d58cb909cd08477fa79222e8ca43fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sprite_8h.html#a24d58cb909cd08477fa79222e8ca43fa">UnregisterCollider</a> (<a class="el" href="structsprite.html">Sprite</a> *<a class="el" href="structsprite.html">sprite</a>, int id)</td></tr>
 <tr class="memdesc:a24d58cb909cd08477fa79222e8ca43fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">删除一个碰撞器。  <a href="#a24d58cb909cd08477fa79222e8ca43fa">More...</a><br /></td></tr>
 <tr class="separator:a24d58cb909cd08477fa79222e8ca43fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -415,8 +417,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6a7bda0ea9c01ea78ab99b629539bfc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a7bda0ea9c01ea78ab99b629539bfc9">&#9670;&nbsp;</a></span>RegisterCollider()</h2>
+<a id="afeb50c1f160f63862a49d881eb0c0847"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afeb50c1f160f63862a49d881eb0c0847">&#9670;&nbsp;</a></span>RegisterCollider()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -430,7 +432,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct_collider.html">Collider</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_collider.html">Collider</a> *&#160;</td>
           <td class="paramname"><em>collider</em>&#160;</td>
         </tr>
         <tr>

@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('collider_8h.html','');});
 <p>该文件包含了 <a class="el" href="struct_collider.html">Collider</a> 类的定义及相关方法。  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;vector2.h&gt;</code><br />
+<code>#include &lt;linked_list.h&gt;</code><br />
 </div>
 <p><a href="collider_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -109,10 +110,6 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_circle_collider.html">CircleCollider</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_collider.html">Collider</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcollider_node.html">colliderNode</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_colliders_list.html">CollidersList</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -126,9 +123,12 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a2e0e83501f54721b3f1fdde311d47ba1"><td class="memItemLeft" align="right" valign="top"><a id="a2e0e83501f54721b3f1fdde311d47ba1"></a>
 typedef struct <a class="el" href="structsprite.html">sprite</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Sprite</b></td></tr>
 <tr class="separator:a2e0e83501f54721b3f1fdde311d47ba1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2380b946a89a9fa224f889a6cb206cac"><td class="memItemLeft" align="right" valign="top"><a id="a2380b946a89a9fa224f889a6cb206cac"></a>
-typedef struct <a class="el" href="structcollider_node.html">colliderNode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ColliderNode</b></td></tr>
-<tr class="separator:a2380b946a89a9fa224f889a6cb206cac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b8cc4e242d951c2de7c72642436c14d"><td class="memItemLeft" align="right" valign="top"><a id="a9b8cc4e242d951c2de7c72642436c14d"></a>
+typedef <a class="el" href="structlinked_list_node.html">LinkedListNode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ColliderNode</b></td></tr>
+<tr class="separator:a9b8cc4e242d951c2de7c72642436c14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae71ea6403a63103a2d64bb8db54960cc"><td class="memItemLeft" align="right" valign="top"><a id="ae71ea6403a63103a2d64bb8db54960cc"></a>
+typedef <a class="el" href="structlinked_list.html">LinkedList</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CollidersList</b></td></tr>
+<tr class="separator:ae71ea6403a63103a2d64bb8db54960cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -139,6 +139,12 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ae7dfb98e83182af2fc8efe26bd6e9ae5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_collider.html">Collider</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="collider_8h.html#ae7dfb98e83182af2fc8efe26bd6e9ae5">ConstructCollider</a> (int id, ColliderType type, bool solid)</td></tr>
+<tr class="memdesc:ae7dfb98e83182af2fc8efe26bd6e9ae5"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_collider.html">Collider</a> 的构造函数。  <a href="#ae7dfb98e83182af2fc8efe26bd6e9ae5">More...</a><br /></td></tr>
+<tr class="separator:ae7dfb98e83182af2fc8efe26bd6e9ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a7631ab6131545ad689d24491e9cd7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="collider_8h.html#a1a7631ab6131545ad689d24491e9cd7a">DestructCollider</a> (<a class="el" href="struct_collider.html">Collider</a> *this)</td></tr>
+<tr class="memdesc:a1a7631ab6131545ad689d24491e9cd7a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_collider.html">Collider</a> 的析构函数。  <a href="#a1a7631ab6131545ad689d24491e9cd7a">More...</a><br /></td></tr>
+<tr class="separator:a1a7631ab6131545ad689d24491e9cd7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51a0b5b835653c357a7d9509cc7ee319"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="collider_8h.html#a51a0b5b835653c357a7d9509cc7ee319">DetectCollision</a> (<a class="el" href="structsprite.html">Sprite</a> *s1, <a class="el" href="structsprite.html">Sprite</a> *s2, double interval)</td></tr>
 <tr class="memdesc:a51a0b5b835653c357a7d9509cc7ee319"><td class="mdescLeft">&#160;</td><td class="mdescRight">执行碰撞检测，该方法由引擎调用。  <a href="#a51a0b5b835653c357a7d9509cc7ee319">More...</a><br /></td></tr>
 <tr class="separator:a51a0b5b835653c357a7d9509cc7ee319"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,6 +152,77 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>该文件包含了 <a class="el" href="struct_collider.html">Collider</a> 类的定义及相关方法。 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="ae7dfb98e83182af2fc8efe26bd6e9ae5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7dfb98e83182af2fc8efe26bd6e9ae5">&#9670;&nbsp;</a></span>ConstructCollider()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_collider.html">Collider</a>* ConstructCollider </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ColliderType&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>solid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="struct_collider.html">Collider</a> 的构造函数。 </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td><a class="el" href="struct_collider.html">Collider</a> 的 ID </td></tr>
+    <tr><td class="paramname">type</td><td><a class="el" href="struct_collider.html">Collider</a> 的类型 </td></tr>
+    <tr><td class="paramname">solid</td><td><a class="el" href="struct_collider.html">Collider</a> 是否是坚固的（即是否可以穿过） </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>构造的 <a class="el" href="struct_collider.html">Collider</a> </dd></dl>
+
+</div>
+</div>
+<a id="a1a7631ab6131545ad689d24491e9cd7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a7631ab6131545ad689d24491e9cd7a">&#9670;&nbsp;</a></span>DestructCollider()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DestructCollider </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_collider.html">Collider</a> *&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="struct_collider.html">Collider</a> 的析构函数。 </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">this</td><td><a class="el" href="struct_collider.html">Collider</a> 对象 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a51a0b5b835653c357a7d9509cc7ee319"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a51a0b5b835653c357a7d9509cc7ee319">&#9670;&nbsp;</a></span>DetectCollision()</h2>
 
