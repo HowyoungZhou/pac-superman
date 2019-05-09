@@ -46,5 +46,5 @@ void MovePolarPen(double distance) {
 }
 
 void TurnPolarAngleTo(double angle) {
-    _theta = angle * 180.0 / M_PI;
+    _theta = angle / 180.0 * M_PI;
 }
