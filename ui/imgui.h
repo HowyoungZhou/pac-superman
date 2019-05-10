@@ -29,7 +29,7 @@
 // 
 // Generate a *fake* unique ID for gui controls at compiling/run time
 //
-#define GenUIID(N) ( ((__LINE__<<16) | ( N & 0xFFFF))^((long)&__FILE__) )
+#define GenUIID(N) ( ((__LINE__<<16) | ( N & 0xFFFF))^((uintptr_t)&__FILE__) )
 //
 // GenUIID(0) will give a unique ID at each source code line. 
 // If you need one UI ID per line, just call GenUIID with 0

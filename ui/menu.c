@@ -27,7 +27,8 @@ static void _Render(Sprite *this) {
     double x = 0;
     for (int i = 0; i < menu->listsCount; i++) {
         MenuList *list = menu->lists[i];
-        // 计算菜单按钮宽度，由于默认加上了 FontAscent / 2 的 Padding，所以加上一个 FontAscent
+        if (list->UpdateMenuList != NULL)list->UpdateMenuList(list);
+        // 计算菜单按钮宽度，由于默认加上了 FontAscent / 2 的 Padding，所以再加上一个 FontAscent
         double w = TextStringWidth(list->menuItems[0]) + GetFontAscent();
         // 计算菜单宽度，同上需加上一个 FontAscent
         double wlist = _CalcLargestStringWidth(list->menuItems, list->itemsCount) + GetFontAscent();
@@ -51,6 +52,7 @@ MenuList *ConstructMenuList(int id, OnMenuItemSelectedCallback onMenuItemSelecte
     }
     va_end(items);
     obj->id = id;
+    obj->UpdateMenuList = NULL;
     obj->OnMenuItemSelected = onMenuItemSelected;
     obj->itemsCount = itemsCount;
     return obj;

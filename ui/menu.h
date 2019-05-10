@@ -1,6 +1,8 @@
 #ifndef PAC_SUPERMAN_MENU_H
 #define PAC_SUPERMAN_MENU_H
 
+#include <genlib.h>
+
 struct MenuList;
 
 typedef void (*OnMenuItemSelectedCallback)(struct MenuList *sender, int selectedIndex);
@@ -8,6 +10,8 @@ typedef void (*OnMenuItemSelectedCallback)(struct MenuList *sender, int selected
 typedef struct MenuList {
     int id;
     unsigned int itemsCount;
+
+    void (*UpdateMenuList)(struct MenuList *this);
 
     OnMenuItemSelectedCallback OnMenuItemSelected;
 

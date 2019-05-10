@@ -8,9 +8,7 @@
 #include <colors.h>
 #include <button.h>
 #include <events.h>
-#include <menu.h>
-#include <imgui.h>
-#include <extgraph.h>
+#include <game_menu.h>
 
 void PauseCallback(Sprite *button) {
     if (IsPaused()) {
@@ -27,19 +25,7 @@ void RegisterSprites() {
     RegisterSprite(ConstructExampleControllableSprite());
     RegisterSprite(ConstructPellet((Vector2) {1, 1}, (Vector2) {0.1, 0.1}));
     RegisterUISprite(ConstructButtonSprite(1, (Vector2) {1, 2}, (Vector2) {1, 0.6}, "Pause", PauseCallback));
-}
-
-void OnMenuItemSelected(struct MenuList *sender, int selectedIndex) {
-    if (selectedIndex == 2)ExitGraphics();
-}
-
-void TestMenu() {
-    Sprite *menu = ConstructMenuSprite(ConstructMenu(2,
-                                                     ConstructMenuList(2, OnMenuItemSelected, 3, "Game",
-                                                                       "Pause/Resume", "Exit"),
-                                                     ConstructMenuList(3, NULL, 3, "Help", "How to play?",
-                                                                       "About")));
-    RegisterUISprite(menu);
+    RegisterUISprite(ConstructGameMenuSprite());
 }
 
 void Main() {
@@ -48,7 +34,6 @@ void Main() {
     InitEvents();
     DefineColors();
     RegisterSprites();
-    TestMenu();
     InitController();
     InitEngine();
 }
