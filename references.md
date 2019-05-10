@@ -1,0 +1,2 @@
+* Acquiring high-resolution time stamps, https://docs.microsoft.com/zh-cn/windows/desktop/SysInfo/acquiring-high-resolution-time-stamps
+* Arvo, "A Simple Method for Box-Sphere Intersection Testing", Graphics Gems, pp. 247-250, 1993.
