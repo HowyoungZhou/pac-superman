@@ -10,7 +10,7 @@ set(SOURCE_FILES libgraphics/exceptio.c libgraphics/genlib.c libgraphics/graphic
         utils/exceptions.c sprites/example_animated_sprite.c sprites/example_animated_sprite.h engine/controller.c
         engine/controller.h sprites/example_controllable_sprite.c sprites/example_controllable_sprite.h
         engine/collider.c engine/collider.h sprites/example_collidable_sprite.c sprites/example_collidable_sprite.h
-        sprites/pellet.c sprites/pellet.h utils/colors.c utils/colors.h ui/imgui.c utils/linked_list.c utils/linked_list.h ui/button.c ui/button.h utils/events.c utils/events.h ui/menu.c ui/menu.h ui/game_menu.c ui/game_menu.h)
+        sprites/pellet.c sprites/pellet.h utils/colors.c utils/colors.h ui/imgui.c utils/linked_list.c utils/linked_list.h ui/button.c ui/button.h utils/events.c utils/events.h ui/menu.c ui/menu.h ui/game_menu.c ui/game_menu.h sprites/pacman_sprite.c sprites/pacman_sprite.h)
 
 include_directories(libgraphics)
 include_directories(engine)

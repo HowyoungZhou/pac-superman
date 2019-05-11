@@ -8,6 +8,7 @@
 #include <colors.h>
 #include <button.h>
 #include <events.h>
+#include <pacman_sprite.h>
 #include <game_menu.h>
 
 void PauseCallback(Sprite *button) {
@@ -24,6 +25,7 @@ void PauseCallback(Sprite *button) {
 void RegisterSprites() {
     RegisterSprite(ConstructExampleControllableSprite());
     RegisterSprite(ConstructPellet((Vector2) {1, 1}, (Vector2) {0.1, 0.1}));
+    RegisterSprite(ConstructPacmanSprite());
     RegisterUISprite(ConstructButtonSprite(1, (Vector2) {1, 2}, (Vector2) {1, 0.6}, "Pause", PauseCallback));
     RegisterUISprite(ConstructGameMenuSprite());
 }

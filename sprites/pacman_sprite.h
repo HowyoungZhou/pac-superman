@@ -1,0 +1,6 @@
+#ifndef PAC_SUPERMAN_PACMAN_SPRITE_H
+#define PAC_SUPERMAN_PACMAN_SPRITE_H
+
+Sprite *ConstructPacmanSprite();
+
+#endif //PAC_SUPERMAN_PACMAN_SPRITE_H
