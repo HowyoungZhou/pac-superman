@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['uistate',['UIState',['../struct_u_i_state.html',1,'']]]
+  ['scene',['Scene',['../struct_scene.html',1,'']]],
+  ['sprite',['sprite',['../structsprite.html',1,'']]]
 ];

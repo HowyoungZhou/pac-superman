@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['velocity',['velocity',['../structsprite.html#ab173eafbd76f9d340b5dd1accfeb27e7',1,'sprite']]],
-  ['visible',['visible',['../structsprite.html#aa54a57ae048476d840caf6d4d2c47aa3',1,'sprite']]]
+  ['update',['Update',['../structsprite.html#a65aecabef159e14ffa795c3775239e7f',1,'sprite']]]
 ];

@@ -24,7 +24,8 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "pac-superman", "index.html", [
-    [ "pac-superman", "md__r_e_a_d_m_e.html", null ],
+    [ "pac-superman", "md__f_1__coding_pac-superman__r_e_a_d_m_e.html", null ],
+    [ "references", "md__f_1__coding_pac-superman_references.html", null ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],

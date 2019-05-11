@@ -13,6 +13,9 @@ var annotated_dup =
     [ "graphicsStateT", "structgraphics_state_t.html", "structgraphics_state_t" ],
     [ "linkedList", "structlinked_list.html", "structlinked_list" ],
     [ "linkedListNode", "structlinked_list_node.html", "structlinked_list_node" ],
+    [ "Menu", "struct_menu.html", "struct_menu" ],
+    [ "MenuList", "struct_menu_list.html", "struct_menu_list" ],
+    [ "Scene", "struct_scene.html", "struct_scene" ],
     [ "sprite", "structsprite.html", "structsprite" ],
     [ "UIState", "struct_u_i_state.html", "struct_u_i_state" ],
     [ "Vector2", "struct_vector2.html", "struct_vector2" ]

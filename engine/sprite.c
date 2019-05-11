@@ -23,6 +23,7 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     obj->velocity = velocity;
     obj->hasAnimation = false;
     obj->visible = true;
+    obj->foreColor = "White";
     obj->property = NULL;
     obj->renderer.Render = NULL;
     obj->colliders = EMPTY_LINKED_LIST;

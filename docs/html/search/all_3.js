@@ -4,8 +4,8 @@ var searchData=
   ['calcincircleradius',['CalcIncircleRadius',['../sprite_8h.html#a769e4cfe297cecb404221ac96f07049f',1,'sprite.c']]],
   ['calcrelativecentre',['CalcRelativeCentre',['../sprite_8h.html#aae805b9b6d4a1507c77c61c196e1bc6c',1,'sprite.c']]],
   ['circlecollider',['CircleCollider',['../struct_circle_collider.html',1,'']]],
-  ['clearsprites',['ClearSprites',['../engine_8h.html#a0724097bc4e3d938f6db0f75abe5ad46',1,'engine.c']]],
-  ['clearuisprites',['ClearUISprites',['../engine_8h.html#a6171225cff4cb03b19e1d0bb417ef738',1,'engine.c']]],
+  ['cleargamesprites',['ClearGameSprites',['../scene_8h.html#af7aa47f2a9402134c44563c87f1ed0e9',1,'scene.c']]],
+  ['clearuisprites',['ClearUISprites',['../scene_8h.html#a4520991cd7abbff8a0d4688a2698ba99',1,'scene.c']]],
   ['collide',['Collide',['../structsprite.html#a2f522880ac98aa16e538e733d40c1900',1,'sprite']]],
   ['collider',['Collider',['../struct_collider.html',1,'']]],
   ['collider_2eh',['collider.h',['../collider_8h.html',1,'']]],
@@ -14,6 +14,7 @@ var searchData=
   ['constructanimator',['ConstructAnimator',['../animator_8h.html#a9d1a68c75c969c7f717ef4acd2208f92',1,'animator.c']]],
   ['constructbuttonsprite',['ConstructButtonSprite',['../button_8h.html#af614bcc9bc523aa6c98602bc6d9de0b7',1,'button.c']]],
   ['constructcollider',['ConstructCollider',['../collider_8h.html#ae7dfb98e83182af2fc8efe26bd6e9ae5',1,'collider.c']]],
+  ['constructscene',['ConstructScene',['../scene_8h.html#a1d00e2516088b783efd0c8817c2bb3f9',1,'scene.c']]],
   ['constructsprite',['ConstructSprite',['../sprite_8h.html#ae544631d3499b08f6afa3b023b9c0bb2',1,'sprite.c']]],
   ['controller_2eh',['controller.h',['../controller_8h.html',1,'']]],
   ['ctx_5fblock',['ctx_block',['../structctx__block.html',1,'']]]

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unregistercollider',['UnregisterCollider',['../sprite_8h.html#a24d58cb909cd08477fa79222e8ca43fa',1,'sprite.c']]]
+  ['tickanimator',['TickAnimator',['../animator_8h.html#a7267fd3af6c56b6b939e11f25c09e76f',1,'animator.c']]]
 ];

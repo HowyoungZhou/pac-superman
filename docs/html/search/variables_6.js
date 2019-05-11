@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['update',['Update',['../structsprite.html#a65aecabef159e14ffa795c3775239e7f',1,'sprite']]]
+  ['size',['size',['../structsprite.html#aef1d073726fc4b857570fbae3230b8dd',1,'sprite']]]
 ];

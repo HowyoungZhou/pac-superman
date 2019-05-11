@@ -6,6 +6,7 @@
 
 #include <stdbool.h>
 #include <linked_list.h>
+#include <genlib.h>
 #include "vector2.h"
 #include "animator.h"
 #include "collider.h"
@@ -22,6 +23,7 @@ struct sprite {
     Vector2 velocity; /**< 速度矢量 */
     bool visible; /**< 是否可见，即是否会被渲染到屏幕上 */
     bool hasAnimation; /**< 是否拥有动画 */
+    string foreColor; /**< 前景色，使用图形库预定义颜色或在 colors.c 中定义*/
     void *property; /**< 独有属性，可以为任意对象或为 NULL */
 
     union {

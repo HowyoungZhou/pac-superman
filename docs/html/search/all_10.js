@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['vector2',['Vector2',['../struct_vector2.html',1,'']]],
-  ['velocity',['velocity',['../structsprite.html#ab173eafbd76f9d340b5dd1accfeb27e7',1,'sprite']]],
-  ['visible',['visible',['../structsprite.html#aa54a57ae048476d840caf6d4d2c47aa3',1,'sprite']]]
+  ['uistate',['UIState',['../struct_u_i_state.html',1,'']]],
+  ['unregistercollider',['UnregisterCollider',['../sprite_8h.html#a24d58cb909cd08477fa79222e8ca43fa',1,'sprite.c']]],
+  ['update',['Update',['../structsprite.html#a65aecabef159e14ffa795c3775239e7f',1,'sprite']]]
 ];
