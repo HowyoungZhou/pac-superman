@@ -42,4 +42,20 @@ bool IsPaused();
  */
 void PushScene(Scene *scene);
 
+/**@brief 将当前场景从当前的 Scenes 栈中弹出。
+ *
+ * 注意：该方法可在一个渲染周期内被安全调用（通常为 Render, Animate 或 Update 方法中），然而在一个渲染周期内只允许弹出一个场景。
+ * 当在一个渲染周期多次调用该方法时只会弹出一个场景。
+ */
+void PopScene();
+
+/**@brief 用新场景替换当前场景。
+ *
+ * 注意：该方法可在一个渲染周期内被安全调用（通常为 Render, Animate 或 Update 方法中），然而在一个渲染周期内只允许替换一个场景。
+ * 当在一个渲染周期内第二次或更多次调用该方法时会失败并返回 false，请注意妥善处理未成功替换的场景（如调用析构函数）。
+ *
+ * @param newScene 新场景
+ * @return 是否成功替换场景
+ */
+bool ReplaceScene(Scene *newScene);
 #endif //PAC_SUPERMAN_ENGINE_H

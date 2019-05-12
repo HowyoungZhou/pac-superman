@@ -14,9 +14,11 @@ static void _uiGetChar(char c);
 
 static inline void _InitUI();
 
-static inline void _ClearScreen(Scene *current);
+static inline void _ClearScreen(string backColor);
 
 static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callback);
+
+static inline void _UpdateScene();
 
 static void _UpdateSprite(Sprite *sprite);
 
@@ -40,6 +42,8 @@ static LARGE_INTEGER _lastUpdated;
 static double _interval;
 
 static SceneStack _scenes = EMPTY_LINKED_LIST;
+static Scene *_newScene = NULL;
+static bool _popScene = false;
 static bool _paused = false;
 
 void InitEngine() {
@@ -73,6 +77,17 @@ void PushScene(Scene *scene) {
     AddElement(&_scenes, scene);
 }
 
+void PopScene() {
+    _popScene = true;
+}
+
+bool ReplaceScene(Scene *newScene) {
+    if (_newScene != NULL) return false;
+    _popScene = true;
+    _newScene = newScene;
+    return true;
+}
+
 static void _uiGetChar(char c) {
     uiGetChar(c);
 }
@@ -90,14 +105,20 @@ static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callb
 }
 
 static void _MainTimerHandler(int timerID) {
-    Scene *current = (Scene *) _scenes.tail->element;
+    _UpdateScene(); // 检测有无场景更新
+    Scene *current = (Scene *) GetLastElement(&_scenes);
     switch (timerID) {
         case RENDERER_TIMER_ID:
-            _ClearScreen(current);
+            if (current == NULL) {
+                _ClearScreen("Black"); // 无场景时显示黑色背景
+                break;
+            }
+            _ClearScreen(current->backColor);
             _ForEachSprite(&current->gameSprites, _RenderSprite);
             _ForEachSprite(&current->uiSprites, _RenderSprite);
             break;
         case PHYSICAL_ENGINE_TIMER_ID:
+            if (current == NULL) break;
             _UpdateInterval();
             _ForEachSprite(&current->gameSprites, _UpdateAnimator); // 更新动画器
             _ForEachSprite(&current->gameSprites, _UpdateSprite); // 调用 Sprite 的 Update 函数
@@ -107,6 +128,19 @@ static void _MainTimerHandler(int timerID) {
         default:
             break;
     }
+}
+
+static inline void _UpdateScene() {
+    if (!_popScene) return;
+    // 弹出当前场景
+    Scene *scene = PopElement(&_scenes);
+    if (scene != NULL) scene->Destruct(scene);
+    // 如果有新场景则加载新场景
+    if (_newScene != NULL) {
+        PushScene(_newScene);
+        _newScene = NULL;
+    }
+    _popScene = false;
 }
 
 static void _UpdateSprite(Sprite *sprite) {
@@ -151,8 +185,8 @@ static void _RenderSprite(Sprite *sprite) {
     RestoreGraphicsState(); // 恢复图形库状态
 }
 
-static inline void _ClearScreen(Scene *current) {
-    SetPenColor(current->backColor);
+static inline void _ClearScreen(string backColor) {
+    SetPenColor(backColor);
     StartFilledRegion(1.);
     DrawRectangle(0, 0, GetWindowWidth(), GetWindowHeight());
     EndFilledRegion();
