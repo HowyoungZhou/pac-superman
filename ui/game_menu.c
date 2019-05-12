@@ -59,6 +59,8 @@ Sprite *ConstructGameMenuSprite() {
                                            "How To Play?",
                                            "About");
     Menu *menu = ConstructMenu(2, gameMenu, helpMenu);
+    menu->heightRatio = 2.;
+    menu->style = (Style) {"Wall", "White", "White", "Wall", true};
     Sprite *obj = ConstructMenuSprite(menu);
     return obj;
 }

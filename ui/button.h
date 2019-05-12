@@ -5,12 +5,14 @@
 #define PAC_SUPERMAN_BUTTON_H
 
 #include <genlib.h>
+#include "style.h"
 
 typedef void (*OnClickCallback)(Sprite *button);
 
 typedef struct {
     int id;
     string label;
+    Style style;
     OnClickCallback OnClick;
 } Button;
 

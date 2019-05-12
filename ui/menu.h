@@ -2,6 +2,7 @@
 #define PAC_SUPERMAN_MENU_H
 
 #include <genlib.h>
+#include "style.h"
 
 struct MenuList;
 
@@ -21,6 +22,7 @@ typedef struct MenuList {
 typedef struct {
     unsigned int listsCount;
     double heightRatio;
+    Style style;
     MenuList *lists[];
 } Menu;
 

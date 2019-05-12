@@ -4,7 +4,7 @@
 #include <engine.h>
 #include <controller.h>
 
-#include "test_scene.h"
+#include "game_scene.h"
 
 void Main() {
     InitConsole();

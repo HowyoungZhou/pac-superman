@@ -13,7 +13,7 @@ set(SOURCE_FILES libgraphics/exceptio.c libgraphics/genlib.c libgraphics/graphic
         sprites/pellet.c sprites/pellet.h utils/colors.c utils/colors.h ui/imgui.c utils/linked_list.c
         utils/linked_list.h ui/button.c ui/button.h utils/events.c utils/events.h ui/menu.c ui/menu.h
         ui/game_menu.c ui/game_menu.h sprites/pacman_sprite.c sprites/pacman_sprite.h engine/scene.c
-        engine/scene.h scenes/test_scene.c scenes/test_scene.h)
+        engine/scene.h scenes/game_scene.c scenes/game_scene.h ui/style.h)
 
 include_directories(libgraphics)
 include_directories(engine)
