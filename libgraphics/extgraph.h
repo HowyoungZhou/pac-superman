@@ -12,6 +12,8 @@
 #ifndef _extgraph_h
 #define _extgraph_h
 
+#include <assets.h>
+#include <vector2.h>
 #include "genlib.h"
 
 /* Exported functions */
@@ -493,4 +495,6 @@ double GetYResolution(void);
 double ScaleXInches(int x);
 double ScaleYInches(int y);
 
+/*Draw bitmap*/
+void DrawBitmap(HDC mdc, double x, double y, double width, double height, int wSrc, int hSrc);
 #endif

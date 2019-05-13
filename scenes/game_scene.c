@@ -6,6 +6,7 @@
 #include <game_menu.h>
 #include <vector2.h>
 #include <engine.h>
+#include <example_bitmap_sprite.h>
 #include "game_scene.h"
 
 void PauseCallback(Sprite *button) {
@@ -25,6 +26,7 @@ void ResetCallback(Sprite *button) {
 void _Initialize(Scene *scene) {
     //AddGameSprite(scene, ConstructExampleControllableSprite());
     //AddGameSprite(scene, ConstructPellet((Vector2) {1, 1}, (Vector2) {0.1, 0.1}));
+    AddGameSprite(scene, ConstructExampleBitmapSprite());
     AddGameSprite(scene, ConstructPacmanSprite());
     //AddUISprite(scene, ConstructButtonSprite(1, (Vector2) {1, 2}, (Vector2) {1, 0.6}, "Pause", PauseCallback));
     //AddUISprite(scene, ConstructButtonSprite(2, (Vector2) {2.5, 2}, (Vector2) {1, 0.6}, "Reset", ResetCallback));

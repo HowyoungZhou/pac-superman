@@ -17,6 +17,8 @@
 #include <time.h>
 #include <wincon.h>
 #include <Windows.h>
+#include <assets.h>
+#include <vector2.h>
 
 #include "genlib.h"
 #include "gcalloc.h"
@@ -264,7 +266,7 @@ static void DisplayExit(void);
 static HWND FindConsoleWindow(void);
 static BOOL CALLBACK EnumerateProc(HWND window, LPARAM clientData);
 static void RegisterWindowClass(void);
-static LONG FAR PASCAL GraphicsEventProc(HWND w, UINT msg,
+static LRESULT FAR PASCAL GraphicsEventProc(HWND w, UINT msg,
                                          WPARAM p1, LPARAM p2);
 static void CheckEvents(void);
 static void DoUpdate(void);
@@ -746,6 +748,12 @@ double GetYResolution(void)
     return (ydpi);
 }
 
+/* Section 8 -- Bitmap support */
+
+void DrawBitmap(HDC mdc, double x, double y, double width, double height, int wSrc, int hSrc) {
+    StretchBlt(osdc, ScaleX(x), ScaleY(y + height), PixelsX(width), PixelsY(height), mdc, 0, 0, wSrc, hSrc, SRCCOPY);
+}
+
 /* Private functions */
 
 /*
@@ -852,11 +860,11 @@ static void InitDisplay(void)
     SetRectFromSize(&graphicsRect, LeftMargin, TopMargin,
                     PixelsX(windowWidth), PixelsY(windowHeight));
     style = WS_OVERLAPPEDWINDOW & ~(WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
-    
+
     g_keyboard = NULL;
 	g_mouse = NULL;
 	g_timer = NULL;
-    
+
     wndcls.cbClsExtra = 0;
     wndcls.cbWndExtra = 0;
     wndcls.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
@@ -867,22 +875,22 @@ static void InitDisplay(void)
     wndcls.lpszClassName = "Graphics Window";
     wndcls.lpszMenuName = NULL;
     wndcls.style = CS_HREDRAW | CS_VREDRAW;
-    
+
     RegisterClass(&wndcls);
-    
+
     graphicsWindow = CreateWindow(
       GWClassName,
-      windowTitle, 
+      windowTitle,
       style,
-      graphicsRect.left, 
+      graphicsRect.left,
       graphicsRect.top,
-      RectWidth(&graphicsRect), 
+      RectWidth(&graphicsRect),
       RectHeight(&graphicsRect),
-      /*consoleWindow*/ NULL, 
-      (HMENU) NULL, 
+      /*consoleWindow*/ NULL,
+      (HMENU) NULL,
       (HINSTANCE) NULL,
       (LPSTR) NULL);
-      
+
     if (graphicsWindow == NULL) {
         printf("InitGraphics: CreateGraphicsWindow failed.\n");
     }
@@ -897,13 +905,13 @@ static void InitDisplay(void)
     GetClientRect(graphicsWindow, &bounds);
     pixelWidth = RectWidth(&bounds);
     pixelHeight = RectHeight(&bounds);
-    
+
     ShowWindow(graphicsWindow, SW_SHOWNORMAL);
-    
+
     UpdateWindow(graphicsWindow);
-    
+
     osdc = CreateCompatibleDC(gdc);
-    
+
     if (osdc == NULL) {
         Error("Internal error: Can't create offscreen device");
     }
@@ -912,7 +920,7 @@ static void InitDisplay(void)
         Error("Internal error: Can't create offscreen bitmap");
     }
     (void) SelectObject(osdc, osBits);
-    
+
     top = TopMargin + WindowSep + PixelsY(windowHeight) + dy;
     /*
     SetRectFromSize(&consoleRect, LeftMargin, top,
@@ -1067,7 +1075,7 @@ static void RegisterWindowClass(void)
  * is the paint event, which forces a screen update.
  */
 
-static LONG FAR PASCAL GraphicsEventProc(HWND hwnd, UINT msg,
+static LRESULT FAR PASCAL GraphicsEventProc(HWND hwnd, UINT msg,
                                          WPARAM wParam, LPARAM lParam)
 {
     switch(msg)
@@ -1075,7 +1083,7 @@ static LONG FAR PASCAL GraphicsEventProc(HWND hwnd, UINT msg,
         case WM_PAINT:
              DoUpdate();
              return 0;
-             
+
         case WM_CHAR:
     		if (g_char != NULL)
     			g_char((char) wParam);
@@ -1085,62 +1093,62 @@ static LONG FAR PASCAL GraphicsEventProc(HWND hwnd, UINT msg,
     		if (g_keyboard != NULL)
     			g_keyboard((int) wParam,KEY_DOWN);
     		return 0;
-    
+
     	case WM_KEYUP:
     		if(g_keyboard != NULL)
     			g_keyboard((int) wParam,KEY_UP);
     		return 0;
-    
+
     	case WM_LBUTTONDOWN:
     		if (g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), LEFT_BUTTON, BUTTON_DOWN);
     		return 0;
-    
+
     	case WM_LBUTTONUP:
     		if (g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), LEFT_BUTTON, BUTTON_UP);
     		return 0;
-    
+
     	case WM_LBUTTONDBLCLK:
     		if (g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), LEFT_BUTTON, BUTTON_DOUBLECLICK);
     		return 0;
-    
+
     	case WM_MBUTTONDOWN:
     		if (g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), MIDDLE_BUTTON, BUTTON_DOWN);
     		return 0;
-    
+
     	case WM_MBUTTONUP:
     		if (g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), MIDDLE_BUTTON, BUTTON_UP);
     		return 0;
-    
+
     	case WM_MBUTTONDBLCLK:
     		if (g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), MIDDLE_BUTTON, BUTTON_DOUBLECLICK);
     		return 0;
-    
+
     	case WM_RBUTTONDOWN:
     		if (g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), RIGHT_BUTTON, BUTTON_DOWN);
     		return 0;
-    
+
     	case WM_RBUTTONUP:
     		if (g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), RIGHT_BUTTON, BUTTON_UP);
     		return 0;
-    
+
     	case WM_RBUTTONDBLCLK:
     		if (g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), RIGHT_BUTTON, BUTTON_DOUBLECLICK);
     		return 0;
-    
+
     	case WM_MOUSEMOVE:
     		if(g_mouse != NULL)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam), MOUSEMOVE, MOUSEMOVE);
     		return 0;
-    
+
     	case WM_MOUSEWHEEL:
     		if(g_mouse == NULL)
     			return 0;
@@ -1149,7 +1157,7 @@ static LONG FAR PASCAL GraphicsEventProc(HWND hwnd, UINT msg,
     		else if(HIWORD(wParam)==65416)
     			g_mouse((int) LOWORD(lParam), (int) HIWORD(lParam),MIDDLE_BUTTON,ROLL_DOWN);
     		return 0;
-    
+
     	case WM_TIMER:
     		if (g_timer != NULL)
     			g_timer(wParam);
@@ -1161,7 +1169,7 @@ static LONG FAR PASCAL GraphicsEventProc(HWND hwnd, UINT msg,
             return 1;
         default:
             return DefWindowProc(hwnd, msg, wParam, lParam);
-    }                                     
+    }
 
 /*
     if (msg == WM_PAINT) {
@@ -1924,7 +1932,7 @@ int WINAPI WinMain (HINSTANCE hThisInstance,
 
 {
     MSG messages;            /* Here messages to the application are saved */
-    
+
     Main();
 
     /* Run the message loop. It will run until GetMessage() returns 0 */
@@ -1993,7 +2001,7 @@ double ScaleXInches(int x) /*x coordinate from pixels to inches*/
 {
  	  return (double)x/GetXResolution();
 }
-	   
+
 double ScaleYInches(int y)/*y coordinate from pixels to inches*/
 {
  	  return GetWindowHeight()-(double)y/GetYResolution();
