@@ -19,7 +19,7 @@ static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame) {
     double _angle;
 
     StartFilledRegion(0);
-    _angle = frame * ANGLE / 4 + DIRECTION * ANGLE * 3;
+    _angle = frame * ANGLE / 4 + VAngle(sprite->velocity);
     TurnPolarAngleTo(_angle);
     MovePen(sprite->position.x+sprite->size.x/2, sprite->position.y+sprite->size.y/2);
     MovePolarPen(PACMAN_SIZE / 2);
