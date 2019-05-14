@@ -3,7 +3,16 @@
 #include <extgraph.h>
 #include "assets.h"
 
-BitmapAsset *LoadBitmapAsset(string path) {
+#ifdef NDEBUG
+static string _assetsRoot = "assets/";
+#else
+static string _assetsRoot = "../assets/";
+#endif
+
+BitmapAsset *LoadBitmapAsset(string file) {
+    char path[MAX_PATH];
+    strcpy(path, _assetsRoot);
+    strcat(path, file);
     // 加载图像
     HBITMAP hbmp = LoadImage(NULL, path, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     if (hbmp == NULL)return NULL;
@@ -36,11 +45,21 @@ BitmapAsset *LoadBitmapAsset(string path) {
 }
 
 void DrawBitmapAsset(BitmapAsset *asset, Vector2 position, Vector2 size) {
+    if (asset == NULL) Error("DrawBitmapAsset: asset can not be NULL.");
     DrawBitmap(asset->mdc, position.x, position.y, size.x, size.y, asset->width, asset->height);
 }
 
 void FreeBitmapAsset(BitmapAsset *asset) {
+    if (asset == NULL) Error("FreeBitmapAsset: asset can not be NULL.");
     DeleteObject(asset->hbmp);
     DeleteDC(asset->mdc);
     free(asset);
+}
+
+string GetAssetsRootPath() {
+    return _assetsRoot;
+}
+
+void SetAssetsRootPath(string path) {
+    _assetsRoot = path;
 }

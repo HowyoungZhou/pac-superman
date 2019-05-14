@@ -18,14 +18,15 @@ typedef struct {
 
 /**@brief 从文件中加载位图资源。
  *
- * @param path 位图的路径
+ * @param file 位图的路径
  * @return 如果加载成功则返回 BitmapAsset 对象，否则返回 NULL
  */
-BitmapAsset *LoadBitmapAsset(string path);
+BitmapAsset *LoadBitmapAsset(string file);
 
 /**@brief 在指定位置以指定大小绘制位图。
  *
- * 如果指定大小与绘制大小不相符，那么图像会被拉伸。
+ * 如果指定大小与位图原大小不相符，那么图像会被拉伸。
+ *
  * @param asset BitmapAsset 对象
  * @param position 绘制位图的位置
  * @param size 绘制位图的大小
@@ -37,5 +38,19 @@ void DrawBitmapAsset(BitmapAsset *asset, Vector2 position, Vector2 size);
  * @param asset BitmapAsset 对象
  */
 void FreeBitmapAsset(BitmapAsset *asset);
+
+/**@brief 获取资源文件夹根目录。
+ *
+ * @return 资源文件夹根目录
+ */
+string GetAssetsRootPath();
+
+/**@brief 修改资源文件夹根目录。
+ *
+ * 这不会影响已加载的 Asset。
+ *
+ * @param path 资源文件夹根目录
+ */
+void SetAssetsRootPath(string path);
 
 #endif //PAC_SUPERMAN_ASSETS_H
