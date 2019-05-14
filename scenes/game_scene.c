@@ -25,7 +25,7 @@ void ResetCallback(Sprite *button) {
 
 void _Initialize(Scene *scene) {
     //AddGameSprite(scene, ConstructExampleControllableSprite());
-    //AddGameSprite(scene, ConstructPellet((Vector2) {1, 1}, (Vector2) {0.1, 0.1}));
+    AddGameSprite(scene, ConstructPellet((Vector2) {1, 1}, (Vector2) {0.1, 0.1}));
     AddGameSprite(scene, ConstructExampleBitmapSprite());
     AddGameSprite(scene, ConstructPacmanSprite());
     //AddUISprite(scene, ConstructButtonSprite(1, (Vector2) {1, 2}, (Vector2) {1, 0.6}, "Pause", PauseCallback));
