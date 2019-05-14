@@ -23,6 +23,8 @@ static inline double _CalcLargestStringWidth(string strings[], int n) {
 
 static void _Render(Sprite *this) {
     Menu *menu = this->property;
+    setMenuColors(menu->style.borderColor, menu->style.textColor, menu->style.highlightedBorderColor,
+                  menu->style.highlightedTextColor, menu->style.filled);
     drawMenuBar(this->position.x, this->position.y, this->size.x, this->size.y); // 绘制外边框
     double x = 0;
     for (int i = 0; i < menu->listsCount; i++) {
@@ -70,6 +72,7 @@ Menu *ConstructMenu(unsigned int listsCount, ...) {
         obj->lists[i] = va_arg(lists, MenuList*);
     }
     va_end(lists);
+    obj->style = DEFAULT_STYLE;
     obj->listsCount = listsCount;
     obj->heightRatio = 1.5;
     return obj;

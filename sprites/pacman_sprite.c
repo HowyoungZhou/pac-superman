@@ -8,7 +8,7 @@
 
 #define ANGLE 30
 #define DIRECTION 0
-#define size 0.5
+#define PACMAN_SIZE 0.5
 #define SPEED 1
 
 static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame);
@@ -16,19 +16,18 @@ static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame);
 static void _Update(Sprite *this, double interval);
 
 static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame) {
-
     double _angle;
 
     StartFilledRegion(0);
-    _angle = frame * ANGLE / 4 + DIRECTION * ANGLE * 3 ;
+    _angle = frame * ANGLE / 4 + DIRECTION * ANGLE * 3;
     TurnPolarAngleTo(_angle);
-    MovePen(sprite -> position.x + 3, sprite -> position.y + 3);
-    MovePolarPen(size/2);
-    DrawArc((size)/2, _angle, 360 - frame * ANGLE /2);
+    MovePen(sprite->position.x+sprite->size.x/2, sprite->position.y+sprite->size.y/2);
+    MovePolarPen(PACMAN_SIZE / 2);
+    DrawArc((PACMAN_SIZE) / 2, _angle, 360 - frame * ANGLE / 2);
     TurnPolarAngle(180 - frame * ANGLE / 2);
-    DrawPolarLine(size/2);
+    DrawPolarLine(PACMAN_SIZE / 2);
     TurnPolarAngle(frame * ANGLE / 2 - 180);
-    DrawPolarLine(size/2);
+    DrawPolarLine(PACMAN_SIZE / 2);
 
     EndFilledRegion();
 }
@@ -48,7 +47,7 @@ Sprite *ConstructPacmanSprite() {
         animator->intervals[i] = 80;
     animator->Animate = _AnimatedPacmanSprite;
     obj->Update = _Update;
-
+    RegisterCircleCollider(obj, DEFAULT_COLLIDER_ID, true, CalcRelativeCentre(obj), CalcIncircleRadius(obj));
     return obj;
 }
 

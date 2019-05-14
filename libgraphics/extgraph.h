@@ -485,12 +485,17 @@ void SetWindowSize(double width, double height);
  * draws a line from the current point to the point two pixels
  * further right, which results in a line of three pixels.
  */
- 
+
 double GetXResolution(void);
 double GetYResolution(void);
- 
+
 /*pixels to inches*/
 double ScaleXInches(int x);
 double ScaleYInches(int y);
+
+/*Draw bitmap*/
+#include <windef.h>
+
+void DrawBitmap(HDC mdc, double x, double y, double width, double height, int wSrc, int hSrc);
 
 #endif

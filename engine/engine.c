@@ -6,6 +6,7 @@
 #include "engine.h"
 #include "sprite.h"
 #include "drawing.h"
+#include "scene.h"
 
 typedef void (*ForEachSpriteCallback)(Sprite *sprite);
 
@@ -13,15 +14,15 @@ static void _uiGetChar(char c);
 
 static inline void _InitUI();
 
-static inline void _ClearScreen();
+static inline void _ClearScreen(string backColor);
 
 static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callback);
 
-static void _DestructSprite(void *sprite);
+static inline void _UpdateScene();
 
 static void _UpdateSprite(Sprite *sprite);
 
-static void _DetectCollision();
+static void _DetectCollision(Scene *current);
 
 static void _UpdatePosition(Sprite *sprite);
 
@@ -40,9 +41,9 @@ static LARGE_INTEGER _frequency;
 static LARGE_INTEGER _lastUpdated;
 static double _interval;
 
-static SpritesList _spritesList = {NULL, NULL, 0};
-static SpritesList _uiSpritesList = {NULL, NULL, 0};
-
+static SceneStack _scenes = EMPTY_LINKED_LIST;
+static Scene *_newScene = NULL;
+static bool _popScene = false;
 static bool _paused = false;
 
 void InitEngine() {
@@ -53,22 +54,6 @@ void InitEngine() {
     startTimer(RENDERER_TIMER_ID, RENDERER_TIMER_INTERVAL);
     startTimer(PHYSICAL_ENGINE_TIMER_ID, PHYSICAL_ENGINE_TIMER_INTERVAL);
     _InitUI();
-}
-
-void RegisterSprite(Sprite *sprite) {
-    AddElement(&_spritesList, sprite);
-}
-
-void RegisterUISprite(Sprite *uiSprite) {
-    AddElement(&_uiSpritesList, uiSprite);
-}
-
-void ClearSprites() {
-    ClearList(&_spritesList, _DestructSprite);
-}
-
-void ClearUISprites() {
-    ClearList(&_uiSpritesList, _DestructSprite);
 }
 
 void PauseGame() {
@@ -87,6 +72,22 @@ bool IsPaused() {
     return _paused;
 }
 
+void PushScene(Scene *scene) {
+    scene->Initialize(scene);
+    AddElement(&_scenes, scene);
+}
+
+void PopScene() {
+    _popScene = true;
+}
+
+bool ReplaceScene(Scene *newScene) {
+    if (_newScene != NULL) return false;
+    _popScene = true;
+    _newScene = newScene;
+    return true;
+}
+
 static void _uiGetChar(char c) {
     uiGetChar(c);
 }
@@ -103,27 +104,43 @@ static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callb
     }
 }
 
-static void _DestructSprite(void *sprite) {
-    ((Sprite *) sprite)->Destruct(sprite);
-}
-
 static void _MainTimerHandler(int timerID) {
+    _UpdateScene(); // 检测有无场景更新
+    Scene *current = (Scene *) GetLastElement(&_scenes);
     switch (timerID) {
         case RENDERER_TIMER_ID:
-            _ClearScreen();
-            _ForEachSprite(&_spritesList, _RenderSprite);
-            _ForEachSprite(&_uiSpritesList, _RenderSprite);
+            if (current == NULL) {
+                _ClearScreen("Black"); // 无场景时显示黑色背景
+                break;
+            }
+            _ClearScreen(current->backColor);
+            _ForEachSprite(&current->gameSprites, _RenderSprite);
+            _ForEachSprite(&current->uiSprites, _RenderSprite);
             break;
         case PHYSICAL_ENGINE_TIMER_ID:
+            if (current == NULL) break;
             _UpdateInterval();
-            _ForEachSprite(&_spritesList, _UpdateAnimator); // 更新动画器
-            _ForEachSprite(&_spritesList, _UpdateSprite); // 调用 Sprite 的 Update 函数
-            _DetectCollision(); // 碰撞检测
-            _ForEachSprite(&_spritesList, _UpdatePosition); // 更新位置
+            _ForEachSprite(&current->gameSprites, _UpdateAnimator); // 更新动画器
+            _ForEachSprite(&current->gameSprites, _UpdateSprite); // 调用 Sprite 的 Update 函数
+            _DetectCollision(current); // 碰撞检测
+            _ForEachSprite(&current->gameSprites, _UpdatePosition); // 更新位置
             break;
         default:
             break;
     }
+}
+
+static inline void _UpdateScene() {
+    if (!_popScene) return;
+    // 弹出当前场景
+    Scene *scene = PopElement(&_scenes);
+    if (scene != NULL) scene->Destruct(scene);
+    // 如果有新场景则加载新场景
+    if (_newScene != NULL) {
+        PushScene(_newScene);
+        _newScene = NULL;
+    }
+    _popScene = false;
 }
 
 static void _UpdateSprite(Sprite *sprite) {
@@ -131,8 +148,8 @@ static void _UpdateSprite(Sprite *sprite) {
     sprite->Update(sprite, _interval);
 }
 
-static void _DetectCollision() {
-    for (SpritesListNode *s1 = _spritesList.head; s1 != NULL; s1 = s1->next) {
+static void _DetectCollision(Scene *current) {
+    for (SpritesListNode *s1 = current->gameSprites.head; s1 != NULL; s1 = s1->next) {
         for (SpritesListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
             DetectCollision(s1->element, s2->element, _interval);
         }
@@ -154,6 +171,7 @@ static void _RenderSprite(Sprite *sprite) {
     if (!sprite->visible)return;
     SaveGraphicsState(); // 保存当前图形库状态避免不同 Sprite 之间干扰
     MovePen(sprite->position.x, sprite->position.y);
+    SetPenColor(sprite->foreColor);
     // 如果 Sprite 有动画则渲染动画
     if (sprite->hasAnimation) {
         Animator *animator = sprite->renderer.animator;
@@ -167,12 +185,11 @@ static void _RenderSprite(Sprite *sprite) {
     RestoreGraphicsState(); // 恢复图形库状态
 }
 
-static inline void _ClearScreen() {
-    SetEraseMode(TRUE);
+static inline void _ClearScreen(string backColor) {
+    SetPenColor(backColor);
     StartFilledRegion(1.);
     DrawRectangle(0, 0, GetWindowWidth(), GetWindowHeight());
     EndFilledRegion();
-    SetEraseMode(FALSE);
 }
 
 static inline double _UpdateInterval() {

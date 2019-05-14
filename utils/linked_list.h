@@ -24,11 +24,15 @@ typedef struct linkedList {
 
 void AddElement(LinkedList *list, void *element);
 
+void *PopElement(LinkedList *list);
+
 void *RemoveElement(LinkedList *list, void *element, ElementComparer comparer);
 
 void ClearList(LinkedList *list, ElementDestructor destruct);
 
 void ForEachElement(LinkedList *list, ForEachElementCallback callback);
+
+void *GetLastElement(const LinkedList *list);
 
 int PointerComparer(void *e1, void *e2);
 
