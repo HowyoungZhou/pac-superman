@@ -18,7 +18,7 @@ static void _Update(Sprite *this, double interval);
 static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame) {
     double _angle;
 
-    StartFilledRegion(0);
+    StartFilledRegion(1.);
     _angle = frame * ANGLE / 4 + DIRECTION * ANGLE * 3;
     TurnPolarAngleTo(_angle);
     MovePen(sprite->position.x+sprite->size.x/2, sprite->position.y+sprite->size.y/2);
@@ -39,14 +39,16 @@ static void _Update(Sprite *this, double interval) {
 
 Sprite *ConstructPacmanSprite() {
     Sprite *obj = ConstructSprite((Vector2) {0, 0.5}, (Vector2) {0.5, 0.5}, (Vector2) {0, 0});
-    obj->hasAnimation = true;
+
     Animator *animator = ConstructAnimator(5);
-    obj->renderer.animator = animator;
+    for (int i = 0; i < 5; i++) animator->intervals[i] = 80;
     animator->reverse = true;
-    for (int i = 0; i < 5; i++)
-        animator->intervals[i] = 80;
     animator->Animate = _AnimatedPacmanSprite;
+
+    obj->hasAnimation = true;
+    obj->renderer.animator = animator;
     obj->Update = _Update;
+    obj->foreColor = "PacMan";
     RegisterCircleCollider(obj, DEFAULT_COLLIDER_ID, true, CalcRelativeCentre(obj), CalcIncircleRadius(obj));
     return obj;
 }

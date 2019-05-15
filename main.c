@@ -12,6 +12,6 @@ void Main() {
     InitEvents();
     DefineColors();
     InitController();
-    PushScene(ConstructTestScene());
+    PushScene(ConstructGameScene());
     InitEngine();
 }
