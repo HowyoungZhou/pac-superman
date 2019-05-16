@@ -7,9 +7,10 @@
 #include "pacman_sprite.h"
 
 #define ANGLE 30
-#define DIRECTION 0
 #define PACMAN_SIZE 0.5
 #define SPEED 1
+
+static int direction=0;
 
 static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame);
 
@@ -19,7 +20,19 @@ static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame) {
     double _angle;
 
     StartFilledRegion(0);
-    _angle = frame * ANGLE / 4 + VAngle(sprite->velocity);
+    if(sprite->velocity.x>0){
+        direction = 0;
+    }
+    else if(sprite->velocity.y>0){
+        direction = 1;
+    }
+    else if(sprite->velocity.x<0){
+        direction = 2;
+    }
+    else if(sprite->velocity.y<0){
+        direction = 3;
+    }
+    _angle = frame * ANGLE / 4 + direction * 90;
     TurnPolarAngleTo(_angle);
     MovePen(sprite->position.x+sprite->size.x/2, sprite->position.y+sprite->size.y/2);
     MovePolarPen(PACMAN_SIZE / 2);
