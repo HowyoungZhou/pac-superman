@@ -16,6 +16,27 @@ typedef struct {
     int height;
 } BitmapAsset;
 
+typedef struct {
+    unsigned int width;
+    unsigned int height;
+    BitmapAsset *image;
+    short tiles[];
+} TiledMapAsset;
+
+/**@brief 获取资源文件夹根目录。
+ *
+ * @return 资源文件夹根目录
+ */
+string GetAssetsRootPath();
+
+/**@brief 修改资源文件夹根目录。
+ *
+ * 这不会影响已加载的 Asset。
+ *
+ * @param path 资源文件夹根目录
+ */
+void SetAssetsRootPath(string path);
+
 /**@brief 从文件中加载位图资源。
  *
  * @param file 位图的路径
@@ -39,18 +60,20 @@ void DrawBitmapAsset(BitmapAsset *asset, Vector2 position, Vector2 size);
  */
 void FreeBitmapAsset(BitmapAsset *asset);
 
-/**@brief 获取资源文件夹根目录。
+/**@brief 加载由 Tiled Map Editor 创建的平铺地图。
  *
- * @return 资源文件夹根目录
+ * 应提供一个 Tiled Map Editor 创建的 csv 文件及一个可选的 bmp 文件。
+ *
+ * @param name 地图的名称，即 csv 文件的文件名
+ * @param loadImage 是否同时加载图像
+ * @return 如果加载成功则返回 TiledMapAsset 对象，否则返回 NULL
  */
-string GetAssetsRootPath();
+TiledMapAsset *LoadTiledMapAsset(string name, bool loadImage);
 
-/**@brief 修改资源文件夹根目录。
+/**@brief 释放平铺地图资源。
  *
- * 这不会影响已加载的 Asset。
- *
- * @param path 资源文件夹根目录
+ * @param asset TiledMapAsset 对象
  */
-void SetAssetsRootPath(string path);
+void FreeTiledMapAsset(TiledMapAsset *asset);
 
 #endif //PAC_SUPERMAN_ASSETS_H

@@ -1,6 +1,7 @@
 #include <genlib.h>
 #include <rpc.h>
 #include <extgraph.h>
+#include <linked_list.h>
 #include "assets.h"
 
 #ifdef NDEBUG
@@ -8,6 +9,16 @@ static string _assetsRoot = "assets/";
 #else
 static string _assetsRoot = "../assets/";
 #endif
+
+static bool _LoadMap(string path, LinkedList *output, unsigned int *height);
+
+string GetAssetsRootPath() {
+    return _assetsRoot;
+}
+
+void SetAssetsRootPath(string path) {
+    _assetsRoot = path;
+}
 
 BitmapAsset *LoadBitmapAsset(string file) {
     char path[MAX_PATH];
@@ -56,10 +67,72 @@ void FreeBitmapAsset(BitmapAsset *asset) {
     free(asset);
 }
 
-string GetAssetsRootPath() {
-    return _assetsRoot;
+static bool _LoadMap(string path, LinkedList *output, unsigned int *height) {
+    FILE *fp = fopen(path, "r");
+    if (fp == NULL) return false;
+    unsigned int h = 0;
+    short num = 0, sign = 1;
+    char ch;
+    while ((ch = fgetc(fp)) != EOF) {
+        switch (ch) {
+            case '-':
+                sign = -1;
+                break;
+            case '\n':
+                h++;
+            case ',':;
+                short *pnum = malloc(sizeof(short));
+                *pnum = sign * num;
+                AddElement(output, pnum);
+                sign = 1;
+                num = 0;
+                break;
+            default:
+                if (isdigit(ch)) {
+                    num = num * 10 + ch - '0';
+                }
+        }
+    }
+    *height = h;
+    if (fclose(fp)) return false;
+    return true;
 }
 
-void SetAssetsRootPath(string path) {
-    _assetsRoot = path;
+TiledMapAsset *LoadTiledMapAsset(string name, bool loadImage) {
+    char mapPath[MAX_PATH];
+    strcpy(mapPath, _assetsRoot);
+    strcat(mapPath, name);
+    strcat(mapPath, ".csv");
+
+    unsigned int height;
+    LinkedList list = EMPTY_LINKED_LIST;
+    if (!_LoadMap(mapPath, &list, &height) || list.length == 0) return NULL;
+
+    TiledMapAsset *obj = malloc(sizeof(TiledMapAsset) + list.length * sizeof(short));
+    int i = 0;
+    LinkedListNode *node = list.head;
+    for (; i < list.length && node != NULL; i++, node = node->next) {
+        obj->tiles[i] = *(int *) node->element;
+    }
+    obj->height = height;
+    obj->width = list.length / height;
+    ClearList(&list, free);
+
+    if (loadImage) {
+        char imagePath[MAX_PATH];
+        strcpy(imagePath, _assetsRoot);
+        strcat(imagePath, name);
+        strcat(imagePath, ".bmp");
+        BitmapAsset *image = LoadBitmapAsset(imagePath);
+        if (image == NULL)return NULL;
+        obj->image = image;
+    }
+
+    return obj;
+}
+
+void FreeTiledMapAsset(TiledMapAsset *asset) {
+    if (asset == NULL) Error("FreeTiledMapAsset: asset can not be NULL.");
+    if (asset->image != NULL)FreeBitmapAsset(asset->image);
+    free(asset);
 }
