@@ -2,7 +2,7 @@
 #include <sprite.h>
 #include <extgraph.h>
 #include <drawing.h>
-#include "pellet.h"
+#include "pellet_sprite.h"
 
 static void _Render(Sprite *this) {
     SetPenColor("Pellet");
