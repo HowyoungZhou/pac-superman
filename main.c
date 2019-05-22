@@ -4,7 +4,7 @@
 #include <engine.h>
 #include <controller.h>
 
-#include "game_scene.h"
+#include "game_home_scene.h"
 
 void Main() {
     InitConsole();
@@ -12,6 +12,6 @@ void Main() {
     InitEvents();
     DefineColors();
     InitController();
-    PushScene(ConstructTestScene());
+    PushScene(ConstructHomeScene());
     InitEngine();
 }

@@ -1,0 +1,6 @@
+#ifndef PAC_SUPERMAN_GAME_HOME_SCENE_H
+#define PAC_SUPERMAN_GAME_HOME_SCENE_H
+
+ Scene *ConstructHomeScene();
+
+#endif //PAC_SUPERMAN_GAME_HOME_SCENE_H

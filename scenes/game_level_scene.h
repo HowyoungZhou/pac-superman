@@ -1,0 +1,7 @@
+
+#ifndef PAC_SUPERMAN_GAME_LEVEL_SCENE_H
+#define PAC_SUPERMAN_GAME_LEVEL_SCENE_H
+
+Scene *ConstructLevelScene();
+
+#endif //PAC_SUPERMAN_GAME_LEVEL_SCENE_H
