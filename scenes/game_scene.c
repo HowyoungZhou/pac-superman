@@ -20,7 +20,7 @@ void _Initialize(Scene *scene) {
 //    double width = GetWindowWidth();
 //    AddGameSprite(scene, ConstructWallsSprite((width - height) / 2., height));
 
-    AddGameSprite(scene, ConstructMapSprite("maps/test", ZERO_VECTOR,
+    AddGameSprite(scene, ConstructMapSprite("maps/classic", "colliders_dict.tcd", ZERO_VECTOR,
                                             (Vector2) {GetWindowWidth(), GetWindowHeight() - menu->size.y}));
     AddGameSprite(scene, ConstructPellet((Vector2) {1, 1}, (Vector2) {0.1, 0.1}));
     AddGameSprite(scene, ConstructExampleBitmapSprite());

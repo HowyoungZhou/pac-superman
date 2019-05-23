@@ -8,6 +8,9 @@
 #include <genlib.h>
 #include <windef.h>
 #include <vector2.h>
+#include "collider.h"
+
+#define MAX_LINE_LENGTH 1000
 
 typedef struct {
     HBITMAP hbmp;
@@ -22,6 +25,11 @@ typedef struct {
     BitmapAsset *image;
     short tiles[];
 } TiledMapAsset;
+
+typedef struct {
+    unsigned int length;
+    Collider colliders[];
+} TileCollidersDictAsset;
 
 /**@brief 获取资源文件夹根目录。
  *
@@ -64,16 +72,49 @@ void FreeBitmapAsset(BitmapAsset *asset);
  *
  * 应提供一个 Tiled Map Editor 创建的 csv 文件及一个可选的 bmp 文件。
  *
- * @param name 地图的名称，即 csv 文件的文件名
+ * @param file 地图的名称，即 csv 文件的文件名
  * @param loadImage 是否同时加载图像
  * @return 如果加载成功则返回 TiledMapAsset 对象，否则返回 NULL
  */
-TiledMapAsset *LoadTiledMapAsset(string name, bool loadImage);
+TiledMapAsset *LoadTiledMapAsset(string file, bool loadImage);
 
 /**@brief 释放平铺地图资源。
  *
  * @param asset TiledMapAsset 对象
  */
 void FreeTiledMapAsset(TiledMapAsset *asset);
+
+/**@brief 获取平铺地图某一位置上的 Tile ID。
+ *
+ * 坐标以左下角为原点。
+ *
+ * @param asset TiledMapAsset 对象
+ * @param x x 坐标
+ * @param y y 坐标
+ * @return (x, y) 位置上的 Tile ID
+ */
+short GetTileAt(TiledMapAsset *asset, unsigned int x, unsigned int y);
+
+/**@brief 加载平铺地图碰撞器配置资源。
+ *
+ * @param file 资源文件
+ * @return 如果加载成功则返回 TileCollidersDictAsset 对象，否则返回 NULL
+ */
+TileCollidersDictAsset *LoadTileCollidersDictAsset(string file);
+
+/**@brief 释放平铺地图碰撞器配置资源。
+ *
+ * @param asset TileCollidersDictAsset 对象
+ */
+void FreeTileCollidersDictAsset(TileCollidersDictAsset *asset);
+
+/**@brief 获取平铺地图碰撞器配置 (TileCollidersDict) 中某图块 ID 对应的碰撞器。
+ *
+ * @param dict TileCollidersDictAsset 对象
+ * @param id 图块 ID
+ * @param lengthOutput 用于输出查找到的碰撞器个数的变量地址
+ * @return 查找到的 Collider 数组
+ */
+Collider *FindCollidersInDict(TileCollidersDictAsset *dict, short id, int *lengthOutput);
 
 #endif //PAC_SUPERMAN_ASSETS_H

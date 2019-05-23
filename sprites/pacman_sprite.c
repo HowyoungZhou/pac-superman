@@ -8,7 +8,7 @@
 
 #define ANGLE 30
 #define DIRECTION 0
-#define PACMAN_SIZE 0.5
+#define PACMAN_SIZE 0.3
 #define SPEED 1
 
 static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame);
@@ -38,7 +38,7 @@ static void _Update(Sprite *this, double interval) {
 }
 
 Sprite *ConstructPacmanSprite() {
-    Sprite *obj = ConstructSprite((Vector2) {0, 0.5}, (Vector2) {0.5, 0.5}, (Vector2) {0, 0});
+    Sprite *obj = ConstructSprite((Vector2) {0, 0.5}, (Vector2) {0.3, 0.3}, (Vector2) {0, 0});
 
     Animator *animator = ConstructAnimator(5);
     for (int i = 0; i < 5; i++) animator->intervals[i] = 80;

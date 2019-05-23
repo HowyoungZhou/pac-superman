@@ -3,6 +3,7 @@
 #include <extgraph.h>
 #include <linked_list.h>
 #include "assets.h"
+#include "collider.h"
 
 #ifdef NDEBUG
 static string _assetsRoot = "assets/";
@@ -11,6 +12,10 @@ static string _assetsRoot = "../assets/";
 #endif
 
 static bool _LoadMap(string path, LinkedList *output, unsigned int *height);
+
+static bool _ReadDictFile(string path, LinkedList *output);
+
+static void _DestructCollider(void *collider);
 
 string GetAssetsRootPath() {
     return _assetsRoot;
@@ -98,15 +103,18 @@ static bool _LoadMap(string path, LinkedList *output, unsigned int *height) {
     return true;
 }
 
-TiledMapAsset *LoadTiledMapAsset(string name, bool loadImage) {
+TiledMapAsset *LoadTiledMapAsset(string file, bool loadImage) {
     char mapPath[MAX_PATH];
     strcpy(mapPath, _assetsRoot);
-    strcat(mapPath, name);
+    strcat(mapPath, file);
     strcat(mapPath, ".csv");
 
     unsigned int height;
     LinkedList list = EMPTY_LINKED_LIST;
-    if (!_LoadMap(mapPath, &list, &height) || list.length == 0) return NULL;
+    if (!_LoadMap(mapPath, &list, &height) || list.length == 0) {
+        ClearList(&list, free);
+        return NULL;
+    }
 
     TiledMapAsset *obj = malloc(sizeof(TiledMapAsset) + list.length * sizeof(short));
     int i = 0;
@@ -121,7 +129,7 @@ TiledMapAsset *LoadTiledMapAsset(string name, bool loadImage) {
     if (loadImage) {
         char imagePath[MAX_PATH];
         strcpy(imagePath, _assetsRoot);
-        strcat(imagePath, name);
+        strcat(imagePath, file);
         strcat(imagePath, ".bmp");
         BitmapAsset *image = LoadBitmapAsset(imagePath);
         if (image == NULL)return NULL;
@@ -135,4 +143,91 @@ void FreeTiledMapAsset(TiledMapAsset *asset) {
     if (asset == NULL) Error("FreeTiledMapAsset: asset can not be NULL.");
     if (asset->image != NULL)FreeBitmapAsset(asset->image);
     free(asset);
+}
+
+short GetTileAt(TiledMapAsset *asset, unsigned int x, unsigned int y) {
+    return asset->tiles[(asset->height - 1 - y) * asset->width + x];
+}
+
+static bool _ReadDictFile(string path, LinkedList *output) {
+    FILE *fp = fopen(path, "r");
+    if (fp == NULL) return false;
+    char line[MAX_LINE_LENGTH];
+
+    while (fgets(line, MAX_LINE_LENGTH, fp) != NULL) {
+        int id, pos = 0, dpos;
+        char type;
+        if (sscanf(line + pos, "%d%n", &id, &dpos) != 1) return false;
+        pos += dpos;
+        while (sscanf(line + pos, " %c%n", &type, &dpos) == 1) {
+            pos += dpos;
+            switch (type) {
+                case 'B':;
+                    double x, y, width, height;
+                    if (sscanf(line + pos, "%lf %lf %lf %lf%n", &x, &y, &width, &height, &dpos) != 4)return false;
+                    pos += dpos;
+                    Collider *bCollider = ConstructCollider(id, BOX_COLLIDER, true);
+                    bCollider->shape.boxCollider = (BoxCollider) {(Vector2) {width, height}, (Vector2) {x, y}};
+                    AddElement(output, bCollider);
+                    break;
+                case 'C':;
+                    double cx, cy, radius;
+                    if (sscanf(line + pos, "%lf %lf %lf%n", &cx, &cy, &radius, &dpos) != 3)return false;
+                    pos += dpos;
+                    Collider *cCollider = ConstructCollider(id, CIRCLE_COLLIDER, true);
+                    cCollider->shape.circleCollider = (CircleCollider) {(Vector2) {cx, cy}, radius};
+                    AddElement(output, cCollider);
+                    break;
+                default:
+                    return false;
+            }
+        }
+    }
+    if (fclose(fp)) return false;
+    return true;
+}
+
+static void _DestructCollider(void *collider) {
+    DestructCollider(collider);
+}
+
+TileCollidersDictAsset *LoadTileCollidersDictAsset(string file) {
+    char dictPath[MAX_PATH];
+    strcpy(dictPath, _assetsRoot);
+    strcat(dictPath, file);
+
+    LinkedList list = EMPTY_LINKED_LIST;
+    if (!_ReadDictFile(dictPath, &list)) {
+        ClearList(&list, _DestructCollider);
+        return NULL;
+    }
+
+    TileCollidersDictAsset *asset = malloc(sizeof(TileCollidersDictAsset) + list.length * sizeof(Collider));
+    asset->length = list.length;
+    LinkedListNode *node = list.head;
+    int i = 0;
+    for (; node != NULL && i < list.length; node = node->next, i++) {
+        asset->colliders[i] = *(Collider *) node->element;
+    }
+    ClearList(&list, _DestructCollider);
+
+    return asset;
+}
+
+void FreeTileCollidersDictAsset(TileCollidersDictAsset *asset) {
+    if (asset == NULL) Error("TileCollidersDictAsset: asset can not be NULL.");
+    free(asset);
+}
+
+Collider *FindCollidersInDict(TileCollidersDictAsset *dict, short id, int *lengthOutput) {
+    int length = 0;
+    Collider *res = NULL;
+    for (int i = 0; i < dict->length; i++) {
+        if (dict->colliders[i].id == id) {
+            if (res == NULL) res = dict->colliders + i;
+            length++;
+        } else if (res != NULL) break;
+    }
+    *lengthOutput = length;
+    return res;
 }
