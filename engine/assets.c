@@ -11,6 +11,8 @@ static string _assetsRoot = "assets/";
 static string _assetsRoot = "../assets/";
 #endif
 
+static bool _ReadObjFile(string path, LinkedList *output);
+
 static bool _LoadMap(string path, LinkedList *output, unsigned int *height);
 
 static bool _ReadDictFile(string path, LinkedList *output);
@@ -72,6 +74,58 @@ void FreeBitmapAsset(BitmapAsset *asset) {
     free(asset);
 }
 
+static bool _ReadObjFile(string path, LinkedList *output) {
+    FILE *fp = fopen(path, "r");
+    if (fp == NULL) return false;
+    char line[MAX_LINE_LENGTH];
+
+    while (fgets(line, MAX_LINE_LENGTH, fp) != NULL) {
+        GameObject *object = malloc(sizeof(GameObject));
+        if (sscanf(line, "%s %lf %lf %lf %lf", object->name, &object->position.x, &object->position.y, &object->size.x,
+                   &object->size.y) != 5)
+            return false;
+        AddElement(output, object);
+    }
+    if (fclose(fp)) return false;
+    return true;
+}
+
+GameObjectsListAsset *LoadGameObjectsListAsset(string file) {
+    char objPath[MAX_PATH];
+    strcpy(objPath, _assetsRoot);
+    strcat(objPath, file);
+
+    LinkedList list = EMPTY_LINKED_LIST;
+    if (!_ReadObjFile(objPath, &list)) {
+        ClearList(&list, free);
+        return NULL;
+    }
+
+    GameObjectsListAsset *asset = malloc(sizeof(GameObjectsListAsset) + list.length * sizeof(GameObject));
+    asset->length = list.length;
+    LinkedListNode *node = list.head;
+    int i = 0;
+    for (; node != NULL && i < list.length; node = node->next, i++) {
+        asset->gameObjects[i] = *(GameObject *) node->element;
+    }
+    ClearList(&list, _DestructCollider);
+
+    return asset;
+}
+
+void FreeGameObjectsListAsset(GameObjectsListAsset *asset) {
+    free(asset);
+}
+
+bool FindGameObject(GameObjectsListAsset *asset, string name, GameObject *output) {
+    for (int i = 0; i < asset->length; i++) {
+        if (strcmp(asset->gameObjects[i].name, name) != 0)continue;
+        *output = asset->gameObjects[i];
+        return true;
+    }
+    return false;
+}
+
 static bool _LoadMap(string path, LinkedList *output, unsigned int *height) {
     FILE *fp = fopen(path, "r");
     if (fp == NULL) return false;
@@ -103,7 +157,7 @@ static bool _LoadMap(string path, LinkedList *output, unsigned int *height) {
     return true;
 }
 
-TiledMapAsset *LoadTiledMapAsset(string file, bool loadImage) {
+TiledMapAsset *LoadTiledMapAsset(string file, bool loadImage, bool loadObjects) {
     char mapPath[MAX_PATH];
     strcpy(mapPath, _assetsRoot);
     strcat(mapPath, file);
@@ -128,12 +182,20 @@ TiledMapAsset *LoadTiledMapAsset(string file, bool loadImage) {
 
     if (loadImage) {
         char imagePath[MAX_PATH];
-        strcpy(imagePath, _assetsRoot);
-        strcat(imagePath, file);
+        strcpy(imagePath, file);
         strcat(imagePath, ".bmp");
         BitmapAsset *image = LoadBitmapAsset(imagePath);
         if (image == NULL)return NULL;
         obj->image = image;
+    }
+
+    if (loadObjects) {
+        char objPath[MAX_PATH];
+        strcpy(objPath, file);
+        strcat(objPath, ".gobj");
+        GameObjectsListAsset *objects = LoadGameObjectsListAsset(objPath);
+        if (objects == NULL)return NULL;
+        obj->gameObjects = objects;
     }
 
     return obj;

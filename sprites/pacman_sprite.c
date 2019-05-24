@@ -8,7 +8,6 @@
 
 #define ANGLE 30
 #define DIRECTION 0
-#define PACMAN_SIZE 0.3
 #define SPEED 1
 
 static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame);
@@ -17,18 +16,18 @@ static void _Update(Sprite *this, double interval);
 
 static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame) {
     double _angle;
+    double size = CalcIncircleRadius(sprite) * 2;
 
     StartFilledRegion(1.);
     _angle = frame * ANGLE / 4 + DIRECTION * ANGLE * 3;
     TurnPolarAngleTo(_angle);
-    MovePen(sprite->position.x+sprite->size.x/2, sprite->position.y+sprite->size.y/2);
-    MovePolarPen(PACMAN_SIZE / 2);
-    DrawArc((PACMAN_SIZE) / 2, _angle, 360 - frame * ANGLE / 2);
+    MovePen(sprite->position.x + sprite->size.x / 2, sprite->position.y + sprite->size.y / 2);
+    MovePolarPen(size / 2);
+    DrawArc((size) / 2, _angle, 360 - frame * ANGLE / 2);
     TurnPolarAngle(180 - frame * ANGLE / 2);
-    DrawPolarLine(PACMAN_SIZE / 2);
+    DrawPolarLine(size / 2);
     TurnPolarAngle(frame * ANGLE / 2 - 180);
-    DrawPolarLine(PACMAN_SIZE / 2);
-
+    DrawPolarLine(size / 2);
     EndFilledRegion();
 }
 
@@ -37,8 +36,8 @@ static void _Update(Sprite *this, double interval) {
     this->velocity = VMultiply(SPEED, GetNormalizedControllerVector());
 }
 
-Sprite *ConstructPacmanSprite() {
-    Sprite *obj = ConstructSprite((Vector2) {0, 0.5}, (Vector2) {0.3, 0.3}, (Vector2) {0, 0});
+Sprite *ConstructPacmanSprite(Vector2 position, Vector2 size) {
+    Sprite *obj = ConstructSprite(position, size, ZERO_VECTOR);
 
     Animator *animator = ConstructAnimator(5);
     for (int i = 0; i < 5; i++) animator->intervals[i] = 80;

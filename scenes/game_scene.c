@@ -10,7 +10,10 @@
 #include <graphics.h>
 #include <walls.h>
 #include <map_sprite.h>
+#include <assets.h>
 #include "game_scene.h"
+
+#define PAC_MAN_SIZE_RATIO 1.2
 
 void _Initialize(Scene *scene) {
     Sprite *menu = ConstructGameMenuSprite();
@@ -19,12 +22,14 @@ void _Initialize(Scene *scene) {
 //    double height = GetWindowHeight() - menu->size.y;
 //    double width = GetWindowWidth();
 //    AddGameSprite(scene, ConstructWallsSprite((width - height) / 2., height));
-
-    AddGameSprite(scene, ConstructMapSprite("maps/classic", "colliders_dict.tcd", ZERO_VECTOR,
-                                            (Vector2) {GetWindowWidth(), GetWindowHeight() - menu->size.y}));
+    Sprite *map = ConstructMapSprite("maps/classic", "colliders_dict.tcd", ZERO_VECTOR,
+                                     (Vector2) {GetWindowWidth(), GetWindowHeight() - menu->size.y});
+    GameObject pacman;
+    FindGameObjectOfMap(map, "PacMan", &pacman);
+    AddGameSprite(scene, map);
     AddGameSprite(scene, ConstructPellet((Vector2) {1, 1}, (Vector2) {0.1, 0.1}));
     AddGameSprite(scene, ConstructExampleBitmapSprite());
-    AddGameSprite(scene, ConstructPacmanSprite());
+    AddGameSprite(scene, ConstructPacmanSprite(pacman.position, pacman.size));
 }
 
 Scene *ConstructGameScene() {

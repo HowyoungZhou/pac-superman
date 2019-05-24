@@ -13,6 +13,17 @@
 #define MAX_LINE_LENGTH 1000
 
 typedef struct {
+    char name[100];
+    Vector2 position;
+    Vector2 size;
+} GameObject;
+
+typedef struct {
+    unsigned int length;
+    GameObject gameObjects[];
+} GameObjectsListAsset;
+
+typedef struct {
     HBITMAP hbmp;
     HDC mdc;
     int width;
@@ -22,6 +33,7 @@ typedef struct {
 typedef struct {
     unsigned int width;
     unsigned int height;
+    GameObjectsListAsset *gameObjects;
     BitmapAsset *image;
     short tiles[];
 } TiledMapAsset;
@@ -68,15 +80,38 @@ void DrawBitmapAsset(BitmapAsset *asset, Vector2 position, Vector2 size);
  */
 void FreeBitmapAsset(BitmapAsset *asset);
 
+/**@brief 加载游戏实体列表资源。
+ *
+ * @param file 资源文件
+ * @return 如果加载成功则返回 GameObjectsListAsset 对象，否则返回 NULL
+ */
+GameObjectsListAsset *LoadGameObjectsListAsset(string file);
+
+/**@brief 释放游戏实体列表资源。
+ *
+ * @param asset GameObjectsListAsset 对象
+ */
+void FreeGameObjectsListAsset(GameObjectsListAsset *asset);
+
+/**@brief 从游戏实体列表中查找某实体。
+ *
+ * @param asset 游戏实体列表资源
+ * @param name 实体名称
+ * @param output 用于储存查找到的游戏实体的变量地址
+ * @return 如查找成功则返回 true，否则返回 false。
+ */
+bool FindGameObject(GameObjectsListAsset *asset, string name, GameObject *output);
+
 /**@brief 加载由 Tiled Map Editor 创建的平铺地图。
  *
  * 应提供一个 Tiled Map Editor 创建的 csv 文件及一个可选的 bmp 文件。
  *
  * @param file 地图的名称，即 csv 文件的文件名
  * @param loadImage 是否同时加载图像
+ * @param loadObjects 是否同时加载游戏实体列表
  * @return 如果加载成功则返回 TiledMapAsset 对象，否则返回 NULL
  */
-TiledMapAsset *LoadTiledMapAsset(string file, bool loadImage);
+TiledMapAsset *LoadTiledMapAsset(string file, bool loadImage, bool loadObjects);
 
 /**@brief 释放平铺地图资源。
  *

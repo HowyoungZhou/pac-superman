@@ -62,7 +62,8 @@ static void _RegisterColliders(Sprite *this) {
 }
 
 Sprite *ConstructMapSprite(string mapName, string collidersDictFile, Vector2 position, Vector2 size) {
-    TiledMapAsset *map = LoadTiledMapAsset(mapName, true);
+    TiledMapAsset *map = LoadTiledMapAsset(mapName, true, true);
+    if (map == NULL)return NULL;
     Sprite *obj;
     if ((double) map->width / map->height > position.x / position.y) {
         double height = size.x * map->height / map->width;
@@ -92,4 +93,17 @@ Vector2 GetTileSize(Sprite *this) {
 Vector2 GetRelativeTilePosition(Sprite *this, unsigned int x, unsigned int y) {
     TiledMapAsset *map = this->property;
     return (Vector2) {this->size.x * x / map->width, this->size.y * y / map->height};
+}
+
+bool FindGameObjectOfMap(Sprite *this, string name, GameObject *output) {
+    TiledMapAsset *map = this->property;
+    GameObject obj;
+    if (!FindGameObject(map->gameObjects, name, &obj))return false;
+    obj.position.y = map->image->height - obj.position.y - obj.size.y; // 将坐标转换为以左下角为坐标系
+    // 将大小和位置按照实际 Sprite 大小缩放
+    obj.size = V2DScale(obj.size, (Vector2) {this->size.x / map->image->width, this->size.y / map->image->height});
+    obj.position = VAdd(this->position, V2DScale(obj.position, (Vector2) {this->size.x / map->image->width,
+                                                                          this->size.y / map->image->height}));
+    *output = obj;
+    return true;
 }
