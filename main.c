@@ -3,7 +3,6 @@
 #include <colors.h>
 #include <engine.h>
 #include <controller.h>
-
 #include "game_scene.h"
 
 void Main() {

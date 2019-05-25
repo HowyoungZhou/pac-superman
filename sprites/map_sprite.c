@@ -4,23 +4,19 @@
 #include <drawing.h>
 #include "map_sprite.h"
 
-static TileCollidersDictAsset *_dict = NULL;
-
 static void _Render(Sprite *this);
+
+static void _Destruct(Sprite *this);
+
+static void _Collide(Sprite *this, int id, Sprite *other);
+
+static void _RegisterColliders(Sprite *this);
+
+static TileCollidersDictAsset *_dict = NULL;
 
 static void _Render(Sprite *this) {
     TiledMapAsset *map = this->property;
     DrawBitmapAsset(map->image, this->position, this->size);
-//    for (LinkedListNode *node = this->colliders.head; node != NULL; node = node->next) {
-//        if (((Collider *) node->element)->type == BOX_COLLIDER)
-//            DrawVectorRectangle(
-//                    VAdd(this->position, ((Collider *) node->element)->shape.boxCollider.position),
-//                    ((Collider *) node->element)->shape.boxCollider.size);
-//        else
-//            DrawCircle(((Collider *) node->element)->shape.circleCollider.centre.x + this->position.x,
-//                       ((Collider *) node->element)->shape.circleCollider.centre.y + this->position.y,
-//                       ((Collider *) node->element)->shape.circleCollider.radius);
-//    }
 }
 
 static void _Destruct(Sprite *this) {
@@ -95,6 +91,10 @@ Vector2 GetRelativeTilePosition(Sprite *this, unsigned int x, unsigned int y) {
     return (Vector2) {this->size.x * x / map->width, this->size.y * y / map->height};
 }
 
+Vector2 GetTilePosition(Sprite *this, unsigned int x, unsigned int y) {
+    return VAdd(this->position, GetRelativeTilePosition(this, x, y));
+}
+
 bool FindGameObjectOfMap(Sprite *this, string name, GameObject *output) {
     TiledMapAsset *map = this->property;
     GameObject obj;
@@ -106,4 +106,17 @@ bool FindGameObjectOfMap(Sprite *this, string name, GameObject *output) {
                                                                           this->size.y / map->image->height}));
     *output = obj;
     return true;
+}
+
+void ForEachTile(Sprite *this, ForEachTileCallback callback) {
+    TiledMapAsset *map = this->property;
+    for (unsigned int i = 0; i < map->width; i++) {
+        for (unsigned int j = 0; j < map->height; j++) {
+            callback(this, i, j, GetTileAt(map, i, j));
+        }
+    }
+}
+
+TiledMapAsset *GetMapAsset(Sprite *this) {
+    return this->property;
 }
