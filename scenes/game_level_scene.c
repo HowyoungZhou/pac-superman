@@ -1,7 +1,4 @@
 #include <scene.h>
-#include <example_controllable_sprite.h>
-#include <pellet.h>
-#include <pacman_sprite.h>
 #include <button.h>
 #include <game_menu.h>
 #include <vector2.h>
@@ -10,20 +7,29 @@
 #include <image.h>
 #include <graphics.h>
 #include "game_level_scene.h"
+#include <game_scene.h>
 
 static double cx,cy;
 
-void _Mode(){
+void _Easy(){
+    ReplaceScene(ConstructTestScene());
+}
 
+void _Normal(){
+    ReplaceScene(ConstructTestScene());
+}
+
+void _Hard(){
+    ReplaceScene(ConstructTestScene());
 }
 
 void _Level_Initialize(Scene *scene) {
 
     cx = GetWindowWidth();
     cy = GetWindowHeight();
-    AddUISprite(scene, ConstructButtonSprite(1, (Vector2) {cx/2-2.5, cy/2-0.75}, (Vector2) {1, 1.5}, "EASY", _Mode));
-    AddUISprite(scene, ConstructButtonSprite(2, (Vector2) {cx/2-0.5, cy/2-0.75}, (Vector2) {1, 1.5}, "NORMAL",_Mode));
-    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {cx/2+1.5, cy/2-0.75}, (Vector2) {1, 1.5}, "HARD", _Mode));
+    AddUISprite(scene, ConstructButtonSprite(1, (Vector2) {cx/2-2.5, cy/2-0.75}, (Vector2) {1, 1.5}, "EASY", _Easy));
+    AddUISprite(scene, ConstructButtonSprite(2, (Vector2) {cx/2-0.5, cy/2-0.75}, (Vector2) {1, 1.5}, "NORMAL",_Normal));
+    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {cx/2+1.5, cy/2-0.75}, (Vector2) {1, 1.5}, "HARD", _Hard));
     AddUISprite(scene, ConstructImageSprite((Vector2){cx/2-3,cy*0.7},(Vector2){6,2},"LevelSelection/LS_Title.bmp"));
 
 }
