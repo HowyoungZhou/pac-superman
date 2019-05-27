@@ -25,4 +25,6 @@ Vector2 VAbs(Vector2 v);
 
 Vector2 VMax(Vector2 v1, Vector2 v2);
 
+double VAngle(Vector2 v);
+
 #endif //PAC_SUPERMAN_VECTOR2_H
