@@ -1,21 +1,18 @@
+#include <sprite.h>
 #include <scene.h>
-#include <example_controllable_sprite.h>
-#include <pellet_sprite.h>
-#include <pacman_sprite.h>
-#include <button.h>
-#include <game_menu.h>
-#include <vector2.h>
-#include <engine.h>
-#include <example_bitmap_sprite.h>
-#include <graphics.h>
-#include <walls.h>
 #include <map_sprite.h>
-#include <assets.h>
+#include <pellet_sprite.h>
+#include <game_menu.h>
+#include <graphics.h>
+#include <pacman_sprite.h>
+#include <power_pellet_sprite.h>
 #include "game_scene.h"
 
 #define PELLET_SIZE_RATIO 0.25
+#define POWER_PELLET_SIZE_RATIO 0.7
 
 #define PELLET_TILE 54
+#define POWER_PELLET_TILE 42
 
 void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id);
 
@@ -29,6 +26,13 @@ void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id) {
             Vector2 size = GetTileSize(sprite);
             Vector2 position = VAdd(GetTilePosition(sprite, x, y), VMultiply((1. - PELLET_SIZE_RATIO) / 2., size));
             AddGameSprite(_currentScene, ConstructPellet(position, VMultiply(PELLET_SIZE_RATIO, size)));
+            break;
+        case POWER_PELLET_TILE:;
+            Vector2 powerSize = GetTileSize(sprite);
+            Vector2 powerPosition = VAdd(GetTilePosition(sprite, x, y),
+                                         VMultiply((1. - POWER_PELLET_SIZE_RATIO) / 2., powerSize));
+            AddGameSprite(_currentScene,
+                          ConstructPowerPellet(powerPosition, VMultiply(POWER_PELLET_SIZE_RATIO, powerSize)));
             break;
         default:
             break;
