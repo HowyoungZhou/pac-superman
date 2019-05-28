@@ -41,3 +41,11 @@ Vector2 VAbs(Vector2 v) {
 Vector2 VMax(Vector2 v1, Vector2 v2) {
     return (Vector2) {fmax(v1.x, v2.x), fmax(v1.y, v2.y)};
 }
+
+double VAngle(Vector2 v){
+    if(v.x==0 && v.y==0) return 0;
+    if(v.x>=0 && v.y>=0  || v.x>=0 && v.y<0)
+        return atan(v.y/v.x) * 180 / M_PI;
+    if(v.x<0 && v.y>=0 || v.x<0 && v.y<0)
+        return atan(v.y/v.x) * 180 / M_PI + 180;
+}
