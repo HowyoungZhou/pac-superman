@@ -55,12 +55,12 @@ Collider *ConstructCollider(int id, ColliderType type, bool solid);
  */
 void DestructCollider(Collider *this);
 
-/**@brief 执行碰撞检测，该方法由引擎调用。
+/**@brief 检测两碰撞器是否相交。
  *
- * @param s1 Sprite 对象 1
- * @param s2 Sprite 对象 2
- * @param interval 当前渲染时间间隔
+ * @param c1 Collider 对象
+ * @param c2 Collider 对象
+ * @return 如果两碰撞器相交则返回 true，否则返回 false
  */
-void DetectCollision(Sprite *s1, Sprite *s2, double interval);
+bool DetectIntersection(const Collider *c1, const Collider *c2);
 
 #endif //PAC_SUPERMAN_COLLIDER_H
