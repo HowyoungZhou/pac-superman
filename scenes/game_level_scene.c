@@ -12,15 +12,15 @@
 static double cx,cy;
 
 void _Easy(){
-    ReplaceScene(ConstructTestScene());
+    ReplaceScene(ConstructGameScene());
 }
 
 void _Normal(){
-    ReplaceScene(ConstructTestScene());
+    ReplaceScene(ConstructGameScene());
 }
 
 void _Hard(){
-    ReplaceScene(ConstructTestScene());
+    ReplaceScene(ConstructGameScene());
 }
 
 void _Level_Initialize(Scene *scene) {

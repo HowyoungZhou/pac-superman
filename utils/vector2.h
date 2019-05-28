@@ -11,6 +11,8 @@ Vector2 VAdd(Vector2 v1, Vector2 v2);
 
 Vector2 VSubtract(Vector2 v1, Vector2 v2);
 
+Vector2 V2DScale(Vector2 v1, Vector2 v2);
+
 Vector2 VMultiply(double k, Vector2 v);
 
 double VLengthSquared(Vector2 v);
