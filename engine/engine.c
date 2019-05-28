@@ -169,7 +169,6 @@ static void _UpdateAnimator(Sprite *sprite) {
 
 static void _RenderSprite(Sprite *sprite) {
     if (!sprite->visible)return;
-    SaveGraphicsState(); // 保存当前图形库状态避免不同 Sprite 之间干扰
     MovePen(sprite->position.x, sprite->position.y);
     SetPenColor(sprite->foreColor);
     // 如果 Sprite 有动画则渲染动画
@@ -182,7 +181,6 @@ static void _RenderSprite(Sprite *sprite) {
         if (sprite->renderer.Render == NULL)raise(MethodNotImplementedException);
         sprite->renderer.Render(sprite);
     }
-    RestoreGraphicsState(); // 恢复图形库状态
 }
 
 static inline void _ClearScreen(string backColor) {
