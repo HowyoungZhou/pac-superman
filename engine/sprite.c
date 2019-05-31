@@ -3,7 +3,7 @@
 #include <tgmath.h>
 #include "sprite.h"
 
-static int _ColliderIDComparer(void *collider, void *id);
+static bool _ColliderIDComparer(void *collider, void *id);
 
 void DestructSprite(Sprite *this) {
     // 如果 Sprite 有动画，则析构动画器
@@ -38,8 +38,8 @@ void RegisterCollider(Sprite *sprite, Collider *collider) {
     AddElement(&sprite->colliders, collider);
 }
 
-static int _ColliderIDComparer(void *collider, void *id) {
-    return ((Collider *) collider)->id - *(int *) id;
+static bool _ColliderIDComparer(void *collider, void *id) {
+    return ((Collider *) collider)->id == *(int *) id;
 }
 
 bool UnregisterCollider(Sprite *sprite, int id) {

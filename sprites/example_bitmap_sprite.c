@@ -23,7 +23,8 @@ static void _Destruct(Sprite *this) {
 }
 
 Sprite *ConstructExampleBitmapSprite() {
-    Sprite *obj = ConstructSprite(ZERO_VECTOR, (Vector2) {0.3, 0.3}, ZERO_VECTOR);
+    Sprite *obj = ConstructSprite((Vector2) {6.45, 6}, (Vector2) {0.3, 0.3}, ZERO_VECTOR);
+    RegisterBoxCollider(obj, 0, true, obj->size, ZERO_VECTOR);
     if (_asset == NULL)_asset = LoadBitmapAsset("blinky-down1.bmp");
     obj->renderer.Render = _Render;
     _objCount++;

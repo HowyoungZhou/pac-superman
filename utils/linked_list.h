@@ -5,7 +5,7 @@
 
 #define EMPTY_LINKED_LIST (LinkedList){NULL, NULL, 0}
 
-typedef int (*ElementComparer)(void *element, void *param);
+typedef bool (*ElementIdentifier)(void *element, void *param);
 
 typedef void (*ElementDestructor)(void *obj);
 
@@ -40,10 +40,10 @@ void *PopElement(LinkedList *list);
  *
  * @param list 目标链表
  * @param param 用于匹配元素的参数
- * @param comparer 用于匹配元素的比较器，如该函数返回 0 则表示成功匹配到了该元素。
+ * @param identifier 用于匹配元素的比较器，如该函数返回 0 则表示成功匹配到了该元素。
  * @return 如移除成功则返回被移除的元素，否则返回 NULL
  */
-void *RemoveElement(LinkedList *list, void *param, ElementComparer comparer);
+void *RemoveElement(LinkedList *list, void *param, ElementIdentifier identifier);
 
 /**@brief 清除链表中的所有元素。
  *
@@ -70,17 +70,17 @@ void *GetLastElement(const LinkedList *list);
  *
  * @param list 目标链表
  * @param param 用于匹配元素的参数
- * @param comparer 用于匹配元素的比较器，如该函数返回 0 则表示成功匹配到了该元素。
+ * @param identifier 用于匹配元素的比较器，如该函数返回 0 则表示成功匹配到了该元素。
  * @return 如查找成功则返回该元素，否则返回 NULL
  */
-void *SearchElement(const LinkedList *list, void *param, ElementComparer comparer);
+void *SearchElement(const LinkedList *list, void *param, ElementIdentifier identifier);
 
 /**@brief 用于比较两元素是否位于同一地址的指针比较器。
  *
  * @param e1 元素 1
  * @param e2 元素 2
- * @return 如两元素位于同一地址则返回 0，否则返回两元素地址的差值(e1 - e2)。
+ * @return 如两元素位于同一地址则返回 true，否则返回 false。
  */
-int PointerComparer(void *e1, void *e2);
+bool PointerComparer(void *e1, void *e2);
 
 #endif //PAC_SUPERMAN_LINKED_LIST_H

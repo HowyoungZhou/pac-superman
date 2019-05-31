@@ -11,13 +11,15 @@ static inline void _HeapifyUp(BinaryHeap *heap, int index);
 
 static inline void _HeapifyDown(BinaryHeap *heap, int index);
 
-static inline int _SearchElement(BinaryHeap *heap, void *param, ElementIdentifier identifier);
-
 void InitBinaryHeap(BinaryHeap *heap, ElementComparer comparer) {
     heap->elements = calloc(PAGE_SIZE, sizeof(void *));
     heap->comparer = comparer;
     heap->capacity = PAGE_SIZE;
     heap->length = 0;
+}
+
+void FreeBinaryHeap(BinaryHeap *heap) {
+    free(heap->elements);
 }
 
 static inline void _HeapifyUp(BinaryHeap *heap, int index) {
@@ -31,7 +33,7 @@ static inline void _HeapifyUp(BinaryHeap *heap, int index) {
     heap->elements[index] = curNode;
 }
 
-void InsertElement(BinaryHeap *heap, void *element) {
+void HeapInsertElement(BinaryHeap *heap, void *element) {
     if (heap->length >= heap->capacity) {
         heap->elements = realloc(heap->elements, (heap->capacity + PAGE_SIZE) * sizeof(void *));
         heap->capacity = heap->capacity + PAGE_SIZE;
@@ -54,7 +56,7 @@ static inline void _HeapifyDown(BinaryHeap *heap, int index) {
 }
 
 
-void *PopTop(BinaryHeap *heap) {
+void *HeapPopTop(BinaryHeap *heap) {
     if (!heap->length) return NULL;
     void *top = heap->elements[0];
     heap->elements[0] = heap->elements[--heap->length];
@@ -62,24 +64,36 @@ void *PopTop(BinaryHeap *heap) {
     return top;
 }
 
-static inline int _SearchElement(BinaryHeap *heap, void *param, ElementIdentifier identifier) {
+int HeapSearchIndexOfElement(BinaryHeap *heap, void *param, ElementIdentifier identifier) {
     for (int i = 0; i < heap->length; i++) {
         if (identifier(heap->elements[i], param)) return i;
     }
-    return -1;
+    return ELEMENT_NOT_FOUND;
 }
 
-void *SearchElement(BinaryHeap *heap, void *param, ElementIdentifier identifier) {
-    int res = _SearchElement(heap, param, identifier);
-    if (res == -1) return NULL;
+void *HeapSearchElement(BinaryHeap *heap, void *param, ElementIdentifier identifier) {
+    int res = HeapSearchIndexOfElement(heap, param, identifier);
+    if (res == ELEMENT_NOT_FOUND) return NULL;
     return heap->elements[res];
 }
 
-void *PopElement(BinaryHeap *heap, void *param, ElementIdentifier identifier) {
-    int res = _SearchElement(heap, param, identifier);
-    if (res == -1) return NULL;
+void *HeapPopElement(BinaryHeap *heap, void *param, ElementIdentifier identifier) {
+    int res = HeapSearchIndexOfElement(heap, param, identifier);
+    if (res == ELEMENT_NOT_FOUND) return NULL;
     void *element = heap->elements[res];
     heap->elements[res] = heap->elements[--heap->length];
     _HeapifyDown(heap, res);
     return element;
+}
+
+bool HeapUpdateElementByIndex(BinaryHeap *heap, int index) {
+    if (index == ELEMENT_NOT_FOUND) return false;
+    _HeapifyDown(heap, index);
+    _HeapifyUp(heap, index);
+    return true;
+}
+
+bool HeapUpdateElement(BinaryHeap *heap, void *param, ElementIdentifier identifier) {
+    int index = HeapSearchIndexOfElement(heap, param, identifier);
+    return HeapUpdateElementByIndex(heap, index);
 }
