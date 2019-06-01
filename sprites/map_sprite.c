@@ -72,6 +72,7 @@ Sprite *ConstructMapSprite(string mapName, string collidersDictFile, Vector2 pos
                               (Vector2) {width, size.y},
                               ZERO_VECTOR);
     }
+    obj->name = "Map";
     obj->renderer.Render = _Render;
     obj->property = map;
     obj->Destruct = _Destruct;

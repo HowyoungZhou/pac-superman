@@ -4,6 +4,7 @@
 #include <controller.h>
 #include <exception.h>
 #include <engine.h>
+#include <game_controller.h>
 #include "example_bitmap_sprite.h"
 
 #define SPEED 1
@@ -31,13 +32,22 @@ static void _Update(Sprite *this, double interval) {
     _interval = 0;
 }
 
+static void _Collide(Sprite *this, int id, Sprite *other) {
+    if (other->name && !strcmp(other->name, "PacMan")) {
+        if (GetPowerMode()) this->visible = false;
+        else PopScene();
+    }
+}
+
 Sprite *ConstructExampleBitmapSprite(Sprite *target) {
     Sprite *obj = ConstructSprite((Vector2) {6.45, 6}, (Vector2) {0.3, 0.3}, ZERO_VECTOR);
     RegisterBoxCollider(obj, 0, true, obj->size, ZERO_VECTOR);
     if (_asset == NULL)_asset = LoadBitmapAsset("blinky-down1.bmp");
+    obj->navAgent.speed = 0.5;
     obj->property = target;
     obj->renderer.Render = _Render;
     obj->Update = _Update;
+    obj->Collide = _Collide;
     _objCount++;
     return obj;
 }

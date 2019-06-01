@@ -18,6 +18,7 @@ void DestructSprite(Sprite *this) {
 Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     Sprite *obj = malloc(sizeof(Sprite));
 
+    obj->name = NULL;
     obj->position = position;
     obj->size = size;
     obj->velocity = velocity;

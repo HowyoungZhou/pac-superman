@@ -57,6 +57,7 @@ Sprite *ConstructPacmanSprite(Vector2 position, Vector2 size) {
     animator->reverse = true;
     animator->Animate = _AnimatedPacmanSprite;
 
+    obj->name = "PacMan";
     obj->hasAnimation = true;
     obj->renderer.animator = animator;
     obj->Update = _Update;

@@ -19,6 +19,7 @@ typedef struct sprite Sprite;
  *
  */
 struct sprite {
+    string name; /**< 名称 */
     Vector2 position; /**< 位置矢量，由屏幕左下角指向 Sprite 的左下角 */
     Vector2 size; /**< 大小矢量，由 Sprite 的左下角指向右上角 */
     Vector2 velocity; /**< 速度矢量 */
