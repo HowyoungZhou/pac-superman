@@ -12,24 +12,17 @@ struct Property {
 static void _Render(Sprite *this);
 
 static void _Render(Sprite *this) {
-    struct Property *property = this->property;
-    PathNode *path = AStarFindPath(GetCurrentScene(), property->source, property->target);
-    PathNode *child = NULL;
-    for (; path != NULL && path->parent != NULL; path = path->parent) {
-        if (child != NULL)free(child);
-        MovePen(path->position.x, path->position.y);
-        Vector2 delta = VSubtract(path->parent->position, path->position);
+    Sprite *source = this->property;
+    for (PathNode *node = source->navAgent.path; node != NULL && node->parent != NULL; node = node->parent) {
+        MovePen(node->position.x, node->position.y);
+        Vector2 delta = VSubtract(node->parent->position, node->position);
         DrawLine(delta.x, delta.y);
-        child = path;
     }
 }
 
-Sprite *ConstructAutoNavRouteSprite(Sprite *source, Sprite *target) {
+Sprite *ConstructAutoNavRouteSprite(Sprite *source) {
     Sprite *obj = ConstructSprite(ZERO_VECTOR, ZERO_VECTOR, ZERO_VECTOR);
-    struct Property *property = malloc(sizeof(struct Property));
-    property->source = source;
-    property->target = target;
-    obj->property = property;
+    obj->property = source;
     obj->renderer.Render = _Render;
     obj->foreColor = "Red";
     return obj;

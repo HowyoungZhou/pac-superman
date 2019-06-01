@@ -10,6 +10,7 @@
 #include "vector2.h"
 #include "animator.h"
 #include "collider.h"
+#include "autonav.h"
 
 struct sprite;
 typedef struct sprite Sprite;
@@ -33,6 +34,7 @@ struct sprite {
     } renderer; /**< 渲染器，如果 hasAnimation 为 true 则为 Animator，否则为 Render 方法，不能为 NULL */
 
     CollidersList colliders; /**< 碰撞器列表 */
+    AutoNavAgent navAgent; /**< 自动导航器 */
 
     void (*Update)(Sprite *this, double interval); /**< Update 方法，用于更新物理属性，如位置、速度等，可为 NULL */
 

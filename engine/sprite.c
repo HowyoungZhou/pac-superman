@@ -27,6 +27,7 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     obj->property = NULL;
     obj->renderer.Render = NULL;
     obj->colliders = EMPTY_LINKED_LIST;
+    obj->navAgent = INIT_NAV_AGENT;
     obj->Collide = NULL;
     obj->Update = NULL;
     obj->Destruct = DestructSprite;

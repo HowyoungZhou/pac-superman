@@ -22,6 +22,8 @@ static inline void _UpdateScene();
 
 static void _UpdateSprite(Sprite *sprite);
 
+static void _AutoNav(Sprite *sprite);
+
 static inline Collider _CalcAbsoluteCollider(Sprite *sprite, Collider *collider);
 
 static inline void _DetectSpriteCollision(Sprite *s1, Sprite *s2);
@@ -76,7 +78,7 @@ bool IsPaused() {
     return _paused;
 }
 
-Scene *GetCurrentScene(){
+Scene *GetCurrentScene() {
     return GetLastElement(&_scenes);
 }
 
@@ -130,6 +132,7 @@ static void _MainTimerHandler(int timerID) {
             _UpdateInterval();
             _ForEachSprite(&current->gameSprites, _UpdateAnimator); // 更新动画器
             _ForEachSprite(&current->gameSprites, _UpdateSprite); // 调用 Sprite 的 Update 函数
+            _ForEachSprite(&current->gameSprites, _AutoNav);
             _DetectCollision(current); // 碰撞检测
             _ForEachSprite(&current->gameSprites, _UpdatePosition); // 更新位置
             break;
@@ -154,6 +157,10 @@ static inline void _UpdateScene() {
 static void _UpdateSprite(Sprite *sprite) {
     if (sprite->Update == NULL)return;
     sprite->Update(sprite, _interval);
+}
+
+static void _AutoNav(Sprite *sprite) {
+    if (sprite->navAgent.path) AutoNav(sprite, _interval);
 }
 
 static inline Collider _CalcAbsoluteCollider(Sprite *sprite, Collider *collider) {
@@ -191,9 +198,9 @@ static inline void _DetectSpriteCollision(Sprite *s1, Sprite *s2) {
 
 static void _DetectCollision(Scene *current) {
     for (SpritesListNode *s1 = current->gameSprites.head; s1 != NULL; s1 = s1->next) {
-        if(!((Sprite*)s1->element)->visible) continue;
+        if (!((Sprite *) s1->element)->visible) continue;
         for (SpritesListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
-            if(!((Sprite*)s1->element)->visible) continue;
+            if (!((Sprite *) s1->element)->visible) continue;
             _DetectSpriteCollision(s1->element, s2->element);
         }
     }

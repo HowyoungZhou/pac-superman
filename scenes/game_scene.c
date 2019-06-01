@@ -59,11 +59,10 @@ void _Initialize(Scene *scene) {
     AddGameSprite(scene, pacmanSprite);
     // 添加豆子
     ForEachTile(map, _ForEachTile);
-    Sprite *ghost = ConstructExampleBitmapSprite();
+    Sprite *ghost = ConstructExampleBitmapSprite(pacmanSprite);
     AddGameSprite(scene, ghost);
-    PathNode *path = AStarFindPath(scene, ghost, pacmanSprite);
-    ChangePathfindingStep(GetTileSize(map).x);
-    AddUISprite(scene, ConstructAutoNavRouteSprite(ghost, pacmanSprite));
+    ChangePathfindingStep(GetTileSize(map).x/2);
+    AddUISprite(scene, ConstructAutoNavRouteSprite(ghost));
 }
 
 Scene *ConstructGameScene() {
