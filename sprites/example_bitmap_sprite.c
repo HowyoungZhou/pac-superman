@@ -26,11 +26,8 @@ static void _Destruct(Sprite *this) {
     DestructSprite(this);
 }
 
-static void _Update(Sprite *this, double interval) {
-    _interval += interval;
-    if (_interval < 500) return;
-    UpdatePath(GetCurrentScene(), this);
-    _interval = 0;
+static void _UpdatePath(Sprite *sender) {
+    UpdatePath(GetCurrentScene(), sender);
 }
 
 static void _Collide(Sprite *this, int id, Sprite *other) {
@@ -45,8 +42,8 @@ Sprite *ConstructExampleBitmapSprite(Sprite *target) {
     RegisterBoxCollider(obj, 0, true, obj->size, ZERO_VECTOR);
     if (_asset == NULL)_asset = LoadBitmapAsset("blinky-down1.bmp");
     SetNavTargetSprite(obj, target);
+    RegisterTimer(obj, 500, _UpdatePath);
     obj->renderer.Render = _Render;
-    obj->Update = _Update;
     obj->Collide = _Collide;
     _objCount++;
     return obj;

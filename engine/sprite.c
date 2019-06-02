@@ -3,7 +3,9 @@
 #include <tgmath.h>
 #include "sprite.h"
 
-static bool _ColliderIDComparer(void *collider, void *id);
+static bool _ColliderIDIdentifier(void *collider, void *id);
+
+static bool _TimerIdentifier(void *element, void *param);
 
 void DestructSprite(Sprite *this) {
     // 如果 Sprite 有动画，则析构动画器
@@ -29,6 +31,7 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
     obj->renderer.Render = NULL;
     obj->colliders = EMPTY_LINKED_LIST;
     obj->navAgent = INIT_NAV_AGENT;
+    obj->timers = EMPTY_LINKED_LIST;
     obj->Collide = NULL;
     obj->Update = NULL;
     obj->Destruct = DestructSprite;
@@ -40,12 +43,12 @@ void RegisterCollider(Sprite *sprite, Collider *collider) {
     AddElement(&sprite->colliders, collider);
 }
 
-static bool _ColliderIDComparer(void *collider, void *id) {
+static bool _ColliderIDIdentifier(void *collider, void *id) {
     return ((Collider *) collider)->id == *(int *) id;
 }
 
 bool UnregisterCollider(Sprite *sprite, int id) {
-    Collider *collider = RemoveElement(&sprite->colliders, &id, _ColliderIDComparer);
+    Collider *collider = RemoveElement(&sprite->colliders, &id, _ColliderIDIdentifier);
     if (collider == NULL)return false;
     DestructCollider(collider);
     return true;
@@ -73,4 +76,23 @@ Vector2 CalcRelativeCentre(Sprite *sprite) {
 
 double CalcIncircleRadius(Sprite *sprite) {
     return fmin(sprite->size.x, sprite->size.y) / 2.;
+}
+
+void RegisterTimer(Sprite *this, double interval, TimerCallback callback) {
+    Timer *timer = malloc(sizeof(Timer));
+    timer->interval = interval;
+    timer->currentTick = 0;
+    timer->callback = callback;
+    AddElement(&this->timers, timer);
+}
+
+static bool _TimerIdentifier(void *element, void *param) {
+    return ((Timer *) element)->callback == param;
+}
+
+bool UnregisterTimer(Sprite *this, TimerCallback callback) {
+    Timer *timer = RemoveElement(&this->timers, callback, _TimerIdentifier);
+    if (!timer) return false;
+    free(timer);
+    return true;
 }
