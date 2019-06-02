@@ -29,7 +29,13 @@ static inline void _FreePath(PathNode *path);
 
 static void inline _FreeResources(BinaryHeap *open, BinaryHeap *closed);
 
-static PathNode *_AStarFindPath(Scene *scene, Sprite *sprite, Sprite *target);
+static inline bool _PointInRect(Vector2 point, Vector2 rectPos, Vector2 rectSize);
+
+static inline Vector2 _GetTargetPos(Sprite *sprite);
+
+static inline bool _ReachTarget(Sprite *sprite, Vector2 position);
+
+static inline PathNode *_AStarFindPath(Scene *scene, Sprite *sprite);
 
 static double _step = 0.1;
 
@@ -126,13 +132,40 @@ static void inline _FreeResources(BinaryHeap *open, BinaryHeap *closed) {
     FreeBinaryHeap(closed);
 }
 
-static PathNode *_AStarFindPath(Scene *scene, Sprite *sprite, Sprite *target) {
+static inline bool _PointInRect(Vector2 point, Vector2 rectPos, Vector2 rectSize) {
+    Vector2 topRight = VAdd(rectPos, rectSize);
+    return point.x >= rectPos.x && point.y >= rectPos.y && point.x <= topRight.x && point.y <= topRight.y;
+}
+
+static inline Vector2 _GetTargetPos(Sprite *sprite) {
+    AutoNavAgent agent = sprite->navAgent;
+    switch (agent.targetType) {
+        case SPRITE_TARGET:
+            return agent.target.sprite->position;
+        case POS_TARGET:
+            return agent.target.position;
+    }
+}
+
+static inline bool _ReachTarget(Sprite *sprite, Vector2 position) {
+    AutoNavAgent agent = sprite->navAgent;
+    switch (agent.targetType) {
+        case SPRITE_TARGET:
+            return _DetectSpriteCollision(sprite, position, agent.target.sprite, agent.target.sprite->position);
+        case POS_TARGET:
+            return _PointInRect(agent.target.position, position, sprite->size);
+    }
+}
+
+static inline PathNode *_AStarFindPath(Scene *scene, Sprite *sprite) {
     BinaryHeap open, closed;
     InitBinaryHeap(&open, _CompareCost);
     InitBinaryHeap(&closed, _CompareCost);
+    Vector2 targetPos = _GetTargetPos(sprite);
+    if (_ReachTarget(sprite, sprite->position)) return _ConstructPathNode(NULL, 0, 0, sprite->position);
     // 将起点放入 open 列表
-    HeapInsertElement(&open, _ConstructPathNode(NULL, 0, _ManhattanDistance(sprite->position, target->position),
-                                                sprite->position));
+    PathNode *start = _ConstructPathNode(NULL, 0, _ManhattanDistance(sprite->position, targetPos), sprite->position);
+    HeapInsertElement(&open, start);
     while (open.length != 0) {
         // 从 open 列表中弹出 cost 最小的节点，放入 closed 列表
         PathNode *node = HeapPopTop(&open);
@@ -144,7 +177,7 @@ static PathNode *_AStarFindPath(Scene *scene, Sprite *sprite, Sprite *target) {
                 // 计算出绝对位置
                 Vector2 neighbor = VAdd(node->position, VMultiply(_step, (Vector2) {x, y}));
                 // 如和目标碰撞则寻径结束
-                if (_DetectSpriteCollision(sprite, neighbor, target, target->position)) {
+                if (_ReachTarget(sprite, neighbor)) {
                     PathNode *path = _GetPath(_ConstructPathNode(node, _step, 0, neighbor));
                     _FreeResources(&open, &closed);
                     return path;
@@ -168,7 +201,7 @@ static PathNode *_AStarFindPath(Scene *scene, Sprite *sprite, Sprite *target) {
                     }
                 } else {
                     // 如未找到则直接加入 open 列表
-                    double h = _ManhattanDistance(neighbor, target->position);
+                    double h = _ManhattanDistance(neighbor, targetPos);
                     HeapInsertElement(&open, _ConstructPathNodeFromParent(node, _step, h, neighbor));
                 }
             }
@@ -185,16 +218,27 @@ static inline void _FreePath(PathNode *path) {
     }
 }
 
-bool SetNavTargetSprite(Scene *scene, Sprite *source, Sprite *target) {
-    PathNode *path = _AStarFindPath(scene, source, target);
+bool UpdatePath(Scene *scene, Sprite *sprite) {
+    PathNode *path = _AStarFindPath(scene, sprite);
     if (!path) return false;
     // 跳过起点
     PathNode *next = path->parent;
     free(path);
-    if (!source->navAgent.path) _FreePath(source->navAgent.path);
-    source->navAgent.path = next;
-    source->velocity = VMultiply(source->navAgent.speed, VNormalize(VSubtract(next->position, source->position)));
+    if (!sprite->navAgent.path) _FreePath(sprite->navAgent.path);
+    sprite->navAgent.path = next;
+    if (!next) return true;
+    sprite->velocity = VMultiply(sprite->navAgent.speed, VNormalize(VSubtract(next->position, sprite->position)));
     return true;
+}
+
+void SetNavTargetSprite(Sprite *source, Sprite *target) {
+    source->navAgent.targetType = SPRITE_TARGET;
+    source->navAgent.target.sprite = target;
+}
+
+void SetNavTargetPosition(Sprite *sprite, Vector2 position) {
+    sprite->navAgent.targetType = POS_TARGET;
+    sprite->navAgent.target.position = position;
 }
 
 void AutoNav(Sprite *sprite, double interval) {

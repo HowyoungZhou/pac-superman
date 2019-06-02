@@ -1,9 +1,13 @@
 #ifndef PAC_SUPERMAN_AUTONAV_H
 #define PAC_SUPERMAN_AUTONAV_H
 
-#define INIT_NAV_AGENT (AutoNavAgent){NULL, 1.}
+#define INIT_NAV_AGENT (AutoNavAgent) {.speed = 1., .path = NULL}
 
 typedef struct Scene Scene;
+
+typedef enum {
+    SPRITE_TARGET, POS_TARGET
+} TargetType;
 
 typedef struct PathNode {
     struct PathNode *parent;
@@ -15,6 +19,11 @@ typedef struct PathNode {
 } PathNode;
 
 typedef struct AutoNavAgent {
+    union {
+        Sprite *sprite;
+        Vector2 position;
+    } target;
+    TargetType targetType;
     PathNode *path;
     double speed;
 } AutoNavAgent;
@@ -27,14 +36,27 @@ typedef struct AutoNavAgent {
  */
 void ChangePathfindingStep(double step);
 
-/**@brief 设置某 Sprite 的自动导航目标。
+/**@brief 更新某 Sprite 的自动导航路径。
  *
  * @param scene 当前场景
- * @param source 要执行自动导航的 Sprite
- * @param target 目标 Sprite
+ * @param sprite 要执行自动导航的 Sprite
  * @return 如果成功找到路径则返回 true，否则返回 false
  */
-bool SetNavTargetSprite(Scene *scene, Sprite *source, Sprite *target);
+bool UpdatePath(Scene *scene, Sprite *sprite);
+
+/**@brief 设置某 Sprite 的自动导航的目标 Sprite。
+ *
+ * @param source 要执行自动导航的 Sprite
+ * @param target 目标 Sprite
+ */
+void SetNavTargetSprite(Sprite *source, Sprite *target);
+
+/**@brief 设置某 Sprite 的自动导航的目标位置。
+ *
+ * @param sprite 要执行自动导航的 Sprite
+ * @param position 目标位置
+ */
+void SetNavTargetPosition(Sprite *sprite, Vector2 position);
 
 /**@brief 自动导航方法，该方法由引擎调用。
  *

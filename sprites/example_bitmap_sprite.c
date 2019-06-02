@@ -5,6 +5,7 @@
 #include <exception.h>
 #include <engine.h>
 #include <game_controller.h>
+#include <autonav.h>
 #include "example_bitmap_sprite.h"
 
 #define SPEED 1
@@ -28,7 +29,7 @@ static void _Destruct(Sprite *this) {
 static void _Update(Sprite *this, double interval) {
     _interval += interval;
     if (_interval < 500) return;
-    SetNavTargetSprite(GetCurrentScene(), this, this->property);
+    UpdatePath(GetCurrentScene(), this);
     _interval = 0;
 }
 
@@ -43,8 +44,7 @@ Sprite *ConstructExampleBitmapSprite(Sprite *target) {
     Sprite *obj = ConstructSprite((Vector2) {6.45, 6}, (Vector2) {0.3, 0.3}, ZERO_VECTOR);
     RegisterBoxCollider(obj, 0, true, obj->size, ZERO_VECTOR);
     if (_asset == NULL)_asset = LoadBitmapAsset("blinky-down1.bmp");
-    obj->navAgent.speed = 0.5;
-    obj->property = target;
+    SetNavTargetSprite(obj, target);
     obj->renderer.Render = _Render;
     obj->Update = _Update;
     obj->Collide = _Collide;
