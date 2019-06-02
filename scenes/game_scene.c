@@ -62,7 +62,7 @@ void _Initialize(Scene *scene) {
     Sprite *ghost = ConstructExampleBitmapSprite(pacmanSprite);
     AddGameSprite(scene, ghost);
     ChangePathfindingStep(GetTileSize(map).x/2);
-    AddUISprite(scene, ConstructAutoNavRouteSprite(ghost));
+    //AddUISprite(scene, ConstructAutoNavRouteSprite(ghost));
 }
 
 Scene *ConstructGameScene() {

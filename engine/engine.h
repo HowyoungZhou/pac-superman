@@ -64,4 +64,5 @@ void PopScene();
  * @return 是否成功替换场景
  */
 bool ReplaceScene(Scene *newScene);
+
 #endif //PAC_SUPERMAN_ENGINE_H
