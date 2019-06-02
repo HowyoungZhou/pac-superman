@@ -6,6 +6,10 @@
 #include <graphics.h>
 #include <pacman_sprite.h>
 #include <power_pellet_sprite.h>
+#include <example_bitmap_sprite.h>
+#include <autonav.h>
+#include <autonav_route_sprite.h>
+#include <example_controllable_sprite.h>
 #include "game_scene.h"
 
 #define PELLET_SIZE_RATIO 0.25
@@ -51,9 +55,14 @@ void _Initialize(Scene *scene) {
     // 添加吃豆人
     GameObject pacman;
     FindGameObjectOfMap(map, "PacMan", &pacman);
-    AddGameSprite(scene, ConstructPacmanSprite(pacman.position, pacman.size));
+    Sprite *pacmanSprite = ConstructPacmanSprite(pacman.position, pacman.size);
+    AddGameSprite(scene, pacmanSprite);
     // 添加豆子
     ForEachTile(map, _ForEachTile);
+    Sprite *ghost = ConstructExampleBitmapSprite(pacmanSprite);
+    AddGameSprite(scene, ghost);
+    ChangePathfindingStep(GetTileSize(map).x/2);
+    //AddUISprite(scene, ConstructAutoNavRouteSprite(ghost));
 }
 
 Scene *ConstructGameScene() {

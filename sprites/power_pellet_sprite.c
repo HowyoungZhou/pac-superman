@@ -1,5 +1,8 @@
 #include <assets.h>
 #include <sprite.h>
+#include <game_controller.h>
+
+#define POWER_PELLET_SCORE 100
 
 static unsigned int _spriteCount = 0;
 static BitmapAsset *_asset = NULL;
@@ -9,7 +12,11 @@ static void _Animate(Animator *this, Sprite *sprite, Frame frame) {
 }
 
 static void _Collide(Sprite *this, int id, Sprite *other) {
-    this->visible = false;
+    if (other->name && !strcmp(other->name, "PacMan")) {
+        this->visible = false;
+        SetPowerMode(true);
+        ChangeScore(POWER_PELLET_SCORE);
+    }
 }
 
 static void _Destruct(Sprite *this) {
@@ -31,6 +38,7 @@ Sprite *ConstructPowerPellet(Vector2 position, Vector2 size) {
     animator->Animate = _Animate;
     for (int i = 0; i < 2; i++)animator->intervals[i] = 200;
 
+    obj->name = "PowerPellet";
     obj->hasAnimation = true;
     obj->renderer.animator = animator;
     obj->Collide = _Collide;

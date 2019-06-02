@@ -10,14 +10,25 @@
 #include "vector2.h"
 #include "animator.h"
 #include "collider.h"
+#include "autonav.h"
 
 struct sprite;
 typedef struct sprite Sprite;
+
+typedef void(*TimerCallback)(Sprite *sender);
+
+typedef struct {
+    double interval;
+    double currentTick;
+    TimerCallback callback;
+} Timer;
+typedef LinkedList TimersList;
 
 /**@brief Sprite 结构包含了 Sprite 的基本属性。
  *
  */
 struct sprite {
+    string name; /**< 名称 */
     Vector2 position; /**< 位置矢量，由屏幕左下角指向 Sprite 的左下角 */
     Vector2 size; /**< 大小矢量，由 Sprite 的左下角指向右上角 */
     Vector2 velocity; /**< 速度矢量 */
@@ -33,6 +44,8 @@ struct sprite {
     } renderer; /**< 渲染器，如果 hasAnimation 为 true 则为 Animator，否则为 Render 方法，不能为 NULL */
 
     CollidersList colliders; /**< 碰撞器列表 */
+    AutoNavAgent navAgent; /**< 自动导航器 */
+    TimersList timers; /**< 计时器列表 */
 
     void (*Update)(Sprite *this, double interval); /**< Update 方法，用于更新物理属性，如位置、速度等，可为 NULL */
 
@@ -110,5 +123,21 @@ Vector2 CalcRelativeCentre(Sprite *sprite);
  * @return Sprite 的内切圆半径
  */
 double CalcIncircleRadius(Sprite *sprite);
+
+/**@brief 注册计时器。
+ *
+ * @param this 计时器所述 Sprite
+ * @param interval 计时器事件触发时间间隔
+ * @param callback 回调函数
+ */
+void RegisterTimer(Sprite *this, double interval, TimerCallback callback);
+
+/**@brief 删除计时器。
+ *
+ * @param this 计时器所述 Sprite
+ * @param callback callback 回调函数
+ * @return 如删除成功则返回 true，否则返回 false
+ */
+bool UnregisterTimer(Sprite *this, TimerCallback callback);
 
 #endif //PAC_SUPERMAN_SPRITE_H

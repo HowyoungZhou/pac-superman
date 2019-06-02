@@ -36,6 +36,12 @@ void ResumeGame();
  */
 bool IsPaused();
 
+/**@brief 获取当前场景，即 Scenes 栈栈顶场景。
+ *
+ * @return 如 Scenes 栈非空则返回当前场景，否则返回 NULL
+ */
+Scene *GetCurrentScene();
+
 /**@brief 将新的 Scene 加入当前的 Scenes 栈。
  *
  * @param scene Scene 对象
@@ -58,4 +64,5 @@ void PopScene();
  * @return 是否成功替换场景
  */
 bool ReplaceScene(Scene *newScene);
+
 #endif //PAC_SUPERMAN_ENGINE_H

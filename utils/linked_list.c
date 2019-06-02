@@ -15,11 +15,11 @@ void AddElement(LinkedList *list, void *element) {
     list->length++;
 }
 
-void *RemoveElement(LinkedList *list, void *param, ElementComparer comparer) {
+void *RemoveElement(LinkedList *list, void *param, ElementIdentifier identifier) {
     if (list == NULL) return NULL;
     LinkedListNode *current = list->head, *last = NULL;
     while (current) {
-        if (comparer(current->element, param) == 0) {
+        if (identifier(current->element, param)) {
             // 如果 last 为 NULL，则修改首节点为下一个节点
             if (last == NULL) list->head = current->next;
             else last->next = current->next;
@@ -84,15 +84,15 @@ void *GetLastElement(const LinkedList *list) {
     return list->tail->element;
 }
 
-void *SearchElement(const LinkedList *list, void *param, ElementComparer comparer) {
+void *SearchElement(const LinkedList *list, void *param, ElementIdentifier identifier) {
     if (list->head == NULL)return NULL;
     for (LinkedListNode *node = list->head; node != NULL; node = node->next) {
-        if (comparer(node->element, param) == 0)return node->element;
+        if (identifier(node->element, param))return node->element;
     }
     return NULL;
 }
 
-int PointerComparer(void *e1, void *e2) {
-    return e1 - e2;
+bool PointerComparer(void *e1, void *e2) {
+    return e1 == e2;
 }
 

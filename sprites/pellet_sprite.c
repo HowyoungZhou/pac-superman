@@ -3,7 +3,10 @@
 #include <extgraph.h>
 #include <drawing.h>
 #include <assets.h>
+#include <game_controller.h>
 #include "pellet_sprite.h"
+
+#define PELLET_SCORE 50
 
 static unsigned int _spriteCount = 0;
 static BitmapAsset *_asset = NULL;
@@ -13,7 +16,10 @@ static void _Render(Sprite *this) {
 }
 
 static void _Collide(Sprite *this, int id, Sprite *other) {
-    this->visible = false;
+    if (other->name && !strcmp(other->name, "PacMan")) {
+        this->visible = false;
+        ChangeScore(PELLET_SCORE);
+    }
 }
 
 static void _Destruct(Sprite *this) {
@@ -30,6 +36,7 @@ Sprite *ConstructPellet(Vector2 position, Vector2 size) {
     Sprite *obj = ConstructSprite(position, size, ZERO_VECTOR);
     if (_asset == NULL) _asset = LoadBitmapAsset("pellet.bmp");
     RegisterCircleCollider(obj, DEFAULT_COLLIDER_ID, false, CalcRelativeCentre(obj), CalcIncircleRadius(obj));
+    obj->name = "Pellet";
     obj->renderer.Render = _Render;
     obj->Collide = _Collide;
     obj->Destruct = _Destruct;

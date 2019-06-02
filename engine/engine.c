@@ -20,7 +20,15 @@ static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callb
 
 static inline void _UpdateScene();
 
+static void _UpdateTimers(Sprite *sprite);
+
 static void _UpdateSprite(Sprite *sprite);
+
+static void _AutoNav(Sprite *sprite);
+
+static inline Collider _CalcAbsoluteCollider(Sprite *sprite, Collider *collider);
+
+static inline void _DetectSpriteCollision(Sprite *s1, Sprite *s2);
 
 static void _DetectCollision(Scene *current);
 
@@ -72,6 +80,10 @@ bool IsPaused() {
     return _paused;
 }
 
+Scene *GetCurrentScene() {
+    return GetLastElement(&_scenes);
+}
+
 void PushScene(Scene *scene) {
     scene->Initialize(scene);
     AddElement(&_scenes, scene);
@@ -120,8 +132,11 @@ static void _MainTimerHandler(int timerID) {
         case PHYSICAL_ENGINE_TIMER_ID:
             if (current == NULL) break;
             _UpdateInterval();
+            _ForEachSprite(&current->gameSprites, _UpdateTimers); // 更新计时器
+            _ForEachSprite(&current->uiSprites, _UpdateTimers);
             _ForEachSprite(&current->gameSprites, _UpdateAnimator); // 更新动画器
             _ForEachSprite(&current->gameSprites, _UpdateSprite); // 调用 Sprite 的 Update 函数
+            _ForEachSprite(&current->gameSprites, _AutoNav);
             _DetectCollision(current); // 碰撞检测
             _ForEachSprite(&current->gameSprites, _UpdatePosition); // 更新位置
             break;
@@ -143,15 +158,65 @@ static inline void _UpdateScene() {
     _popScene = false;
 }
 
+static void _UpdateTimers(Sprite *sprite) {
+    for (LinkedListNode *node = sprite->timers.head; node != NULL; node = node->next) {
+        Timer *timer = node->element;
+        timer->currentTick += _interval;
+        if (timer->currentTick >= timer->interval) {
+            timer->callback(sprite);
+            timer->currentTick = 0;
+        }
+    }
+}
+
 static void _UpdateSprite(Sprite *sprite) {
     if (sprite->Update == NULL)return;
     sprite->Update(sprite, _interval);
 }
 
+static void _AutoNav(Sprite *sprite) {
+    if (sprite->navAgent.path) AutoNav(sprite, _interval);
+}
+
+static inline Collider _CalcAbsoluteCollider(Sprite *sprite, Collider *collider) {
+    Collider res = *collider;
+    Vector2 position = VAdd(sprite->position, VMultiply(_interval / 1000.0, sprite->velocity));
+    switch (res.type) {
+        case BOX_COLLIDER:
+            res.shape.boxCollider.position = VAdd(position, res.shape.boxCollider.position);
+            break;
+        case CIRCLE_COLLIDER:
+            res.shape.circleCollider.centre = VAdd(position, res.shape.circleCollider.centre);
+            break;
+    }
+    return res;
+}
+
+static inline void _DetectSpriteCollision(Sprite *s1, Sprite *s2) {
+    if (s1->colliders.head == NULL || s2->colliders.head == NULL)return;
+    for (ColliderNode *n1 = s1->colliders.head; n1 != NULL; n1 = n1->next) {
+        Collider c1 = _CalcAbsoluteCollider(s1, (Collider *) n1->element);
+        for (ColliderNode *n2 = s2->colliders.head; n2 != NULL; n2 = n2->next) {
+            Collider c2 = _CalcAbsoluteCollider(s2, (Collider *) n2->element);
+            if (!DetectIntersection(&c1, &c2)) continue;
+            if (s1->Collide != NULL) {
+                s1->Collide(s1, ((Collider *) n1->element)->id, s2);
+                return;
+            }
+            if (s2->Collide != NULL) {
+                s2->Collide(s2, ((Collider *) n2->element)->id, s1);
+                return;
+            }
+        }
+    }
+}
+
 static void _DetectCollision(Scene *current) {
     for (SpritesListNode *s1 = current->gameSprites.head; s1 != NULL; s1 = s1->next) {
+        if (!((Sprite *) s1->element)->visible) continue;
         for (SpritesListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
-            DetectCollision(s1->element, s2->element, _interval);
+            if (!((Sprite *) s1->element)->visible) continue;
+            _DetectSpriteCollision(s1->element, s2->element);
         }
     }
 }

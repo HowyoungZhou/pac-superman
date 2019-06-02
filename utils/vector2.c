@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdbool.h>
 #include "vector2.h"
 
 Vector2 VAdd(Vector2 v1, Vector2 v2) {
@@ -48,4 +49,8 @@ double VAngle(Vector2 v){
         return atan(v.y/v.x) * 180 / M_PI;
     if(v.x<0 && v.y>=0 || v.x<0 && v.y<0)
         return atan(v.y/v.x) * 180 / M_PI + 180;
+}
+
+bool VEqual(Vector2 v1, Vector2 v2) {
+    return fabs(v1.x - v2.x) < EPSILON && fabs(v1.y - v2.y) < EPSILON;
 }
