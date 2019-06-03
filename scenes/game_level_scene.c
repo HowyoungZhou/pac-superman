@@ -8,25 +8,31 @@
 #include <graphics.h>
 #include "game_level_scene.h"
 #include <game_scene.h>
+#include <imgui.h>
+#include <textbox.h>
+#include <extgraph.h>
 
 static double cx,cy;
 
+static Scene *_CurrentScene;
+
 void _Easy(){
-    ReplaceScene(ConstructGameScene());
+    AddUISprite(_CurrentScene, ConstructTextBoxSprite());
 }
 
 void _Normal(){
-    ReplaceScene(ConstructGameScene());
+    AddUISprite(_CurrentScene, ConstructTextBoxSprite());
 }
 
 void _Hard(){
-    ReplaceScene(ConstructGameScene());
+    AddUISprite(_CurrentScene, ConstructTextBoxSprite());
 }
 
 void _Level_Initialize(Scene *scene) {
 
     cx = GetWindowWidth();
     cy = GetWindowHeight();
+    _CurrentScene = scene;
     AddUISprite(scene, ConstructButtonSprite(1, (Vector2) {cx/2-2.5, cy/2-0.75}, (Vector2) {1, 1.5}, "EASY", _Easy));
     AddUISprite(scene, ConstructButtonSprite(2, (Vector2) {cx/2-0.5, cy/2-0.75}, (Vector2) {1, 1.5}, "NORMAL",_Normal));
     AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {cx/2+1.5, cy/2-0.75}, (Vector2) {1, 1.5}, "HARD", _Hard));

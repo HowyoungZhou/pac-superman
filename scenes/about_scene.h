@@ -1,0 +1,6 @@
+#ifndef PAC_SUPERMAN_ABOUT_SCENE_H
+#define PAC_SUPERMAN_ABOUT_SCENE_H
+
+Scene *ConstructAboutScene();
+
+#endif //PAC_SUPERMAN_ABOUT_SCENE_H

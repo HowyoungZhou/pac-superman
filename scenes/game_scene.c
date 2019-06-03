@@ -7,12 +7,22 @@
 #include <pacman_sprite.h>
 #include <power_pellet_sprite.h>
 #include "game_scene.h"
+#include <button.h>
+#include <hp.h>
+#include <score.h>
+#include <scene.h>
+#include <engine.h>
+#include <game_instruction_scene.h>
+#include <game_RankingList_scene.h>
+#include <about_scene.h>
 
 #define PELLET_SIZE_RATIO 0.25
 #define POWER_PELLET_SIZE_RATIO 0.7
 
 #define PELLET_TILE 54
 #define POWER_PELLET_TILE 42
+
+static double cx,cy;
 
 void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id);
 
@@ -39,6 +49,28 @@ void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id) {
     }
 }
 
+void PauseCallback(Sprite *button) {
+    if (IsPaused()) {
+        ResumeGame();
+        ((Button *) button->property)->label = "Pause";
+    } else {
+        PauseGame();
+        ((Button *) button->property)->label = "Resume";
+    }
+}
+
+void ResetCallback(Sprite *button) {
+    ReplaceScene(ConstructGameScene());
+}
+
+void _GameToRank(){
+    ReplaceScene(ConstructRankingListScene());
+}
+
+void _GameToAbout(){
+    ReplaceScene(ConstructAboutScene());
+}
+
 void _Initialize(Scene *scene) {
     _currentScene = scene;
     // 游戏菜单
@@ -54,6 +86,20 @@ void _Initialize(Scene *scene) {
     AddGameSprite(scene, ConstructPacmanSprite(pacman.position, pacman.size));
     // 添加豆子
     ForEachTile(map, _ForEachTile);
+
+    //添加左上角的按钮
+    cx = GetWindowWidth();
+    cy = GetWindowHeight();
+    AddUISprite(scene, ConstructButtonSprite(1, (Vector2) {0.1, cy-0.9}, (Vector2) {0.8, 0.4}, "Pause", PauseCallback));
+    AddUISprite(scene, ConstructButtonSprite(2, (Vector2) {1.1, cy-0.9}, (Vector2) {0.8, 0.4}, "Reset", ResetCallback));
+    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {2.1, cy-0.9}, (Vector2) {0.8, 0.4}, "Rank", _GameToRank));
+    AddUISprite(scene, ConstructButtonSprite(4, (Vector2) {3.1, cy-0.9}, (Vector2) {0.8, 0.4}, "About", _GameToAbout));
+
+    //添加右上角的分数
+    AddUISprite(scene,ConstructScoreSprite());
+
+    //添加左下角生命值
+    AddUISprite(scene,ConstructHPSprite());
 }
 
 Scene *ConstructGameScene() {
