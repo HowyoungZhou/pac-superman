@@ -7,15 +7,9 @@
 #include <game_controller.h>
 #include <autonav.h>
 #include "ghost_blinky_sprite.h"
-
-typedef enum {
-    UP, RIGHT, DOWN, LEFT
-} Direction;
-
-typedef struct {
-    BitmapAsset *assets[8];
-    Direction lookingAt;
-} Ghost;
+#include "ghost.h"
+#include "map_sprite.h"
+#include <ghost.h>
 
 static inline Ghost *_ConstructGhost();
 
@@ -23,13 +17,17 @@ static inline void _DestructGhost(Ghost *this);
 
 static void _Animate(Animator *this, Sprite *sprite, Frame frame);
 
-static BitmapAsset *_assets[8];
+static void _UpdatePath(Sprite *this);
+
+static Vector2 _FindFleePosition(Sprite *map);
+
 static int _objCount = 0;
 static double _interval = 0;
 
 static inline Ghost *_ConstructGhost() {
     Ghost *obj = malloc(sizeof(Ghost));
     obj->lookingAt = DOWN;
+    obj->chasedAfter = false;
     obj->assets[0] = LoadBitmapAsset("ghost/blinky/blinky-right1.bmp");
     obj->assets[1] = LoadBitmapAsset("ghost/blinky/blinky-right2.bmp");
     obj->assets[2] = LoadBitmapAsset("ghost/blinky/blinky-up1.bmp");
@@ -38,6 +36,8 @@ static inline Ghost *_ConstructGhost() {
     obj->assets[5] = LoadBitmapAsset("ghost/blinky/blinky-left2.bmp");
     obj->assets[6] = LoadBitmapAsset("ghost/blinky/blinky-down1.bmp");
     obj->assets[7] = LoadBitmapAsset("ghost/blinky/blinky-down2.bmp");
+    obj->assets[8] = LoadBitmapAsset("ghost/flash/flash1.bmp");
+    obj->assets[9] = LoadBitmapAsset("ghost/flash/flash2.bmp");
     return obj;
 }
 
@@ -58,6 +58,12 @@ static void _Animate(Animator *this, Sprite *sprite, Frame frame) {
         ghost->lookingAt = LEFT;
     } else if (sprite->velocity.y < 0) {
         ghost->lookingAt = DOWN;
+    }
+
+    if (ghost->chasedAfter) {
+        if (frame == 0) DrawBitmapAsset(ghost->assets[8], sprite->position, sprite->size);
+        else DrawBitmapAsset(ghost->assets[9], sprite->position, sprite->size);
+        return;
     }
 
     switch (ghost->lookingAt) {
@@ -85,26 +91,47 @@ static void _Destruct(Sprite *this) {
     DestructSprite(this);
 }
 
-static void _Update(Sprite *this, double interval) {
-    _interval += interval;
-    if (_interval < 500) return;
+static Vector2 _FindFleePosition(Sprite *map) {
+    Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
+    TiledMapAsset *asset = map->property;
+    Vector2 resPos = ZERO_VECTOR;
+    double resDist = -1.;
+    for (int i = 0; i < asset->width; i++) {
+        for (int j = 0; j < asset->height; j++) {
+            if (!IsTileWalkable(map, i, j)) continue;
+            Vector2 tilePos = GetTilePosition(map, i, j);
+            double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
+            if (dist > resDist) {
+                resPos = tilePos;
+                resDist = dist;
+            }
+        }
+    }
+    return resPos;
+}
+
+static void _UpdatePath(Sprite *this) {
+    Ghost *ghost = this->property;
+    if (ghost->chasedAfter) {
+        this->navAgent.targetType = POS_TARGET;
+        this->navAgent.target.position = _FindFleePosition(FindGameSpriteByName(GetCurrentScene(), "Map"));
+    } else if (this->navAgent.targetType == POS_TARGET) {
+        this->navAgent.targetType = SPRITE_TARGET;
+        this->navAgent.target.sprite = FindGameSpriteByName(GetCurrentScene(), "PacMan");
+    }
     UpdatePath(GetCurrentScene(), this);
-    _interval = 0;
 }
 
 static void _Collide(Sprite *this, int id, Sprite *other) {
     if (other->name && !strcmp(other->name, "PacMan")) {
-        if (GetPowerMode()) this->visible = false;
-        else PopScene();
+
     }
 }
 
 Sprite *ConstructGhostBlinkySprite(Sprite *target) {
     Sprite *obj = ConstructSprite((Vector2) {6.45, 6}, (Vector2) {0.3, 0.3}, ZERO_VECTOR);
-
-    Ghost *ghost = _ConstructGhost();
-
     RegisterBoxCollider(obj, 0, true, obj->size, ZERO_VECTOR);
+    RegisterTimer(obj, 500, _UpdatePath);
     SetNavTargetSprite(obj, target);
 
     Animator *animator = ConstructAnimator(2);
@@ -114,8 +141,7 @@ Sprite *ConstructGhostBlinkySprite(Sprite *target) {
     obj->name = "GhostBlinky";
     obj->hasAnimation = true;
     obj->renderer.animator = animator;
-    obj->Update = _Update;
-    obj->property = ghost;
+    obj->property = _ConstructGhost();
     obj->Collide = _Collide;
     _objCount++;
     return obj;

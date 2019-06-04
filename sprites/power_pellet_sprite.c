@@ -14,7 +14,7 @@ static void _Animate(Animator *this, Sprite *sprite, Frame frame) {
 static void _Collide(Sprite *this, int id, Sprite *other) {
     if (other->name && !strcmp(other->name, "PacMan")) {
         this->visible = false;
-        SetPowerMode(true);
+        PowerModeOn();
         ChangeScore(POWER_PELLET_SCORE);
     }
 }

@@ -13,8 +13,6 @@ Difficulty GetDifficulty();
 
 void SetDifficulty(Difficulty difficulty);
 
-bool GetPowerMode();
-
-void SetPowerMode(bool value);
+void PowerModeOn();
 
 #endif //PAC_SUPERMAN_GAME_STATE_H

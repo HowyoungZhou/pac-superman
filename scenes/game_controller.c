@@ -1,17 +1,23 @@
 #include <stdbool.h>
+#include <genlib.h>
+#include <sprite.h>
+#include <scene.h>
+#include <engine.h>
+#include <assets.h>
+#include <ghost.h>
 #include "game_controller.h"
 
 typedef struct {
     int score;
     unsigned int life;
-    bool powerMode;
 } GameState;
 
+static const string _ghosts[] = {"GhostBlinky"};
 static Difficulty _difficulty;
-static GameState _state = (GameState) {.life = 3, .score = 0, .powerMode = false};
+static GameState _state = (GameState) {.life = 3, .score = 0};
 
 void ResetGameState() {
-    _state = (GameState) {.life = 3, .score = 0, .powerMode = false};
+    _state = (GameState) {.life = 3, .score = 0};
 }
 
 void ChangeScore(int change) {
@@ -26,10 +32,10 @@ void SetDifficulty(Difficulty difficulty) {
     _difficulty = difficulty;
 }
 
-bool GetPowerMode() {
-    return _state.powerMode;
-}
-
-void SetPowerMode(bool value) {
-    _state.powerMode = value;
+void PowerModeOn() {
+    for (int i = 0; i < sizeof(_ghosts) / sizeof(string); i++) {
+        Sprite *ghost = FindGameSpriteByName(GetCurrentScene(), _ghosts[i]);
+        if (!ghost) continue;
+        ((Ghost *) ghost->property)->chasedAfter = true;
+    }
 }

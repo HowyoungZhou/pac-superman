@@ -13,6 +13,8 @@ Vector2 GetRelativeTilePosition(Sprite *this, unsigned int x, unsigned int y);
 
 Vector2 GetTilePosition(Sprite *this, unsigned int x, unsigned int y);
 
+bool IsTileWalkable(Sprite *this, unsigned int x, unsigned int y);
+
 bool FindGameObjectOfMap(Sprite *this, string name, GameObject *output);
 
 void ForEachTile(Sprite *this, ForEachTileCallback callback);

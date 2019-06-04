@@ -96,6 +96,14 @@ Vector2 GetTilePosition(Sprite *this, unsigned int x, unsigned int y) {
     return VAdd(this->position, GetRelativeTilePosition(this, x, y));
 }
 
+bool IsTileWalkable(Sprite *this, unsigned int x, unsigned int y) {
+    short tile = GetTileAt(this->property, x, y);
+    for (int i = 0; i < _dict->length; i++) {
+        if (tile == _dict->colliders[i].id) return false;
+    }
+    return true;
+}
+
 bool FindGameObjectOfMap(Sprite *this, string name, GameObject *output) {
     TiledMapAsset *map = this->property;
     GameObject obj;
