@@ -1,6 +1,0 @@
-#ifndef PAC_SUPERMAN_EXAMPLE_BITMAP_SPRITE_H
-#define PAC_SUPERMAN_EXAMPLE_BITMAP_SPRITE_H
-
-Sprite *ConstructExampleBitmapSprite(Sprite *target);
-
-#endif //PAC_SUPERMAN_EXAMPLE_BITMAP_SPRITE_H

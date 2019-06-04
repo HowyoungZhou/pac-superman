@@ -4,7 +4,7 @@
 #include <vector2.h>
 #include <engine.h>
 #include "graphics.h"
-#include <example_bitmap_sprite.h>
+#include <ghost_blinky_sprite.h>
 #include "game_home_scene.h"
 #include "image.h"
 #include <game_level_scene.h>

@@ -6,7 +6,7 @@
 #include <graphics.h>
 #include <pacman_sprite.h>
 #include <power_pellet_sprite.h>
-#include <example_bitmap_sprite.h>
+#include <ghost_blinky_sprite.h>
 #include <autonav.h>
 #include <autonav_route_sprite.h>
 #include <example_controllable_sprite.h>
@@ -59,7 +59,7 @@ void _Initialize(Scene *scene) {
     AddGameSprite(scene, pacmanSprite);
     // 添加豆子
     ForEachTile(map, _ForEachTile);
-    Sprite *ghost = ConstructExampleBitmapSprite(pacmanSprite);
+    Sprite *ghost = ConstructGhostBlinkySprite(pacmanSprite);
     AddGameSprite(scene, ghost);
     ChangePathfindingStep(GetTileSize(map).x/2);
     AddUISprite(scene, ConstructAutoNavRouteSprite(ghost));

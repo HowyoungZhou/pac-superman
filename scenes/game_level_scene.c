@@ -3,7 +3,7 @@
 #include <game_menu.h>
 #include <vector2.h>
 #include <engine.h>
-#include <example_bitmap_sprite.h>
+#include <ghost_blinky_sprite.h>
 #include <image.h>
 #include <graphics.h>
 #include "game_level_scene.h"
