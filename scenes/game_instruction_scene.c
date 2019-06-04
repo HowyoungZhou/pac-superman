@@ -6,6 +6,7 @@
 #include <ghost_blinky_sprite.h>
 #include <image.h>
 #include <graphics.h>
+#include <extgraph.h>
 #include <game_home_scene.h>
 #include "game_instruction_scene.h"
 
@@ -21,7 +22,7 @@ void _Instruction_Initialize(Scene *scene) {
     cy = GetWindowHeight();
 
     AddUISprite(scene, ConstructButtonSprite(1, (Vector2) {0.2, 0.2}, (Vector2) {0.55, 0.55}, "BACK", _InsToHome));
-    AddUISprite(scene, ConstructImageSprite((Vector2){cx/2-3,cy*0.7},(Vector2){6,1.8},"Instruction/Ins_Title.bmp"));
+    AddUISprite(scene, ConstructImageSprite((Vector2){cx/2-5,cy/2-2.5},(Vector2){10,6},"Instruction/ins.bmp"));
 
 }
 

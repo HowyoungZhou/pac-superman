@@ -20,6 +20,8 @@ static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callb
 
 static inline void _UpdateScene();
 
+static void _UpdateTimers(Sprite *sprite);
+
 static void _UpdateSprite(Sprite *sprite);
 
 static void _AutoNav(Sprite *sprite);
@@ -130,6 +132,8 @@ static void _MainTimerHandler(int timerID) {
         case PHYSICAL_ENGINE_TIMER_ID:
             if (current == NULL) break;
             _UpdateInterval();
+            _ForEachSprite(&current->gameSprites, _UpdateTimers); // 更新计时器
+            _ForEachSprite(&current->uiSprites, _UpdateTimers);
             _ForEachSprite(&current->gameSprites, _UpdateAnimator); // 更新动画器
             _ForEachSprite(&current->gameSprites, _UpdateSprite); // 调用 Sprite 的 Update 函数
             _ForEachSprite(&current->gameSprites, _AutoNav);
@@ -152,6 +156,17 @@ static inline void _UpdateScene() {
         _newScene = NULL;
     }
     _popScene = false;
+}
+
+static void _UpdateTimers(Sprite *sprite) {
+    for (LinkedListNode *node = sprite->timers.head; node != NULL; node = node->next) {
+        Timer *timer = node->element;
+        timer->currentTick += _interval;
+        if (timer->currentTick >= timer->interval) {
+            timer->callback(sprite);
+            timer->currentTick = 0;
+        }
+    }
 }
 
 static void _UpdateSprite(Sprite *sprite) {
