@@ -1,6 +1,6 @@
 #ifndef PAC_SUPERMAN_GHOST_BLINKY_SPRITE_H
 #define PAC_SUPERMAN_GHOST_BLINKY_SPRITE_H
 
-Sprite *ConstructGhostBlinkySprite();
+Sprite *ConstructGhostBlinkySprite(Sprite *target);
 
 #endif //PAC_SUPERMAN_GHOST_BLINKY_SPRITE_H
