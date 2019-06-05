@@ -114,7 +114,7 @@ void _Initialize(Scene *scene) {
     ForEachTile(map, _ForEachTile);
 
     // 添加鬼
-    Sprite *ghost = ConstructGhostBlinkySprite(pacmanSprite);
+    Sprite *ghost = ConstructGhostBlinkySprite((Vector2) {6.45, 6}, (Vector2) {0.3, 0.3});
     AddGameSprite(scene, ghost);
     ChangePathfindingStep(GetTileSize(map).x / 2);
 }

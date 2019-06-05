@@ -4,7 +4,7 @@
 #include <scene.h>
 #include <engine.h>
 #include <assets.h>
-#include <ghost.h>
+#include <ghost_sprite.h>
 #include "game_controller.h"
 
 typedef struct {
@@ -36,6 +36,6 @@ void PowerModeOn() {
     for (int i = 0; i < sizeof(_ghosts) / sizeof(string); i++) {
         Sprite *ghost = FindGameSpriteByName(GetCurrentScene(), _ghosts[i]);
         if (!ghost) continue;
-        ((Ghost *) ghost->property)->chasedAfter = true;
+        ((Ghost *) ghost->property)->state = CHASED_AFTER;
     }
 }

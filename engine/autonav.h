@@ -58,6 +58,8 @@ void SetNavTargetSprite(Sprite *source, Sprite *target);
  */
 void SetNavTargetPosition(Sprite *sprite, Vector2 position);
 
+void SetNavDirectTargetPosition(Sprite *sprite, Vector2 position);
+
 /**@brief 自动导航方法，该方法由引擎调用。
  *
  * @param sprite 要执行自动导航的 Sprite

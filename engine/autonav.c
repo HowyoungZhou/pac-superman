@@ -221,13 +221,9 @@ static inline void _FreePath(PathNode *path) {
 bool UpdatePath(Scene *scene, Sprite *sprite) {
     PathNode *path = _AStarFindPath(scene, sprite);
     if (!path) return false;
-    // 跳过起点
-    PathNode *next = path->parent;
-    free(path);
     if (!sprite->navAgent.path) _FreePath(sprite->navAgent.path);
-    sprite->navAgent.path = next;
-    if (!next) return true;
-    sprite->velocity = VMultiply(sprite->navAgent.speed, VNormalize(VSubtract(next->position, sprite->position)));
+    sprite->navAgent.path = path;
+    sprite->velocity = VMultiply(sprite->navAgent.speed, VNormalize(VSubtract(path->position, sprite->position)));
     return true;
 }
 
@@ -241,6 +237,12 @@ void SetNavTargetPosition(Sprite *sprite, Vector2 position) {
     sprite->navAgent.target.position = position;
 }
 
+void SetNavDirectTargetPosition(Sprite *sprite, Vector2 position) {
+    sprite->navAgent.targetType = POS_TARGET;
+    sprite->navAgent.path = _ConstructPathNode(NULL, 0, 0, position);
+    sprite->velocity = VMultiply(sprite->navAgent.speed, VNormalize(VSubtract(position, sprite->position)));
+}
+
 void AutoNav(Sprite *sprite, double interval) {
     PathNode *node = sprite->navAgent.path;
     if (!node) return;
@@ -248,7 +250,7 @@ void AutoNav(Sprite *sprite, double interval) {
     Vector2 nextPos = VAdd(sprite->position, VMultiply(interval / 1000.0, sprite->velocity)); // 下一时刻的位置
     Vector2 nextDist = VSubtract(nextPos, node->position); // 下一时刻距目标点的距离
     // 如下一时刻距目标点的距离比目前距目标点的距离小，表明仍在向目标前进，不更新
-    if (VLengthSquared(nextDist) < VLengthSquared(currentDist)) return;
+    if (!VEqual(sprite->position, node->position) && VLengthSquared(nextDist) < VLengthSquared(currentDist)) return;
     // 否则判定已达到目标点，切换到路径中的下一个节点
     //sprite->position = node->position;
     sprite->navAgent.path = node->parent;
