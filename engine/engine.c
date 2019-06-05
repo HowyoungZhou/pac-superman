@@ -213,10 +213,9 @@ static inline void _DetectSpriteCollision(Sprite *s1, Sprite *s2) {
 
 static void _DetectCollision(Scene *current) {
     for (SpritesListNode *s1 = current->gameSprites.head; s1 != NULL; s1 = s1->next) {
-        if (!((Sprite *) s1->element)->visible) continue;
         for (SpritesListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
-            if (!((Sprite *) s1->element)->visible) continue;
-            _DetectSpriteCollision(s1->element, s2->element);
+            if (((Sprite *) s1->element)->visible && ((Sprite *) s2->element)->visible)
+                _DetectSpriteCollision(s1->element, s2->element);
         }
     }
 }

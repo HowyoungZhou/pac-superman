@@ -9,6 +9,7 @@
 #include "map_sprite.h"
 #include <ghost_sprite.h>
 
+#define EYES_SPEED 3
 #define PATH_UPDATE_INTERVAL 500
 
 static inline Ghost *_ConstructGhost(Vector2 initPos);
@@ -132,11 +133,12 @@ static void _UpdatePath(Sprite *this) {
     Ghost *ghost = this->property;
     switch (ghost->state) {
         case CHASING:
-            if (this->navAgent.targetType == POS_TARGET || !this->navAgent.target.sprite)
-                SetNavTargetSprite(this, FindGameSpriteByName(GetCurrentScene(), "PacMan"));
+            this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
+            SetNavTargetSprite(this, FindGameSpriteByName(GetCurrentScene(), "PacMan"));
             break;
         case CHASED_AFTER:
-            //SetNavTargetPosition(this, _FindFleePosition(FindGameSpriteByName(GetCurrentScene(), "Map")));
+            this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
+            SetNavTargetPosition(this, _FindFleePosition(FindGameSpriteByName(GetCurrentScene(), "Map")));
             break;
         default:
             break;
@@ -149,11 +151,23 @@ static void _Collide(Sprite *this, int id, Sprite *other) {
     Ghost *ghost = this->property;
     switch (ghost->state) {
         case CHASING:
+            break;
         case CHASED_AFTER:
             ghost->state = EATEN;
+            this->navAgent.speed = EYES_SPEED;
             SetNavTargetPosition(this, ghost->initPos);
+            UpdatePath(GetCurrentScene(), this);
+            break;
         default:
             break;
+    }
+}
+
+static void _Update(Sprite *this, double interval) {
+    Ghost *ghost = this->property;
+    if (ghost->state == EATEN && !this->navAgent.path) {
+        ghost->state = CHASING;
+        this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
     }
 }
 
@@ -171,6 +185,7 @@ Sprite *ConstructGhostSprite(Vector2 position, Vector2 size, string name) {
     obj->renderer.animator = animator;
     obj->property = _ConstructGhost(position);
     obj->Collide = _Collide;
+    obj->Update = _Update;
     if (_objCount == 0) _LoadPublicAssets();
     _objCount++;
     return obj;

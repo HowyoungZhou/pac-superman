@@ -15,6 +15,24 @@ typedef struct {
 static const string _ghosts[] = {"GhostBlinky"};
 static Difficulty _difficulty;
 static GameState _state = (GameState) {.life = 3, .score = 0};
+static GameObjectOption _option;
+static const GameObjectOption _options[] = {
+        (GameObjectOption) {
+                .playerSpeed = 1.,
+                .ghostChasingSpeed = 0.5,
+                .ghostChasedSpeed = 0.4
+        },
+        (GameObjectOption) {
+                .playerSpeed = 1.,
+                .ghostChasingSpeed = 0.7,
+                .ghostChasedSpeed = 0.6
+        },
+        (GameObjectOption) {
+                .playerSpeed = 1.,
+                .ghostChasingSpeed = 1.,
+                .ghostChasedSpeed = 0.8
+        }
+};
 
 void ResetGameState() {
     _state = (GameState) {.life = 3, .score = 0};
@@ -32,10 +50,15 @@ void SetDifficulty(Difficulty difficulty) {
     _difficulty = difficulty;
 }
 
+GameObjectOption GetGameObjectOption() {
+    return _options[_difficulty];
+}
+
 void PowerModeOn() {
     for (int i = 0; i < sizeof(_ghosts) / sizeof(string); i++) {
-        Sprite *ghost = FindGameSpriteByName(GetCurrentScene(), _ghosts[i]);
-        if (!ghost) continue;
-        ((Ghost *) ghost->property)->state = CHASED_AFTER;
+        Sprite *ghostSprite = FindGameSpriteByName(GetCurrentScene(), _ghosts[i]);
+        if (!ghostSprite) continue;
+        Ghost *ghost = ghostSprite->property;
+        if (ghost->state == CHASING) ghost->state = CHASED_AFTER;
     }
 }
