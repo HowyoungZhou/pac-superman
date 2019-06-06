@@ -6,6 +6,14 @@
 #include "ghost_blinky_sprite.h"
 #include "map_sprite.h"
 
+#define DELAY 0
+
+static Vector2 _FindFleePosition(Sprite *map);
+
+static void _UpdatePath(Sprite *this);
+
+static void _Go(Sprite *this);
+
 static Vector2 _FindFleePosition(Sprite *map) {
     Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
     TiledMapAsset *asset = map->property;
@@ -42,8 +50,14 @@ static void _UpdatePath(Sprite *this) {
     UpdatePath(GetCurrentScene(), this);
 }
 
+static void _Go(Sprite *this) {
+    _UpdatePath(this);
+    RegisterTimer(this, PATH_UPDATE_INTERVAL, _UpdatePath);
+    DisableTimer(this, _Go);
+}
+
 Sprite *ConstructGhostBlinkySprite(Vector2 position, Vector2 size) {
-    Sprite *obj = ConstructGhostSprite(position, size, "GhostBlinky");
+    Sprite *obj = ConstructGhostSprite(position, size, "Blinky");
     Ghost *ghost = obj->property;
     ghost->assets[0] = LoadBitmapAsset("ghost/blinky/blinky-right1.bmp");
     ghost->assets[1] = LoadBitmapAsset("ghost/blinky/blinky-right2.bmp");
@@ -54,6 +68,11 @@ Sprite *ConstructGhostBlinkySprite(Vector2 position, Vector2 size) {
     ghost->assets[6] = LoadBitmapAsset("ghost/blinky/blinky-down1.bmp");
     ghost->assets[7] = LoadBitmapAsset("ghost/blinky/blinky-down2.bmp");
 
-    RegisterTimer(obj, PATH_UPDATE_INTERVAL, _UpdatePath);
+    RegisterTimer(obj, DELAY, _Go);
     return obj;
+}
+
+void ResetBlinky(Sprite *this) {
+    ResetGhost(this);
+    RegisterTimer(this, DELAY, _Go);
 }

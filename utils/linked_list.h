@@ -29,6 +29,13 @@ typedef struct linkedList {
  */
 void AddElement(LinkedList *list, void *element);
 
+/**@brief 将元素添加到链表的头部。
+ *
+ * @param list 目标链表
+ * @param element 要添加的元素
+ */
+void PushElement(LinkedList *list, void *element);
+
 /**@brief 弹出链表中的最末尾的元素并将其返回。
  *
  * @param list 目标链表

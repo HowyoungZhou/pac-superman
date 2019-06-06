@@ -15,6 +15,16 @@ void AddElement(LinkedList *list, void *element) {
     list->length++;
 }
 
+void PushElement(LinkedList *list, void *element) {
+    if (list == NULL) return;
+    LinkedListNode *node = malloc(sizeof(LinkedListNode));
+    node->element = element;
+    node->next = list->head;
+    list->head = node;
+    if (!list->tail)list->tail = node;
+    list->length++;
+}
+
 void *RemoveElement(LinkedList *list, void *param, ElementIdentifier identifier) {
     if (list == NULL) return NULL;
     LinkedListNode *current = list->head, *last = NULL;
@@ -63,7 +73,7 @@ void ClearList(LinkedList *list, ElementDestructor destruct) {
     LinkedListNode *node = list->head;
     while (node) {
         LinkedListNode *next = node->next;
-        if(destruct) destruct(node->element);
+        if (destruct) destruct(node->element);
         free(node);
         node = next;
     }

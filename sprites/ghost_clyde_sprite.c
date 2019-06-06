@@ -51,12 +51,13 @@ static void _UpdatePath(Sprite *this) {
 }
 
 static void _Go(Sprite *this) {
+    _UpdatePath(this);
     RegisterTimer(this, PATH_UPDATE_INTERVAL, _UpdatePath);
     DisableTimer(this, _Go);
 }
 
 Sprite *ConstructGhostClydeSprite(Vector2 position, Vector2 size) {
-    Sprite *obj = ConstructGhostSprite(position, size, "GhostClyde");
+    Sprite *obj = ConstructGhostSprite(position, size, "Clyde");
     Ghost *ghost = obj->property;
     ghost->assets[0] = LoadBitmapAsset("ghost/clyde/clyde-right1.bmp");
     ghost->assets[1] = LoadBitmapAsset("ghost/clyde/clyde-right2.bmp");
@@ -69,4 +70,9 @@ Sprite *ConstructGhostClydeSprite(Vector2 position, Vector2 size) {
 
     RegisterTimer(obj, DELAY, _Go);
     return obj;
+}
+
+void ResetClyde(Sprite *this) {
+    ResetGhost(this);
+    RegisterTimer(this, DELAY, _Go);
 }

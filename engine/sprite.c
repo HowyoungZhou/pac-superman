@@ -16,7 +16,7 @@ void DestructSprite(Sprite *this) {
     // 析构自动导航器
     FreePath(this->navAgent.path);
     // 析构计时器
-    ClearList(&this->timers, free);
+    ClearTimers(this);
     // 析构自身
     free(this);
 }
@@ -100,4 +100,14 @@ bool DisableTimer(Sprite *this, TimerCallback callback) {
     if (!timer) return false;
     timer->enable = false;
     return true;
+}
+
+void ClearTimers(Sprite *this){
+    ClearList(&this->timers, free);
+}
+
+void ResetTimers(Sprite *this) {
+    for (LinkedListNode *node = this->timers.head; node != NULL; node = node->next) {
+        ((Timer *) node->element)->currentTick = 0;
+    }
 }

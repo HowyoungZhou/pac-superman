@@ -51,12 +51,13 @@ static void _UpdatePath(Sprite *this) {
 }
 
 static void _Go(Sprite *this) {
+    _UpdatePath(this);
     RegisterTimer(this, PATH_UPDATE_INTERVAL, _UpdatePath);
     DisableTimer(this, _Go);
 }
 
 Sprite *ConstructGhostPinkySprite(Vector2 position, Vector2 size) {
-    Sprite *obj = ConstructGhostSprite(position, size, "GhostPinky");
+    Sprite *obj = ConstructGhostSprite(position, size, "Pinky");
     Ghost *ghost = obj->property;
     ghost->assets[0] = LoadBitmapAsset("ghost/pinky/pinky-right1.bmp");
     ghost->assets[1] = LoadBitmapAsset("ghost/pinky/pinky-right2.bmp");
@@ -69,4 +70,9 @@ Sprite *ConstructGhostPinkySprite(Vector2 position, Vector2 size) {
 
     RegisterTimer(obj, DELAY, _Go);
     return obj;
+}
+
+void ResetPinky(Sprite *this) {
+    ResetGhost(this);
+    RegisterTimer(this, DELAY, _Go);
 }

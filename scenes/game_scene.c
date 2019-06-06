@@ -37,7 +37,7 @@ static void _Initialize(Scene *scene);
 
 static Scene *_currentScene = NULL;
 static Sprite *_currentMap = NULL;
-static const string _ghosts[] = {"GhostBlinky", "GhostPinky", "GhostInky", "GhostClyde"};
+static const string _ghosts[] = {"Blinky", "Pinky", "Inky", "Clyde"};
 
 static void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id) {
     switch (id) {
@@ -144,12 +144,16 @@ static void _Initialize(Scene *scene) {
 
 void RevivePacMan() {
     Scene *current = GetCurrentScene();
-    RemoveGameSprite(current, "PacMan");
-    for (int i = 0; i < sizeof(_ghosts) / sizeof(string); i++) {
-        RemoveGameSprite(current, _ghosts[i]);
-    }
-    _AddPacMan();
-    _AddGhost();
+
+    Sprite *pacmanSprite = FindGameSpriteByName(current, "PacMan");
+    GameObject pacman;
+    FindGameObjectOfMap(_currentMap, "PacMan", &pacman);
+    pacmanSprite->position = pacman.position;
+
+    ResetBlinky(FindGameSpriteByName(current, "Blinky"));
+    ResetClyde(FindGameSpriteByName(current, "Clyde"));
+    ResetInky(FindGameSpriteByName(current, "Inky"));
+    ResetPinky(FindGameSpriteByName(current, "Pinky"));
 }
 
 Scene *ConstructGameScene() {

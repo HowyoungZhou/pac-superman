@@ -184,3 +184,14 @@ Sprite *ConstructGhostSprite(Vector2 position, Vector2 size, string name) {
     _objCount++;
     return obj;
 }
+
+void ResetGhost(Sprite *this) {
+    Ghost *ghost = this->property;
+    this->position = ghost->initPos;
+    this->velocity = ZERO_VECTOR;
+    ClearTimers(this);
+    FreePath(this->navAgent.path);
+    this->navAgent.path = NULL;
+    ghost->state = CHASING;
+    ghost->lookingAt = UP;
+}

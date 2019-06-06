@@ -141,4 +141,8 @@ void RegisterTimer(Sprite *this, double interval, TimerCallback callback);
  */
 bool DisableTimer(Sprite *this, TimerCallback callback);
 
+void ClearTimers(Sprite *this);
+
+void ResetTimers(Sprite *this);
+
 #endif //PAC_SUPERMAN_SPRITE_H

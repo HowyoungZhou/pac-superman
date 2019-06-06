@@ -23,4 +23,6 @@ typedef struct {
 
 Sprite *ConstructGhostSprite(Vector2 position, Vector2 size, string name);
 
+void ResetGhost(Sprite *this);
+
 #endif //PAC_SUPERMAN_GHOST_H
