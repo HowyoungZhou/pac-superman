@@ -161,6 +161,7 @@ static inline void _UpdateScene() {
 static void _UpdateTimers(Sprite *sprite) {
     for (LinkedListNode *node = sprite->timers.head; node != NULL; node = node->next) {
         Timer *timer = node->element;
+        if (!timer->enable) continue;
         timer->currentTick += _interval;
         if (timer->currentTick >= timer->interval) {
             timer->callback(sprite);

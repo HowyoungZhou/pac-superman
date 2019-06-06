@@ -18,6 +18,7 @@ typedef struct sprite Sprite;
 typedef void(*TimerCallback)(Sprite *sender);
 
 typedef struct {
+    bool enable;
     double interval;
     double currentTick;
     TimerCallback callback;
@@ -138,6 +139,6 @@ void RegisterTimer(Sprite *this, double interval, TimerCallback callback);
  * @param callback callback 回调函数
  * @return 如删除成功则返回 true，否则返回 false
  */
-bool UnregisterTimer(Sprite *this, TimerCallback callback);
+bool DisableTimer(Sprite *this, TimerCallback callback);
 
 #endif //PAC_SUPERMAN_SPRITE_H

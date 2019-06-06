@@ -9,6 +9,7 @@
 #include "map_sprite.h"
 #include <ghost_sprite.h>
 
+#define FLASH_COUNTDOWN 3000
 #define EYES_SPEED 3
 
 static inline Ghost *_ConstructGhost(Vector2 initPos);
@@ -35,6 +36,7 @@ static inline Ghost *_ConstructGhost(Vector2 initPos) {
     obj->initPos = initPos;
     obj->lookingAt = DOWN;
     obj->state = CHASING;
+    obj->chasedCountDown = 0;
     return obj;
 }
 
@@ -74,8 +76,12 @@ static void _Animate(Animator *this, Sprite *sprite, Frame frame) {
 
     switch (ghost->state) {
         case CHASED_AFTER:
-            if (frame == 0) DrawBitmapAsset(_pubicAssets[0], sprite->position, sprite->size);
-            else DrawBitmapAsset(_pubicAssets[1], sprite->position, sprite->size);
+            if (ghost->chasedCountDown <= FLASH_COUNTDOWN) {
+        if (frame == 0) DrawBitmapAsset(_pubicAssets[0], sprite->position, sprite->size);
+        else DrawBitmapAsset(_pubicAssets[1], sprite->position, sprite->size);
+    } else {
+        DrawBitmapAsset(_pubicAssets[0], sprite->position, sprite->size);
+    }
             break;
         case CHASING:
         case EATEN:
@@ -112,6 +118,7 @@ static void _Destruct(Sprite *this) {
 }
 
 static void _Collide(Sprite *this, int id, Sprite *other) {
+    other->velocity = ZERO_VECTOR;
     if (!other->name || strcmp(other->name, "PacMan") != 0) return;
     Ghost *ghost = this->property;
     switch (ghost->state) {
@@ -130,9 +137,22 @@ static void _Collide(Sprite *this, int id, Sprite *other) {
 
 static void _Update(Sprite *this, double interval) {
     Ghost *ghost = this->property;
-    if (ghost->state == EATEN && !this->navAgent.path) {
-        ghost->state = CHASING;
-        this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
+    switch (ghost->state) {
+        case CHASED_AFTER:
+            ghost->chasedCountDown -= interval;
+            if (ghost->chasedCountDown <= 0) {
+                ghost->state = CHASING;
+                this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
+            }
+            break;
+        case EATEN:
+            if (!this->navAgent.path) {
+                ghost->state = CHASING;
+                this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
+            }
+            break;
+        default:
+            break;
     }
 }
 

@@ -18,6 +18,7 @@ typedef struct {
     BitmapAsset *assets[8];
     Direction lookingAt;
     GhostState state;
+    double chasedCountDown;
 } Ghost;
 
 Sprite *ConstructGhostSprite(Vector2 position, Vector2 size, string name);

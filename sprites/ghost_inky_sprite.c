@@ -6,6 +6,14 @@
 #include "ghost_inky_sprite.h"
 #include "map_sprite.h"
 
+#define DELAY 2000
+
+static void _Go(Sprite *this);
+
+static Vector2 _FindFleePosition(Sprite *map);
+
+static void _UpdatePath(Sprite *this);
+
 static Vector2 _FindFleePosition(Sprite *map) {
     Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
     TiledMapAsset *asset = map->property;
@@ -42,6 +50,11 @@ static void _UpdatePath(Sprite *this) {
     UpdatePath(GetCurrentScene(), this);
 }
 
+static void _Go(Sprite *this) {
+    RegisterTimer(this, PATH_UPDATE_INTERVAL, _UpdatePath);
+    DisableTimer(this, _Go);
+}
+
 Sprite *ConstructGhostInkySprite(Vector2 position, Vector2 size) {
     Sprite *obj = ConstructGhostSprite(position, size, "GhostInky");
     Ghost *ghost = obj->property;
@@ -54,6 +67,6 @@ Sprite *ConstructGhostInkySprite(Vector2 position, Vector2 size) {
     ghost->assets[6] = LoadBitmapAsset("ghost/inky/inky-down1.bmp");
     ghost->assets[7] = LoadBitmapAsset("ghost/inky/inky-down2.bmp");
 
-    RegisterTimer(obj, PATH_UPDATE_INTERVAL, _UpdatePath);
+    RegisterTimer(obj, DELAY, _Go);
     return obj;
 }

@@ -80,6 +80,7 @@ double CalcIncircleRadius(Sprite *sprite) {
 
 void RegisterTimer(Sprite *this, double interval, TimerCallback callback) {
     Timer *timer = malloc(sizeof(Timer));
+    timer->enable = true;
     timer->interval = interval;
     timer->currentTick = 0;
     timer->callback = callback;
@@ -90,9 +91,9 @@ static bool _TimerIdentifier(void *element, void *param) {
     return ((Timer *) element)->callback == param;
 }
 
-bool UnregisterTimer(Sprite *this, TimerCallback callback) {
-    Timer *timer = RemoveElement(&this->timers, callback, _TimerIdentifier);
+bool DisableTimer(Sprite *this, TimerCallback callback) {
+    Timer *timer = SearchElement(&this->timers, callback, _TimerIdentifier);
     if (!timer) return false;
-    free(timer);
+    timer->enable = false;
     return true;
 }

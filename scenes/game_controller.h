@@ -9,6 +9,7 @@ typedef struct {
     double playerSpeed;
     double ghostChasingSpeed;
     double ghostChasedSpeed;
+    double ghostChasedCountDown;
 } GameObjectOption;
 
 void ResetGameState();

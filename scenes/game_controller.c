@@ -20,17 +20,20 @@ static const GameObjectOption _options[] = {
         (GameObjectOption) {
                 .playerSpeed = 1.,
                 .ghostChasingSpeed = 0.5,
-                .ghostChasedSpeed = 0.4
+                .ghostChasedSpeed = 0.4,
+                .ghostChasedCountDown = 10000
         },
         (GameObjectOption) {
                 .playerSpeed = 1.,
                 .ghostChasingSpeed = 0.7,
-                .ghostChasedSpeed = 0.6
+                .ghostChasedSpeed = 0.6,
+                .ghostChasedCountDown = 10000
         },
         (GameObjectOption) {
                 .playerSpeed = 1.,
                 .ghostChasingSpeed = 1.,
-                .ghostChasedSpeed = 0.8
+                .ghostChasedSpeed = 0.8,
+                .ghostChasedCountDown = 10000
         }
 };
 
@@ -60,5 +63,6 @@ void PowerModeOn() {
         if (!ghostSprite) continue;
         Ghost *ghost = ghostSprite->property;
         if (ghost->state == CHASING) ghost->state = CHASED_AFTER;
+        ghost->chasedCountDown = _options->ghostChasedCountDown;
     }
 }
