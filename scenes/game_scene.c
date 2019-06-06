@@ -129,8 +129,8 @@ static void _Initialize(Scene *scene) {
     AddUISprite(scene, ConstructHPSprite());
 
     // 游戏地图
-    _currentMap = ConstructMapSprite("maps/classic", "colliders_dict.tcd", ZERO_VECTOR,
-                                     (Vector2) {GetWindowWidth(), GetWindowHeight() - menu->size.y});
+    _currentMap = ConstructMapSprite("maps/classic", "colliders_dict.tcd", (Vector2) {0, 0.4},
+                                     (Vector2) {GetWindowWidth(), GetWindowHeight() - menu->size.y - 0.4 - 0.72});
     AddGameSprite(scene, _currentMap);
 
     _AddPacMan();

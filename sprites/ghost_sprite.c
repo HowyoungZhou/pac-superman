@@ -12,6 +12,7 @@
 #include <game_scene.h>
 
 #define FLASH_COUNTDOWN 3000
+#define GHOST_SCORE 200
 #define EYES_SPEED 3
 
 static inline Ghost *_ConstructGhost(Vector2 initPos);
@@ -127,12 +128,13 @@ static void _Collide(Sprite *this, int id, Sprite *other) {
         case CHASING:
             ChangeLife(-1);
             if (GetLife() == 0) {
-                //ExitGraphics();
+                //TODO: 显示游戏失败提示
             } else {
                 RevivePacMan();
             }
             break;
         case CHASED_AFTER:
+            ChangeScore(GHOST_SCORE);
             ghost->state = EATEN;
             this->navAgent.speed = EYES_SPEED;
             SetNavTargetPosition(this, ghost->initPos);

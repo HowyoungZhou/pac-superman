@@ -61,7 +61,7 @@ Sprite *ConstructMapSprite(string mapName, string collidersDictFile, Vector2 pos
     TiledMapAsset *map = LoadTiledMapAsset(mapName, true, true);
     if (map == NULL)return NULL;
     Sprite *obj;
-    if ((double) map->width / map->height > position.x / position.y) {
+    if ((double) map->width / map->height > size.x / size.y) {
         double height = size.x * map->height / map->width;
         obj = ConstructSprite((Vector2) {position.x, position.y + (size.y - height) / 2.},
                               (Vector2) {size.x, height},
