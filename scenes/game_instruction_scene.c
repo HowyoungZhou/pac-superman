@@ -13,7 +13,7 @@
 static double cx,cy;
 
 void _InsToHome(){
-    ReplaceScene(ConstructHomeScene());
+    PopScene();
 }
 
 void _Instruction_Initialize(Scene *scene) {

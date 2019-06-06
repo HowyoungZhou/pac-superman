@@ -25,7 +25,7 @@ void _Render()
     if (button(GenUIID(0), cx/2+1, cy/2-0.8, 0.5, 0.4,"OK"))
         _GAMESTART = !_GAMESTART;
     if( _GAMESTART) {
-        ReplaceScene(ConstructGameScene());
+        //ReplaceScene(ConstructGameScene());
         _GAMESTART = !_GAMESTART;
     }
 

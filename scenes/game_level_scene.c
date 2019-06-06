@@ -13,23 +13,25 @@
 #include <textbox.h>
 #include <extgraph.h>
 
+#define DEFAULT_MAP "maps/classic"
+
 static double cx, cy;
 
 static Scene *_CurrentScene;
 
 void _Easy() {
     SetDifficulty(EASY);
-    AddUISprite(_CurrentScene, ConstructTextBoxSprite());
+    ReplaceScene(ConstructGameScene(DEFAULT_MAP));
 }
 
 void _Normal() {
     SetDifficulty(NORMAL);
-    AddUISprite(_CurrentScene, ConstructTextBoxSprite());
+    ReplaceScene(ConstructGameScene(DEFAULT_MAP));
 }
 
 void _Hard() {
     SetDifficulty(HARD);
-    AddUISprite(_CurrentScene, ConstructTextBoxSprite());
+    ReplaceScene(ConstructGameScene(DEFAULT_MAP));
 }
 
 void _Level_Initialize(Scene *scene) {

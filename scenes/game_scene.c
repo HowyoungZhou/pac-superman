@@ -37,6 +37,7 @@ static void _Initialize(Scene *scene);
 
 static Scene *_currentScene = NULL;
 static Sprite *_currentMap = NULL;
+static string _mapName = NULL;
 static const string _ghosts[] = {"Blinky", "Pinky", "Inky", "Clyde"};
 
 static void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id) {
@@ -69,15 +70,15 @@ void PauseCallback(Sprite *button) {
 }
 
 void ResetCallback(Sprite *button) {
-    ReplaceScene(ConstructGameScene());
+    NewGame();
 }
 
 void _GameToRank() {
-    ReplaceScene(ConstructRankingListScene());
+    PushScene(ConstructRankingListScene());
 }
 
 void _GameToAbout() {
-    ReplaceScene(ConstructAboutScene());
+    PushScene(ConstructAboutScene());
 }
 
 static inline void _AddGhost() {
@@ -129,8 +130,8 @@ static void _Initialize(Scene *scene) {
     AddUISprite(scene, ConstructHPSprite());
 
     // 游戏地图
-    _currentMap = ConstructMapSprite("maps/classic", "colliders_dict.tcd", (Vector2) {0, 0.4},
-                                     (Vector2) {GetWindowWidth(), GetWindowHeight() - menu->size.y - 0.4 - 0.72});
+    _currentMap = ConstructMapSprite(_mapName, "colliders_dict.tcd", (Vector2) {0, 0.4},
+                                     (Vector2) {cx, cy - menu->size.y - 0.4 - 0.72});
     AddGameSprite(scene, _currentMap);
 
     _AddPacMan();
@@ -156,9 +157,14 @@ void RevivePacMan() {
     ResetPinky(FindGameSpriteByName(current, "Pinky"));
 }
 
-Scene *ConstructGameScene() {
+Scene *ConstructGameScene(string mapName) {
+    _mapName = mapName;
     Scene *obj = ConstructScene(_Initialize);
     return obj;
+}
+
+void NewGame() {
+    ReplaceScene(ConstructGameScene(_mapName));
 }
 
 void PowerModeOn() {

@@ -18,15 +18,15 @@ void _HomeToLevel(){
 }
 
 void _HomeToRanking(){
-    ReplaceScene(ConstructRankingListScene());
+    PushScene(ConstructRankingListScene());
 }
 
 void _HomeToIns(){
-    ReplaceScene(ConstructInstructionScene());
+    PushScene(ConstructInstructionScene());
 }
 
 void _HomeToAbout(){
-    ReplaceScene(ConstructAboutScene());
+    PushScene(ConstructAboutScene());
 }
 
 void _Home_Initialize(Scene *scene) {
@@ -37,7 +37,6 @@ void _Home_Initialize(Scene *scene) {
     AddUISprite(scene, ConstructButtonSprite(2, (Vector2) {cx/2-1, cy/2-1}, (Vector2) {2, 0.5}, "Ranking", _HomeToRanking));
     AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {cx/2-1, cy/2-1.8}, (Vector2) {2, 0.5}, "Instruction", _HomeToIns));
     AddUISprite(scene, ConstructButtonSprite(4, (Vector2) {cx/2-1, cy/2-2.6}, (Vector2) {2, 0.5}, "About", _HomeToAbout));
-    AddUISprite(scene, ConstructGameMenuSprite());
     AddUISprite(scene,ConstructImageSprite((Vector2){cx/2-1.25,cy/2+0.6},(Vector2){2.5,2},"Home/logoa.bmp"));
 }
 
