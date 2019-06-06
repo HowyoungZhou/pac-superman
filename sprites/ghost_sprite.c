@@ -7,7 +7,9 @@
 #include <game_controller.h>
 #include <autonav.h>
 #include "map_sprite.h"
+#include "pacman_sprite.h"
 #include <ghost_sprite.h>
+#include <game_scene.h>
 
 #define FLASH_COUNTDOWN 3000
 #define EYES_SPEED 3
@@ -77,11 +79,11 @@ static void _Animate(Animator *this, Sprite *sprite, Frame frame) {
     switch (ghost->state) {
         case CHASED_AFTER:
             if (ghost->chasedCountDown <= FLASH_COUNTDOWN) {
-        if (frame == 0) DrawBitmapAsset(_pubicAssets[0], sprite->position, sprite->size);
-        else DrawBitmapAsset(_pubicAssets[1], sprite->position, sprite->size);
-    } else {
-        DrawBitmapAsset(_pubicAssets[0], sprite->position, sprite->size);
-    }
+                if (frame == 0) DrawBitmapAsset(_pubicAssets[0], sprite->position, sprite->size);
+                else DrawBitmapAsset(_pubicAssets[1], sprite->position, sprite->size);
+            } else {
+                DrawBitmapAsset(_pubicAssets[0], sprite->position, sprite->size);
+            }
             break;
         case CHASING:
         case EATEN:
@@ -123,6 +125,12 @@ static void _Collide(Sprite *this, int id, Sprite *other) {
     Ghost *ghost = this->property;
     switch (ghost->state) {
         case CHASING:
+            ChangeLife(-1);
+            if (GetLife() == 0) {
+                //ExitGraphics();
+            } else {
+                RevivePacMan();
+            }
             break;
         case CHASED_AFTER:
             ghost->state = EATEN;

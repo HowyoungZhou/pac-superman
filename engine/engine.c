@@ -42,6 +42,8 @@ static inline double _UpdateInterval();
 
 static void _MainTimerHandler(int timerID);
 
+static inline void _RemoveSprites(Scene *current);
+
 extern exception NullArgumentException;
 extern exception MethodNotImplementedException;
 
@@ -53,6 +55,8 @@ static SceneStack _scenes = EMPTY_LINKED_LIST;
 static Scene *_newScene = NULL;
 static bool _popScene = false;
 static bool _paused = false;
+static SpritesList _gameSpritesToBeRemoved = EMPTY_LINKED_LIST;
+static SpritesList _uiSpritesToBeRemoved = EMPTY_LINKED_LIST;
 
 void InitEngine() {
     RegisterTimerEvent(_MainTimerHandler);
@@ -119,6 +123,7 @@ static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callb
 static void _MainTimerHandler(int timerID) {
     _UpdateScene(); // 检测有无场景更新
     Scene *current = (Scene *) GetLastElement(&_scenes);
+    if (current) _RemoveSprites(current);
     switch (timerID) {
         case RENDERER_TIMER_ID:
             if (current == NULL) {
@@ -261,4 +266,29 @@ static inline double _UpdateInterval() {
     _interval = (timestamp.QuadPart - _lastUpdated.QuadPart) * 1000.0 / _frequency.QuadPart;
     _lastUpdated = timestamp;
     QueryPerformanceFrequency(&_frequency);
+}
+
+static inline void _RemoveSprites(Scene *current) {
+    if (_gameSpritesToBeRemoved.head != NULL) {
+        for (SpritesListNode *node = _gameSpritesToBeRemoved.head; node != NULL; node = node->next) {
+            _RemoveGameSprite(current, node->element);
+        }
+    }
+
+    if (_uiSpritesToBeRemoved.head != NULL) {
+        for (SpritesListNode *node = _uiSpritesToBeRemoved.head; node != NULL; node = node->next) {
+            _RemoveUISprite(current, node->element);
+        }
+    }
+
+    ClearList(&_gameSpritesToBeRemoved, NULL);
+    ClearList(&_uiSpritesToBeRemoved, NULL);
+}
+
+void RemoveGameSpriteFromCurrentScene(Sprite *sprite) {
+    AddElement(&_gameSpritesToBeRemoved, sprite);
+}
+
+void RemoveUISpriteFromCurrentScene(Sprite *sprite) {
+    AddElement(&_uiSpritesToBeRemoved, sprite);
 }

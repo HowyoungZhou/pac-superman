@@ -1,6 +1,7 @@
 #include <assets.h>
 #include <sprite.h>
 #include <game_controller.h>
+#include <game_scene.h>
 
 #define POWER_PELLET_SCORE 100
 

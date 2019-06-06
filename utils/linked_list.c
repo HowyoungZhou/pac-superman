@@ -63,7 +63,7 @@ void ClearList(LinkedList *list, ElementDestructor destruct) {
     LinkedListNode *node = list->head;
     while (node) {
         LinkedListNode *next = node->next;
-        destruct(node->element);
+        if(destruct) destruct(node->element);
         free(node);
         node = next;
     }

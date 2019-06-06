@@ -36,6 +36,12 @@ typedef struct AutoNavAgent {
  */
 void ChangePathfindingStep(double step);
 
+/**@brief 释放当前路径
+ *
+ * @param path 路径
+ */
+void FreePath(PathNode *path);
+
 /**@brief 更新某 Sprite 的自动导航路径。
  *
  * @param scene 当前场景

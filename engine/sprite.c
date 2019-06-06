@@ -13,6 +13,10 @@ void DestructSprite(Sprite *this) {
         DestructAnimator(this->renderer.animator);
     // 析构碰撞器
     ClearList(&this->colliders, free);
+    // 析构自动导航器
+    FreePath(this->navAgent.path);
+    // 析构计时器
+    ClearList(&this->timers, free);
     // 析构自身
     free(this);
 }

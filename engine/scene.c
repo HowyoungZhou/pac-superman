@@ -2,6 +2,7 @@
 #include <string.h>
 #include "sprite.h"
 #include "scene.h"
+#include "engine.h"
 
 static void _DestructSprite(void *sprite);
 
@@ -27,6 +28,40 @@ Sprite *FindGameSpriteByName(Scene *this, string name) {
 
 Sprite *FindUISpriteByName(Scene *this, string name) {
     return SearchElement(&this->uiSprites, name, _SpriteNameIdentifier);
+}
+
+bool _RemoveGameSprite(Scene *this, Sprite *sprite) {
+    if (RemoveElement(&this->gameSprites, sprite, PointerComparer)) {
+        sprite->Destruct(sprite);
+        return true;
+    }
+    return false;
+}
+
+bool RemoveGameSprite(Scene *this, string name) {
+    Sprite *sprite = FindGameSpriteByName(this, name);
+    if (!sprite)return false;
+    if (GetCurrentScene() == this) {
+        RemoveGameSpriteFromCurrentScene(sprite);
+        return true;
+    } else return _RemoveGameSprite(this, sprite);
+}
+
+bool _RemoveUISprite(Scene *this, Sprite *sprite) {
+    if (RemoveElement(&this->gameSprites, sprite, PointerComparer)) {
+        sprite->Destruct(sprite);
+        return true;
+    }
+    return false;
+}
+
+bool RemoveUISprite(Scene *this, string name) {
+    Sprite *sprite = FindUISpriteByName(this, name);
+    if (!sprite)return false;
+    if (GetCurrentScene() == this) {
+        RemoveUISpriteFromCurrentScene(sprite);
+        return true;
+    } else return _RemoveUISprite(this, sprite);
 }
 
 void ClearGameSprites(Scene *this) {

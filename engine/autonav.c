@@ -25,8 +25,6 @@ static inline bool _DetectMovable(Scene *scene, Sprite *sprite, Vector2 position
 
 PathNode *_GetPath(PathNode *last);
 
-static inline void _FreePath(PathNode *path);
-
 static void inline _FreeResources(BinaryHeap *open, BinaryHeap *closed);
 
 static inline bool _PointInRect(Vector2 point, Vector2 rectPos, Vector2 rectSize);
@@ -210,7 +208,7 @@ static inline PathNode *_AStarFindPath(Scene *scene, Sprite *sprite) {
     return NULL;
 }
 
-static inline void _FreePath(PathNode *path) {
+void FreePath(PathNode *path) {
     while (path) {
         PathNode *next = path->parent;
         free(path);
@@ -221,7 +219,7 @@ static inline void _FreePath(PathNode *path) {
 bool UpdatePath(Scene *scene, Sprite *sprite) {
     PathNode *path = _AStarFindPath(scene, sprite);
     if (!path) return false;
-    if (!sprite->navAgent.path) _FreePath(sprite->navAgent.path);
+    if (!sprite->navAgent.path) FreePath(sprite->navAgent.path);
     sprite->navAgent.path = path;
     sprite->velocity = VMultiply(sprite->navAgent.speed, VNormalize(VSubtract(path->position, sprite->position)));
     return true;

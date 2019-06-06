@@ -55,6 +55,14 @@ Sprite *FindGameSpriteByName(Scene *this, string name);
  */
 Sprite *FindUISpriteByName(Scene *this, string name);
 
+bool _RemoveGameSprite(Scene *this, Sprite *sprite);
+
+bool _RemoveUISprite(Scene *this, Sprite *sprite);
+
+bool RemoveGameSprite(Scene *this, string name);
+
+bool RemoveUISprite(Scene *this, string name);
+
 /**@brief 清除所有 Sprite。
  *
  * 注意：该方法不能在 Render, Animate 或 Update 方法中调用，因为该方法会破坏正常的物理引擎计算和渲染流程。

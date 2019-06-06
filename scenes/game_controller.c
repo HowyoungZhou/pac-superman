@@ -1,10 +1,7 @@
-#include <stdbool.h>
-#include <genlib.h>
 #include <sprite.h>
 #include <scene.h>
 #include <engine.h>
 #include <assets.h>
-#include <ghost_sprite.h>
 #include "game_controller.h"
 
 typedef struct {
@@ -12,10 +9,8 @@ typedef struct {
     unsigned int life;
 } GameState;
 
-static const string _ghosts[] = {"GhostBlinky", "GhostPinky", "GhostInky", "GhostClyde"};
 static Difficulty _difficulty;
 static GameState _state = (GameState) {.life = 3, .score = 0};
-static GameObjectOption _option;
 static const GameObjectOption _options[] = {
         (GameObjectOption) {
                 .playerSpeed = 1.,
@@ -41,8 +36,20 @@ void ResetGameState() {
     _state = (GameState) {.life = 3, .score = 0};
 }
 
+void ChangeLife(int change) {
+    _state.life += change;
+}
+
+unsigned int GetLife() {
+    return _state.life;
+}
+
 void ChangeScore(int change) {
     _state.score += change;
+}
+
+int GetScore() {
+    return _state.score;
 }
 
 Difficulty GetDifficulty() {
@@ -55,14 +62,4 @@ void SetDifficulty(Difficulty difficulty) {
 
 GameObjectOption GetGameObjectOption() {
     return _options[_difficulty];
-}
-
-void PowerModeOn() {
-    for (int i = 0; i < sizeof(_ghosts) / sizeof(string); i++) {
-        Sprite *ghostSprite = FindGameSpriteByName(GetCurrentScene(), _ghosts[i]);
-        if (!ghostSprite) continue;
-        Ghost *ghost = ghostSprite->property;
-        if (ghost->state == CHASING) ghost->state = CHASED_AFTER;
-        ghost->chasedCountDown = _options->ghostChasedCountDown;
-    }
 }

@@ -14,14 +14,18 @@ typedef struct {
 
 void ResetGameState();
 
+void ChangeLife(int change);
+
+unsigned int GetLife();
+
 void ChangeScore(int change);
+
+int GetScore();
 
 Difficulty GetDifficulty();
 
 void SetDifficulty(Difficulty difficulty);
 
 GameObjectOption GetGameObjectOption();
-
-void PowerModeOn();
 
 #endif //PAC_SUPERMAN_GAME_STATE_H
