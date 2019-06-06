@@ -12,7 +12,7 @@ typedef struct {
     unsigned int life;
 } GameState;
 
-static const string _ghosts[] = {"GhostBlinky"};
+static const string _ghosts[] = {"GhostBlinky", "GhostPinky"};
 static Difficulty _difficulty;
 static GameState _state = (GameState) {.life = 3, .score = 0};
 static GameObjectOption _option;

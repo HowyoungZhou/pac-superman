@@ -23,7 +23,8 @@ set(SOURCE_FILES libgraphics/exceptio.c libgraphics/genlib.c libgraphics/graphic
         sprites/autonav_route_sprite.h scenes/game_controller.c scenes/game_controller.h scenes/game_instruction_scene.h
         scenes/game_level_scene.c scenes/game_level_scene.h ui/hp.c ui/hp.h ui/score.c ui/score.h ui/textbox.c
         ui/textbox.h scenes/about_scene.c scenes/about_scene.h sprites/ghost_blinky_sprite.c
-        sprites/ghost_blinky_sprite.h sprites/ghost_sprite.h sprites/ghost_sprite.c)
+        sprites/ghost_blinky_sprite.h sprites/ghost_sprite.h sprites/ghost_sprite.c sprites/ghost_pinky_sprite.c
+        sprites/ghost_pinky_sprite.h)
 
 include_directories(libgraphics)
 include_directories(engine)

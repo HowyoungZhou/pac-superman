@@ -19,6 +19,7 @@
 #include <game_instruction_scene.h>
 #include <game_RankingList_scene.h>
 #include <about_scene.h>
+#include <ghost_pinky_sprite.h>
 
 #define PELLET_SIZE_RATIO 0.25
 #define POWER_PELLET_SIZE_RATIO 0.7
@@ -114,8 +115,13 @@ void _Initialize(Scene *scene) {
     ForEachTile(map, _ForEachTile);
 
     // 添加鬼
-    Sprite *ghost = ConstructGhostBlinkySprite((Vector2) {6.45, 6}, (Vector2) {0.3, 0.3});
-    AddGameSprite(scene, ghost);
+    GameObject blinky, pinky;
+    FindGameObjectOfMap(map, "Blinky", &blinky);
+    FindGameObjectOfMap(map, "Pinky", &pinky);
+    AddGameSprite(scene, ConstructGhostBlinkySprite(blinky.position, blinky.size));
+    AddGameSprite(scene, ConstructGhostPinkySprite(pinky.position, pinky.size));
+
+    // 设置寻径步长值
     ChangePathfindingStep(GetTileSize(map).x / 2);
 }
 

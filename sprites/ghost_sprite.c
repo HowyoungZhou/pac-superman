@@ -10,7 +10,6 @@
 #include <ghost_sprite.h>
 
 #define EYES_SPEED 3
-#define PATH_UPDATE_INTERVAL 500
 
 static inline Ghost *_ConstructGhost(Vector2 initPos);
 
@@ -22,9 +21,11 @@ static inline void _FreePublicAssets();
 
 static void _Animate(Animator *this, Sprite *sprite, Frame frame);
 
-static void _UpdatePath(Sprite *this);
+static void _Destruct(Sprite *this);
 
-static Vector2 _FindFleePosition(Sprite *map);
+static void _Collide(Sprite *this, int id, Sprite *other);
+
+static void _Update(Sprite *this, double interval);
 
 static int _objCount = 0;
 static BitmapAsset *_pubicAssets[6];
@@ -110,42 +111,6 @@ static void _Destruct(Sprite *this) {
     DestructSprite(this);
 }
 
-static Vector2 _FindFleePosition(Sprite *map) {
-    Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    TiledMapAsset *asset = map->property;
-    Vector2 resPos = ZERO_VECTOR;
-    double resDist = -1.;
-    for (int i = 0; i < asset->width; i++) {
-        for (int j = 0; j < asset->height; j++) {
-            if (!IsTileWalkable(map, i, j)) continue;
-            Vector2 tilePos = GetTilePosition(map, i, j);
-            double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
-            if (dist > resDist) {
-                resPos = tilePos;
-                resDist = dist;
-            }
-        }
-    }
-    return resPos;
-}
-
-static void _UpdatePath(Sprite *this) {
-    Ghost *ghost = this->property;
-    switch (ghost->state) {
-        case CHASING:
-            this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
-            SetNavTargetSprite(this, FindGameSpriteByName(GetCurrentScene(), "PacMan"));
-            break;
-        case CHASED_AFTER:
-            this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            SetNavTargetPosition(this, _FindFleePosition(FindGameSpriteByName(GetCurrentScene(), "Map")));
-            break;
-        default:
-            break;
-    }
-    UpdatePath(GetCurrentScene(), this);
-}
-
 static void _Collide(Sprite *this, int id, Sprite *other) {
     if (!other->name || strcmp(other->name, "PacMan") != 0) return;
     Ghost *ghost = this->property;
@@ -174,7 +139,6 @@ static void _Update(Sprite *this, double interval) {
 Sprite *ConstructGhostSprite(Vector2 position, Vector2 size, string name) {
     Sprite *obj = ConstructSprite(position, size, ZERO_VECTOR);
     RegisterBoxCollider(obj, 0, true, obj->size, ZERO_VECTOR);
-    RegisterTimer(obj, PATH_UPDATE_INTERVAL, _UpdatePath);
 
     Animator *animator = ConstructAnimator(2);
     animator->Animate = _Animate;
