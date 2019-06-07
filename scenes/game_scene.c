@@ -121,16 +121,16 @@ static void _Initialize(Scene *scene) {
     // 游戏菜单
     Sprite *menu = ConstructGameMenuSprite();
 
-    //添加左上角的按钮
+    //添加右上角的按钮
     AddUISprite(scene,
-                ConstructButtonSprite(1, (Vector2) {0.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Pause", PauseCallback));
+                ConstructButtonSprite(1, (Vector2) {cx-4+0.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Pause", PauseCallback));
     AddUISprite(scene,
-                ConstructButtonSprite(2, (Vector2) {1.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Reset", ResetCallback));
-    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {2.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Rank", _GameToRank));
+                ConstructButtonSprite(2, (Vector2) {cx-4+1.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Reset", ResetCallback));
+    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {cx-4+2.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Rank", _GameToRank));
     AddUISprite(scene,
-                ConstructButtonSprite(4, (Vector2) {3.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "About", _GameToAbout));
+                ConstructButtonSprite(4, (Vector2) {cx-4+3.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "About", _GameToAbout));
 
-    //添加右上角的分数
+    //添加左上角的分数
     AddUISprite(scene, ConstructScoreSprite());
 
     //添加左下角生命值

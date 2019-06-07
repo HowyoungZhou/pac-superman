@@ -14,7 +14,7 @@ static double cx, cy;
 static void _Render(Sprite *this) {
     char score[MAX_SCORE_LENGTH + 1];
     sprintf(score, "%0*d", MAX_SCORE_LENGTH, GetScore());
-    MovePen(cx - 1.75, cy - 0.75);
+    MovePen(0.3, cy - 0.75);
     DrawTextString("SCORE  ");
     DrawTextString(score);
 }
@@ -29,8 +29,8 @@ Sprite *ConstructScoreSprite() {
     cx = GetWindowWidth();
     cy = GetWindowHeight();
 
-    Sprite *obj = ConstructSprite((Vector2) {cx - 2, cy - 1},
-                                  (Vector2) {2, 2}, ZERO_VECTOR);
+    Sprite *obj = ConstructSprite((Vector2) {0, cy - 1},
+                                  (Vector2) {2, 1}, ZERO_VECTOR);
 
 
     obj->Destruct = _Destruct;
