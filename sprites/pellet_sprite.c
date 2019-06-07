@@ -19,6 +19,7 @@ static void _Collide(Sprite *this, int id, Sprite *other) {
     if (other->name && !strcmp(other->name, "PacMan")) {
         this->visible = false;
         ChangeScore(PELLET_SCORE);
+        ChangeRemainingPellets(-1);
     }
 }
 

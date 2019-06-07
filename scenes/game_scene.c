@@ -48,6 +48,7 @@ static void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short i
             Vector2 size = GetTileSize(sprite);
             Vector2 position = VAdd(GetTilePosition(sprite, x, y), VMultiply((1. - PELLET_SIZE_RATIO) / 2., size));
             AddGameSprite(_currentScene, ConstructPellet(position, VMultiply(PELLET_SIZE_RATIO, size)));
+            ChangeRemainingPellets(1);
             break;
         case POWER_PELLET_TILE:;
             Vector2 powerSize = GetTileSize(sprite);
@@ -55,6 +56,7 @@ static void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short i
                                          VMultiply((1. - POWER_PELLET_SIZE_RATIO) / 2., powerSize));
             AddGameSprite(_currentScene,
                           ConstructPowerPellet(powerPosition, VMultiply(POWER_PELLET_SIZE_RATIO, powerSize)));
+            ChangeRemainingPellets(1);
             break;
         default:
             break;
@@ -112,6 +114,9 @@ static void _Initialize(Scene *scene) {
     double cx, cy;
     cx = GetWindowWidth();
     cy = GetWindowHeight();
+
+    // 重置游戏数据
+    ResetGameState();
 
     // 游戏菜单
     Sprite *menu = ConstructGameMenuSprite();

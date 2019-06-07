@@ -34,6 +34,10 @@ void ChangeScore(int change);
 
 int GetScore();
 
+void ChangeRemainingPellets(int change);
+
+unsigned int GetRemainingPellets();
+
 Difficulty GetDifficulty();
 
 void SetDifficulty(Difficulty difficulty);

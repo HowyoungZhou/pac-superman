@@ -17,6 +17,7 @@ static void _Collide(Sprite *this, int id, Sprite *other) {
         this->visible = false;
         PowerModeOn();
         ChangeScore(POWER_PELLET_SCORE);
+        ChangeRemainingPellets(-1);
     }
 }
 

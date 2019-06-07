@@ -2,6 +2,7 @@
 #include <scene.h>
 #include <engine.h>
 #include <assets.h>
+#include <extgraph.h>
 #include "game_controller.h"
 
 static inline bool _WriteRankList();
@@ -15,6 +16,7 @@ static int _ScoreComparer(void *item1, void *item2);
 typedef struct {
     int score;
     unsigned int life;
+    unsigned int remainingPellets;
 } GameState;
 
 static Difficulty _difficulty;
@@ -42,7 +44,7 @@ static const GameObjectOption _options[] = {
 };
 
 void ResetGameState() {
-    _state = (GameState) {.life = 3, .score = 0};
+    _state = (GameState) {.life = 3, .score = 0, .remainingPellets = 0};
 }
 
 void ChangeLife(int change) {
@@ -61,6 +63,14 @@ int GetScore() {
     return _state.score;
 }
 
+void ChangeRemainingPellets(int change) {
+    _state.remainingPellets += change;
+}
+
+unsigned int GetRemainingPellets() {
+    return _state.remainingPellets;
+}
+
 Difficulty GetDifficulty() {
     return _difficulty;
 }
@@ -74,6 +84,7 @@ GameObjectOption GetGameObjectOption() {
 }
 
 void InitGameController() {
+    SetWindowTitle("PAC SUPERMAN!");
     _ReadRankList();
 }
 

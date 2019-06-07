@@ -74,7 +74,7 @@ static void _OnMapMenuItenSelected(MenuList *sender, int selectedIndex) {
             ReplaceScene(ConstructGameScene("maps/peppa_pig"));
             break;
         case PAC_GHOST:
-            ReplaceScene(ConstructGameScene("maps/pac_ghost"));
+            ReplaceScene(ConstructGameScene("maps/pacghost"));
             break;
         default:
             break;
