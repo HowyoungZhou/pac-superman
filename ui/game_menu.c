@@ -13,6 +13,10 @@ enum HelpMenuItem {
     HOW_TO_PLAY = 1, ABOUT
 };
 
+enum StyleMenuItem {
+    SKIN = 1
+};
+
 static void _OnGameMenuItemSelected(MenuList *sender, int selectedIndex) {
     switch (selectedIndex) {
         case PAUSE:
@@ -42,6 +46,15 @@ static void _OnHelpMenuItemSelected(MenuList *sender, int selectedIndex) {
     }
 }
 
+static void _OnStyleMenuItemSelected(MenuList *sender, int selectedIndex) {
+    switch (selectedIndex) {
+        case SKIN:
+            break;
+        default:
+            break;
+    }
+}
+
 static void _UpdateGameMenuList(MenuList *this) {
     this->menuItems[PAUSE] = IsPaused() ? "Resume     | Ctrl-P" : "Pause        | Ctrl-P";
 }
@@ -58,7 +71,11 @@ Sprite *ConstructGameMenuSprite() {
                                            "Help",
                                            "How To Play?",
                                            "About");
-    Menu *menu = ConstructMenu(2, gameMenu, helpMenu);
+    MenuList *styleMenu = ConstructMenuList(GenUIID(0), _OnStyleMenuItemSelected, 2,
+                                           "Style",
+                                           "Skin");
+
+    Menu *menu = ConstructMenu(3, gameMenu, helpMenu,styleMenu);
     menu->heightRatio = 2.;
     menu->style = (Style) {"Wall", "White", "White", "Wall", true};
     Sprite *obj = ConstructMenuSprite(menu);
