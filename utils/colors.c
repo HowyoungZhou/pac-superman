@@ -13,5 +13,6 @@ void DefineHexColor(string name, uint32_t hex) {
 void DefineColors() {
     DefineHexColor("Pellet", 0xffb897);
     DefineHexColor("Wall", 0x2121DE);
-    DefineHexColor("PacMan", 0xFFFF00);
+    DefineHexColor("PacManYellow", 0xFFFF00);
+    DefineRGBColor("PacManGreen", 97, 234, 199);
 }

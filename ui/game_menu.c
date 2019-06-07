@@ -6,6 +6,7 @@
 #include <game_instruction_scene.h>
 #include <game_home_scene.h>
 #include <game_scene.h>
+#include <pacman_sprite.h>
 #include "game_menu.h"
 #include "menu.h"
 #include "imgui.h"
@@ -23,7 +24,7 @@ enum MapMemuItem {
 };
 
 enum StyleMenuItem {
-    SKIN = 1
+    YELLOW = 1, GREEN
 };
 
 static void _OnGameMenuItemSelected(MenuList *sender, int selectedIndex) {
@@ -81,12 +82,19 @@ static void _OnMapMenuItenSelected(MenuList *sender, int selectedIndex) {
 }
 
 static void _OnStyleMenuItemSelected(MenuList *sender, int selectedIndex) {
+    Scene *current = GetCurrentScene();
+    Sprite *pacman = FindGameSpriteByName(current, "PacMan");
     switch (selectedIndex) {
-        case SKIN:
+        case YELLOW:
+            AddGameSprite(current, ConstructPacmanSprite(pacman->position, pacman->size, "PacManYellow"));
+            break;
+        case GREEN:
+            AddGameSprite(current, ConstructPacmanSprite(pacman->position, pacman->size, "PacManGreen"));
             break;
         default:
             break;
     }
+    RemoveGameSprite(current, "PacMan");
 }
 
 static void _UpdateGameMenuList(MenuList *this) {
@@ -112,9 +120,10 @@ Sprite *ConstructGameMenuSprite() {
                                            "Help",
                                            "Instruction | Ctrl-I",
                                            "About");
-    MenuList *styleMenu = ConstructMenuList(GenUIID(0), _OnStyleMenuItemSelected, 2,
-                                            "Style",
-                                            "Skin");
+    MenuList *styleMenu = ConstructMenuList(GenUIID(0), _OnStyleMenuItemSelected, 3,
+                                            "Skin",
+                                            "Yellow",
+                                            "Green");
 
     Menu *menu = ConstructMenu(4, gameMenu, styleMenu, mapMenu, helpMenu);
     menu->heightRatio = 2.;

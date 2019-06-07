@@ -31,6 +31,8 @@
 #define PELLET_TILE 54
 #define POWER_PELLET_TILE 42
 
+#define DEFAULT_PAC_MAN_COLOR "PacManYellow"
+
 static void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id);
 
 static void _Initialize(Scene *scene);
@@ -96,7 +98,7 @@ static inline void _AddGhost() {
 static inline void _AddPacMan() {
     GameObject pacman;
     FindGameObjectOfMap(_currentMap, "PacMan", &pacman);
-    Sprite *pacmanSprite = ConstructPacmanSprite(pacman.position, pacman.size);
+    Sprite *pacmanSprite = ConstructPacmanSprite(pacman.position, pacman.size, DEFAULT_PAC_MAN_COLOR);
     AddGameSprite(_currentScene, pacmanSprite);
 }
 

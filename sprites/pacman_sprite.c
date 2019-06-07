@@ -9,7 +9,7 @@
 #define ANGLE 30
 #define SPEED 1
 
-static int direction=0;
+static int direction = 0;
 
 static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame);
 
@@ -18,18 +18,15 @@ static void _Update(Sprite *this, double interval);
 static void _AnimatedPacmanSprite(Animator *this, Sprite *sprite, Frame frame) {
     double _angle;
     double size = CalcIncircleRadius(sprite) * 2;
-    
+
     StartFilledRegion(1.);
-    if(sprite->velocity.x>0){
+    if (sprite->velocity.x > 0) {
         direction = 0;
-    }
-    else if(sprite->velocity.y>0){
+    } else if (sprite->velocity.y > 0) {
         direction = 1;
-    }
-    else if(sprite->velocity.x<0){
+    } else if (sprite->velocity.x < 0) {
         direction = 2;
-    }
-    else if(sprite->velocity.y<0){
+    } else if (sprite->velocity.y < 0) {
         direction = 3;
     }
     _angle = frame * ANGLE / 4 + direction * 90;
@@ -49,7 +46,7 @@ static void _Update(Sprite *this, double interval) {
     this->velocity = VMultiply(SPEED, GetNormalizedControllerVector());
 }
 
-Sprite *ConstructPacmanSprite(Vector2 position, Vector2 size) {
+Sprite *ConstructPacmanSprite(Vector2 position, Vector2 size, string color) {
     Sprite *obj = ConstructSprite(position, size, ZERO_VECTOR);
 
     Animator *animator = ConstructAnimator(5);
@@ -61,7 +58,7 @@ Sprite *ConstructPacmanSprite(Vector2 position, Vector2 size) {
     obj->hasAnimation = true;
     obj->renderer.animator = animator;
     obj->Update = _Update;
-    obj->foreColor = "PacMan";
+    obj->foreColor = color;
     RegisterCircleCollider(obj, DEFAULT_COLLIDER_ID, true, CalcRelativeCentre(obj), CalcIncircleRadius(obj));
     return obj;
 }

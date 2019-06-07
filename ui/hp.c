@@ -52,7 +52,7 @@ Sprite *ConstructHPSprite() {
     Sprite *obj = ConstructSprite((Vector2) {0.1, 0.1},
                                   (Vector2) {2, 2}, ZERO_VECTOR);
 
-    obj->foreColor = "PacMan";
+    obj->foreColor = "PacManYellow";
     obj->Destruct = _Destruct;
     obj->renderer.Render = _Render;
     return obj;
