@@ -2,6 +2,7 @@
 #include <game_controller.h>
 #include <scene.h>
 #include <engine.h>
+#include <game_scene.h>
 #include "ghost_sprite.h"
 #include "ghost_pinky_sprite.h"
 #include "map_sprite.h"
@@ -42,7 +43,7 @@ static void _UpdatePath(Sprite *this) {
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            SetNavTargetPosition(this, _FindFleePosition(FindGameSpriteByName(GetCurrentScene(), "Map")));
+            SetNavTargetPosition(this, _FindFleePosition(GetCurrentMap()));
             break;
         default:
             break;
