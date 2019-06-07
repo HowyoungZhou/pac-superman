@@ -27,19 +27,22 @@ static const GameObjectOption _options[] = {
                 .playerSpeed = 1.,
                 .ghostChasingSpeed = 0.5,
                 .ghostChasedSpeed = 0.4,
-                .ghostChasedCountDown = 10000
+                .ghostChasedCountDown = 10000,
+                .ghostPathfindingInterval = 2000,
         },
         (GameObjectOption) {
                 .playerSpeed = 1.,
                 .ghostChasingSpeed = 0.7,
                 .ghostChasedSpeed = 0.6,
-                .ghostChasedCountDown = 10000
+                .ghostChasedCountDown = 10000,
+                .ghostPathfindingInterval = 1500,
         },
         (GameObjectOption) {
                 .playerSpeed = 1.,
-                .ghostChasingSpeed = 1.,
+                .ghostChasingSpeed = 0.9,
                 .ghostChasedSpeed = 0.8,
-                .ghostChasedCountDown = 10000
+                .ghostChasedCountDown = 8000,
+                .ghostPathfindingInterval = 1000
         }
 };
 

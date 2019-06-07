@@ -3,8 +3,6 @@
 
 #include <assets.h>
 
-#define PATH_UPDATE_INTERVAL 500
-
 typedef enum {
     UP, RIGHT, DOWN, LEFT
 } Direction;

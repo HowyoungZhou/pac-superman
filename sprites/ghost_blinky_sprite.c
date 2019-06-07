@@ -53,7 +53,7 @@ static void _UpdatePath(Sprite *this) {
 
 static void _Go(Sprite *this) {
     _UpdatePath(this);
-    RegisterTimer(this, PATH_UPDATE_INTERVAL, _UpdatePath);
+    RegisterTimer(this, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath);
     DisableTimer(this, _Go);
 }
 

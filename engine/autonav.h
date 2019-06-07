@@ -28,6 +28,10 @@ typedef struct AutoNavAgent {
     double speed;
 } AutoNavAgent;
 
+void ChangeMaxNodeCounts(long count);
+
+void ChangePathfindingBorder(Vector2 position, Vector2 size);
+
 /**@brief 修改寻径时的步长。
  *
  * 步长较短会导致寻径时间延长，步长较长可能会导致无法找到路径。

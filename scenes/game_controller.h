@@ -14,6 +14,7 @@ typedef struct {
     double ghostChasingSpeed;
     double ghostChasedSpeed;
     double ghostChasedCountDown;
+    double ghostPathfindingInterval;
 } GameObjectOption;
 
 typedef struct {

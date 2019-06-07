@@ -34,6 +34,9 @@ static inline bool _ReachTarget(Sprite *sprite, Vector2 position);
 static inline PathNode *_AStarFindPath(Scene *scene, Sprite *sprite);
 
 static double _step = 0.1;
+static long _maxNodesCount = 100000;
+static Vector2 _borderPos = ZERO_VECTOR;
+static Vector2 _borderSize = ZERO_VECTOR;
 
 static inline PathNode *_ConstructPathNodeFromParent(PathNode *parent, double distance, double h, Vector2 position) {
     return _ConstructPathNode(parent, CALC_G_FROM_PARENT(parent, distance), h, position);
@@ -98,8 +101,17 @@ bool DetectMovable(Scene *scene, Sprite *sprite, Vector2 position) {
     return true;
 }
 
+void ChangeMaxNodeCounts(long count) {
+    _maxNodesCount = count;
+}
+
 void ChangePathfindingStep(double step) {
     _step = step;
+}
+
+void ChangePathfindingBorder(Vector2 position, Vector2 size) {
+    _borderPos = position;
+    _borderSize = size;
 }
 
 PathNode *_GetPath(PathNode *last) {
@@ -158,11 +170,12 @@ static inline PathNode *_AStarFindPath(Scene *scene, Sprite *sprite) {
     InitBinaryHeap(&open, _CompareCost);
     InitBinaryHeap(&closed, _CompareCost);
     Vector2 targetPos = _GetTargetPos(sprite);
+    if (!_PointInRect(targetPos, _borderPos, _borderSize)) return NULL;
     if (_ReachTarget(sprite, sprite->position)) return _ConstructPathNode(NULL, 0, 0, sprite->position);
     // 将起点放入 open 列表
     PathNode *start = _ConstructPathNode(NULL, 0, _ManhattanDistance(sprite->position, targetPos), sprite->position);
     HeapInsertElement(&open, start);
-    while (open.length != 0) {
+    while (open.length != 0 && open.length + closed.length <= _maxNodesCount) {
         // 从 open 列表中弹出 cost 最小的节点，放入 closed 列表
         PathNode *node = HeapPopTop(&open);
         HeapInsertElement(&closed, node);
@@ -172,6 +185,7 @@ static inline PathNode *_AStarFindPath(Scene *scene, Sprite *sprite) {
                 if (x + y != 1 && x + y != -1) continue;
                 // 计算出绝对位置
                 Vector2 neighbor = VAdd(node->position, VMultiply(_step, (Vector2) {x, y}));
+                if (!_PointInRect(neighbor, _borderPos, _borderSize)) continue;
                 // 如和目标碰撞则寻径结束
                 if (_ReachTarget(sprite, neighbor)) {
                     PathNode *path = _GetPath(_ConstructPathNode(node, _step, 0, neighbor));

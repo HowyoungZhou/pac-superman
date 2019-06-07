@@ -34,26 +34,38 @@ static Vector2 _FindFleePosition(Sprite *map) {
     return resPos;
 }
 
+static inline void _UpdateTarget(Sprite *this) {
+    Scene *current = GetCurrentScene();
+    Sprite *blinky = FindGameSpriteByName(current, "Blinky");
+    Sprite *pacman = FindGameSpriteByName(current, "PacMan");
+    Vector2 target = VAdd(pacman->position, VSubtract(pacman->position, blinky->position));
+    SetNavTargetPosition(this, target);
+    if (!UpdatePath(current, this)) {
+        SetNavTargetSprite(this, pacman);
+        UpdatePath(current, this);
+    }
+}
+
 static void _UpdatePath(Sprite *this) {
     Ghost *ghost = this->property;
     switch (ghost->state) {
         case CHASING:
             this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
-            SetNavTargetSprite(this, FindGameSpriteByName(GetCurrentScene(), "PacMan"));
+            _UpdateTarget(this);
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
             SetNavTargetPosition(this, _FindFleePosition(GetCurrentMap()));
+            UpdatePath(GetCurrentScene(), this);
             break;
         default:
             break;
     }
-    UpdatePath(GetCurrentScene(), this);
 }
 
 static void _Go(Sprite *this) {
     _UpdatePath(this);
-    RegisterTimer(this, PATH_UPDATE_INTERVAL, _UpdatePath);
+    RegisterTimer(this, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath);
     DisableTimer(this, _Go);
 }
 

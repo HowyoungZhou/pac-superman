@@ -123,12 +123,16 @@ static void _Initialize(Scene *scene) {
 
     //添加右上角的按钮
     AddUISprite(scene,
-                ConstructButtonSprite(1, (Vector2) {cx-4+0.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Pause", PauseCallback));
+                ConstructButtonSprite(1, (Vector2) {cx - 4 + 0.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Pause",
+                                      PauseCallback));
     AddUISprite(scene,
-                ConstructButtonSprite(2, (Vector2) {cx-4+1.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Reset", ResetCallback));
-    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {cx-4+2.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Rank", _GameToRank));
+                ConstructButtonSprite(2, (Vector2) {cx - 4 + 1.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Reset",
+                                      ResetCallback));
+    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {cx - 4 + 2.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Rank",
+                                             _GameToRank));
     AddUISprite(scene,
-                ConstructButtonSprite(4, (Vector2) {cx-4+3.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "About", _GameToAbout));
+                ConstructButtonSprite(4, (Vector2) {cx - 4 + 3.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "About",
+                                      _GameToAbout));
 
     //添加左上角的分数
     AddUISprite(scene, ConstructScoreSprite());
@@ -146,7 +150,10 @@ static void _Initialize(Scene *scene) {
     _AddGhost();
 
     // 设置寻径步长值
-    ChangePathfindingStep(GetTileSize(_currentMap).x / 2);
+    double step = GetTileSize(_currentMap).x / 2;
+    ChangePathfindingStep(step);
+    ChangeMaxNodeCounts((_currentMap->size.x / step) * (_currentMap->size.y / step));
+    ChangePathfindingBorder(_currentMap->position, _currentMap->size);
     AddUISprite(scene, menu);
 }
 

@@ -42,8 +42,11 @@ static inline void _UpdateTarget(Sprite *this) {
     double tileLength = GetTileSize(map).x;
     Vector2 ambushPos = VAdd(pacman->position,
                              VMultiply(AMBUSH_DIST * tileLength, VNormalize(pacman->velocity)));
-    if (DetectMovable(current, this, ambushPos)) SetNavTargetPosition(this, ambushPos);
-    else SetNavTargetSprite(this, pacman);
+    SetNavTargetPosition(this, ambushPos);
+    if (!UpdatePath(current, this)) {
+        SetNavTargetSprite(this, pacman);
+        UpdatePath(current, this);
+    }
 }
 
 static void _UpdatePath(Sprite *this) {
@@ -56,16 +59,16 @@ static void _UpdatePath(Sprite *this) {
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
             SetNavTargetPosition(this, _FindFleePosition(GetCurrentMap()));
+            UpdatePath(GetCurrentScene(), this);
             break;
         default:
             break;
     }
-    UpdatePath(GetCurrentScene(), this);
 }
 
 static void _Go(Sprite *this) {
     _UpdatePath(this);
-    RegisterTimer(this, PATH_UPDATE_INTERVAL, _UpdatePath);
+    RegisterTimer(this, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath);
     DisableTimer(this, _Go);
 }
 
