@@ -3,6 +3,7 @@
 #include <scene.h>
 #include <engine.h>
 #include <game_scene.h>
+#include <dynamic_array.h>
 #include "ghost_sprite.h"
 #include "ghost_blinky_sprite.h"
 #include "map_sprite.h"
@@ -17,18 +18,15 @@ static void _Go(Sprite *this);
 
 static Vector2 _FindFleePosition(Sprite *map) {
     Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    TiledMapAsset *asset = map->property;
+    DynamicArray walkableTiles = GetAllWalkableTiles();
     Vector2 resPos = ZERO_VECTOR;
     double resDist = -1.;
-    for (int i = 0; i < asset->width; i++) {
-        for (int j = 0; j < asset->height; j++) {
-            if (!IsTileWalkable(map, i, j)) continue;
-            Vector2 tilePos = GetTilePosition(map, i, j);
-            double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
-            if (dist > resDist) {
-                resPos = tilePos;
-                resDist = dist;
-            }
+    for (int i = 0; i < walkableTiles.length; i++) {
+        Vector2 tilePos = *ArrayGetElement(walkableTiles, Vector2*, i);
+        double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
+        if (dist > resDist) {
+            resPos = tilePos;
+            resDist = dist;
         }
     }
     return resPos;

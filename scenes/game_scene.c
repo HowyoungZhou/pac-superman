@@ -11,7 +11,7 @@
 #include <autonav_route_sprite.h>
 #include <example_controllable_sprite.h>
 #include "game_scene.h"
-#include "game_controller.h"
+#include <dynamic_array.h>
 #include <button.h>
 #include <hp.h>
 #include <score.h>
@@ -24,16 +24,15 @@
 #include <ghost_inky_sprite.h>
 #include <ghost_clyde_sprite.h>
 #include <ghost_sprite.h>
+#include "game_controller.h"
 
+#define WALKABLE_TILES_PAGE_SIZE 1000
 #define PELLET_SIZE_RATIO 0.25
 #define POWER_PELLET_SIZE_RATIO 0.7
 
-#define PELLET_TILE 54
-#define POWER_PELLET_TILE 42
-
 #define DEFAULT_PAC_MAN_COLOR "PacManYellow"
 
-static void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id);
+static void _AddPellets(Sprite *sprite, unsigned int x, unsigned int y, short id);
 
 static void _Initialize(Scene *scene);
 
@@ -41,27 +40,7 @@ static Scene *_currentScene = NULL;
 static Sprite *_currentMap = NULL;
 static string _mapName = NULL;
 static const string _ghosts[] = {"Blinky", "Pinky", "Inky", "Clyde"};
-
-static void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id) {
-    switch (id) {
-        case PELLET_TILE:;
-            Vector2 size = GetTileSize(sprite);
-            Vector2 position = VAdd(GetTilePosition(sprite, x, y), VMultiply((1. - PELLET_SIZE_RATIO) / 2., size));
-            AddGameSprite(_currentScene, ConstructPellet(position, VMultiply(PELLET_SIZE_RATIO, size)));
-            ChangeRemainingPellets(1);
-            break;
-        case POWER_PELLET_TILE:;
-            Vector2 powerSize = GetTileSize(sprite);
-            Vector2 powerPosition = VAdd(GetTilePosition(sprite, x, y),
-                                         VMultiply((1. - POWER_PELLET_SIZE_RATIO) / 2., powerSize));
-            AddGameSprite(_currentScene,
-                          ConstructPowerPellet(powerPosition, VMultiply(POWER_PELLET_SIZE_RATIO, powerSize)));
-            ChangeRemainingPellets(1);
-            break;
-        default:
-            break;
-    }
-}
+static DynamicArray _walkableTiles;
 
 void PauseCallback(Sprite *button) {
     if (IsPaused()) {
@@ -85,27 +64,35 @@ void _GameToAbout() {
     PushScene(ConstructAboutScene());
 }
 
-static inline void _AddGhost() {
-    GameObject blinky, pinky, inky, clyde;
-    FindGameObjectOfMap(_currentMap, "Blinky", &blinky);
-    FindGameObjectOfMap(_currentMap, "Pinky", &pinky);
-    FindGameObjectOfMap(_currentMap, "Inky", &inky);
-    FindGameObjectOfMap(_currentMap, "Clyde", &clyde);
-    AddGameSprite(_currentScene, ConstructGhostBlinkySprite(blinky.position, blinky.size));
-    AddGameSprite(_currentScene, ConstructGhostPinkySprite(pinky.position, pinky.size));
-    AddGameSprite(_currentScene, ConstructGhostInkySprite(inky.position, inky.size));
-    AddGameSprite(_currentScene, ConstructGhostClydeSprite(clyde.position, clyde.size));
+static void _AddPellets(Sprite *sprite, unsigned int x, unsigned int y, short id) {
+    switch (id) {
+        case PELLET_TILE:;
+            Vector2 size = GetTileSize(sprite);
+            Vector2 position = VAdd(GetTilePosition(sprite, x, y), VMultiply((1. - PELLET_SIZE_RATIO) / 2., size));
+            AddGameSprite(_currentScene, ConstructPellet(position, VMultiply(PELLET_SIZE_RATIO, size)));
+            ChangeRemainingPellets(1);
+            break;
+        case POWER_PELLET_TILE:;
+            Vector2 powerSize = GetTileSize(sprite);
+            Vector2 powerPosition = VAdd(GetTilePosition(sprite, x, y),
+                                         VMultiply((1. - POWER_PELLET_SIZE_RATIO) / 2., powerSize));
+            AddGameSprite(_currentScene,
+                          ConstructPowerPellet(powerPosition, VMultiply(POWER_PELLET_SIZE_RATIO, powerSize)));
+            ChangeRemainingPellets(1);
+            break;
+        default:
+            break;
+    }
 }
 
-static inline void _AddPacMan() {
-    GameObject pacman;
-    FindGameObjectOfMap(_currentMap, "PacMan", &pacman);
-    Sprite *pacmanSprite = ConstructPacmanSprite(pacman.position, pacman.size, DEFAULT_PAC_MAN_COLOR);
-    AddGameSprite(_currentScene, pacmanSprite);
+static inline Vector2 *_ConstructPosPtr(Vector2 pos) {
+    Vector2 *posPtr = malloc(sizeof(Vector2));
+    *posPtr = pos;
+    return posPtr;
 }
 
-static inline void _AddPellet() {
-    ForEachTile(_currentMap, _ForEachTile);
+static void _FindAllWalkable(Sprite *sprite, unsigned int x, unsigned int y, short id) {
+    if (IsTileWalkable(sprite, x, y)) ArrayAddElement(&_walkableTiles, _ConstructPosPtr(GetTilePosition(sprite, x, y)));
 }
 
 static void _Initialize(Scene *scene) {
@@ -145,9 +132,30 @@ static void _Initialize(Scene *scene) {
                                      (Vector2) {cx, cy - menu->size.y - 0.4 - 0.72});
     AddGameSprite(scene, _currentMap);
 
-    _AddPacMan();
-    _AddPellet();
-    _AddGhost();
+    // 添加吃豆人
+    GameObject pacman;
+    FindGameObjectOfMap(_currentMap, "PacMan", &pacman);
+    Sprite *pacmanSprite = ConstructPacmanSprite(pacman.position, pacman.size, DEFAULT_PAC_MAN_COLOR);
+    AddGameSprite(_currentScene, pacmanSprite);
+
+    // 添加豆子
+    ForEachTile(_currentMap, _AddPellets);
+
+    // 缓存所有的可到达位置
+    if (_walkableTiles.length) FreeDynamicArray(&_walkableTiles, free);
+    InitDynamicArray(&_walkableTiles, WALKABLE_TILES_PAGE_SIZE);
+    ForEachTile(_currentMap, _FindAllWalkable);
+
+    // 添加鬼
+    GameObject blinky, pinky, inky, clyde;
+    FindGameObjectOfMap(_currentMap, "Blinky", &blinky);
+    FindGameObjectOfMap(_currentMap, "Pinky", &pinky);
+    FindGameObjectOfMap(_currentMap, "Inky", &inky);
+    FindGameObjectOfMap(_currentMap, "Clyde", &clyde);
+    AddGameSprite(_currentScene, ConstructGhostBlinkySprite(blinky.position, blinky.size));
+    AddGameSprite(_currentScene, ConstructGhostPinkySprite(pinky.position, pinky.size));
+    AddGameSprite(_currentScene, ConstructGhostInkySprite(inky.position, inky.size));
+    AddGameSprite(_currentScene, ConstructGhostClydeSprite(clyde.position, clyde.size));
 
     // 设置寻径步长值
     double step = GetTileSize(_currentMap).x / 2;
@@ -155,6 +163,10 @@ static void _Initialize(Scene *scene) {
     ChangeMaxNodeCounts((_currentMap->size.x / step) * (_currentMap->size.y / step));
     ChangePathfindingBorder(_currentMap->position, _currentMap->size);
     AddUISprite(scene, menu);
+}
+
+DynamicArray GetAllWalkableTiles(){
+    return _walkableTiles;
 }
 
 void RevivePacMan() {
@@ -169,6 +181,11 @@ void RevivePacMan() {
     ResetClyde(FindGameSpriteByName(current, "Clyde"));
     ResetInky(FindGameSpriteByName(current, "Inky"));
     ResetPinky(FindGameSpriteByName(current, "Pinky"));
+}
+
+static void _Destruct(Scene *this) {
+    DestructScene(this);
+    if (_walkableTiles.length)FreeDynamicArray(&_walkableTiles, free);
 }
 
 Scene *ConstructGameScene(string mapName) {

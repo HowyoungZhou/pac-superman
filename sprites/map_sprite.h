@@ -1,6 +1,9 @@
 #ifndef PAC_SUPERMAN_MAP_SPRITE_H
 #define PAC_SUPERMAN_MAP_SPRITE_H
 
+#define PELLET_TILE 54
+#define POWER_PELLET_TILE 42
+
 #include <assets.h>
 
 typedef struct {
