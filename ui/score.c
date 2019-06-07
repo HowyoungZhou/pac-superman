@@ -9,13 +9,11 @@
 #include "imgui.h"
 #include "score.h"
 
-#define MAX_SCORE_LENGTH 8
-
 static double cx, cy;
 
 static void _Render(Sprite *this) {
     char score[MAX_SCORE_LENGTH + 1];
-    sprintf(score, "%08d", GetScore());
+    sprintf(score, "%0*d", MAX_SCORE_LENGTH, GetScore());
     MovePen(cx - 1.75, cy - 0.75);
     DrawTextString("SCORE  ");
     DrawTextString(score);
