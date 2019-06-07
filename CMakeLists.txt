@@ -22,7 +22,7 @@ set(SOURCE_FILES libgraphics/exceptio.c libgraphics/genlib.c libgraphics/graphic
         utils/binary_heap.h engine/autonav.c engine/autonav.h sprites/autonav_route_sprite.c
         sprites/autonav_route_sprite.h scenes/game_controller.c scenes/game_controller.h scenes/game_instruction_scene.h
         scenes/game_level_scene.c scenes/game_level_scene.h ui/hp.c ui/hp.h ui/score.c ui/score.h ui/textbox.c
-        ui/textbox.h scenes/about_scene.c scenes/about_scene.h ui/rank_display.c ui/rank_display.h scenes/skin.c scenes/skin.h)
+        ui/textbox.h scenes/about_scene.c scenes/about_scene.h ui/rank_display.c ui/rank_display.h)
 
 include_directories(libgraphics)
 include_directories(engine)
