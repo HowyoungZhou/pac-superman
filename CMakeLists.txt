@@ -14,7 +14,7 @@ set(SOURCE_FILES libgraphics/exceptio.c libgraphics/genlib.c libgraphics/graphic
         utils/linked_list.h ui/button.c ui/button.h utils/events.c utils/events.h ui/menu.c ui/menu.h
         ui/game_menu.c ui/game_menu.h sprites/pacman_sprite.c sprites/pacman_sprite.h engine/scene.c
         engine/scene.h scenes/game_scene.c scenes/game_scene.h ui/style.h engine/assets.c engine/assets.h
-        sprites/example_bitmap_sprite.c sprites/example_bitmap_sprite.h sprites/walls.c sprites/walls.h
+        sprites/walls.c sprites/walls.h
         sprites/map_sprite.c sprites/map_sprite.h ui/image.c ui/image.h sprites/power_pellet_sprite.c
         sprites/power_pellet_sprite.h ui/image.c ui/image.h scenes/game_home_scene.c scenes/game_home_scene.h
         scenes/game_RankingList_scene.c scenes/game_RankingList_scene.h scenes/game_instruction_scene.c
@@ -22,7 +22,10 @@ set(SOURCE_FILES libgraphics/exceptio.c libgraphics/genlib.c libgraphics/graphic
         utils/binary_heap.h engine/autonav.c engine/autonav.h sprites/autonav_route_sprite.c
         sprites/autonav_route_sprite.h scenes/game_controller.c scenes/game_controller.h scenes/game_instruction_scene.h
         scenes/game_level_scene.c scenes/game_level_scene.h ui/hp.c ui/hp.h ui/score.c ui/score.h ui/textbox.c
-        ui/textbox.h scenes/about_scene.c scenes/about_scene.h ui/rank_display.c ui/rank_display.h)
+        ui/textbox.h scenes/about_scene.c scenes/about_scene.h ui/rank_display.c ui/rank_display.h sprites/ghost_blinky_sprite.c
+        sprites/ghost_blinky_sprite.h sprites/ghost_sprite.h sprites/ghost_sprite.c sprites/ghost_pinky_sprite.c
+        sprites/ghost_pinky_sprite.h sprites/ghost_inky_sprite.c sprites/ghost_inky_sprite.h sprites/ghost_clyde_sprite.c
+        sprites/ghost_clyde_sprite.h)
 
 include_directories(libgraphics)
 include_directories(engine)

@@ -1,6 +1,7 @@
 #include <assets.h>
 #include <sprite.h>
 #include <game_controller.h>
+#include <game_scene.h>
 
 #define POWER_PELLET_SCORE 100
 
@@ -14,7 +15,7 @@ static void _Animate(Animator *this, Sprite *sprite, Frame frame) {
 static void _Collide(Sprite *this, int id, Sprite *other) {
     if (other->name && !strcmp(other->name, "PacMan")) {
         this->visible = false;
-        SetPowerMode(true);
+        PowerModeOn();
         ChangeScore(POWER_PELLET_SCORE);
     }
 }

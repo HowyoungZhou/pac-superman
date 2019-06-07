@@ -13,6 +13,10 @@ void DestructSprite(Sprite *this) {
         DestructAnimator(this->renderer.animator);
     // 析构碰撞器
     ClearList(&this->colliders, free);
+    // 析构自动导航器
+    FreePath(this->navAgent.path);
+    // 析构计时器
+    ClearTimers(this);
     // 析构自身
     free(this);
 }
@@ -40,7 +44,7 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
 }
 
 void RegisterCollider(Sprite *sprite, Collider *collider) {
-    AddElement(&sprite->colliders, collider);
+    ListAddElement(&sprite->colliders, collider);
 }
 
 static bool _ColliderIDIdentifier(void *collider, void *id) {
@@ -48,7 +52,7 @@ static bool _ColliderIDIdentifier(void *collider, void *id) {
 }
 
 bool UnregisterCollider(Sprite *sprite, int id) {
-    Collider *collider = RemoveElement(&sprite->colliders, &id, _ColliderIDIdentifier);
+    Collider *collider = ListRemoveElement(&sprite->colliders, &id, _ColliderIDIdentifier);
     if (collider == NULL)return false;
     DestructCollider(collider);
     return true;
@@ -80,19 +84,30 @@ double CalcIncircleRadius(Sprite *sprite) {
 
 void RegisterTimer(Sprite *this, double interval, TimerCallback callback) {
     Timer *timer = malloc(sizeof(Timer));
+    timer->enable = true;
     timer->interval = interval;
     timer->currentTick = 0;
     timer->callback = callback;
-    AddElement(&this->timers, timer);
+    ListAddElement(&this->timers, timer);
 }
 
 static bool _TimerIdentifier(void *element, void *param) {
     return ((Timer *) element)->callback == param;
 }
 
-bool UnregisterTimer(Sprite *this, TimerCallback callback) {
-    Timer *timer = RemoveElement(&this->timers, callback, _TimerIdentifier);
+bool DisableTimer(Sprite *this, TimerCallback callback) {
+    Timer *timer = ListSearchElement(&this->timers, callback, _TimerIdentifier);
     if (!timer) return false;
-    free(timer);
+    timer->enable = false;
     return true;
+}
+
+void ClearTimers(Sprite *this){
+    ClearList(&this->timers, free);
+}
+
+void ResetTimers(Sprite *this) {
+    for (LinkedListNode *node = this->timers.head; node != NULL; node = node->next) {
+        ((Timer *) node->element)->currentTick = 0;
+    }
 }

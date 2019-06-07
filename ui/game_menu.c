@@ -1,16 +1,25 @@
 #include <sprite.h>
 #include <extgraph.h>
 #include <engine.h>
+#include <game_RankingList_scene.h>
+#include <about_scene.h>
+#include <game_instruction_scene.h>
+#include <game_home_scene.h>
+#include <game_scene.h>
 #include "game_menu.h"
 #include "menu.h"
 #include "imgui.h"
 
 enum GameMenuItem {
-    PAUSE = 1, NEW_GAME, RANK, EXIT
+    PAUSE = 1, NEW_GAME, RANK, BACK_TO_HOME, EXIT
 };
 
 enum HelpMenuItem {
-    HOW_TO_PLAY = 1, ABOUT
+    INSTRUCTION = 1, ABOUT
+};
+
+enum MapMemuItem {
+    CLASSIC = 1, LOVE_ZJU, PEPPA_PIG, PAC_GHOST
 };
 
 enum StyleMenuItem {
@@ -23,11 +32,15 @@ static void _OnGameMenuItemSelected(MenuList *sender, int selectedIndex) {
             IsPaused() ? ResumeGame() : PauseGame();
             break;
         case NEW_GAME:
+            NewGame();
             break;
         case RANK:
+            PushScene(ConstructRankingListScene());
+            break;
+        case BACK_TO_HOME:
+            ReplaceScene(ConstructHomeScene());
             break;
         case EXIT:
-            //TODO: Destruct Sprites here...
             ExitGraphics();
             break;
         default:
@@ -37,9 +50,30 @@ static void _OnGameMenuItemSelected(MenuList *sender, int selectedIndex) {
 
 static void _OnHelpMenuItemSelected(MenuList *sender, int selectedIndex) {
     switch (selectedIndex) {
-        case HOW_TO_PLAY:
+        case INSTRUCTION:
+            PushScene(ConstructInstructionScene());
             break;
         case ABOUT:
+            PushScene(ConstructAboutScene());
+            break;
+        default:
+            break;
+    }
+}
+
+static void _OnMapMenuItenSelected(MenuList *sender, int selectedIndex) {
+    switch (selectedIndex) {
+        case CLASSIC:
+            ReplaceScene(ConstructGameScene("maps/classic"));
+            break;
+        case LOVE_ZJU:
+            ReplaceScene(ConstructGameScene("maps/lovezju"));
+            break;
+        case PEPPA_PIG:
+            ReplaceScene(ConstructGameScene("maps/peppa_pig"));
+            break;
+        case PAC_GHOST:
+            ReplaceScene(ConstructGameScene("maps/pac_ghost"));
             break;
         default:
             break;
@@ -56,26 +90,33 @@ static void _OnStyleMenuItemSelected(MenuList *sender, int selectedIndex) {
 }
 
 static void _UpdateGameMenuList(MenuList *this) {
-    this->menuItems[PAUSE] = IsPaused() ? "Resume     | Ctrl-P" : "Pause        | Ctrl-P";
+    this->menuItems[PAUSE] = IsPaused() ? "Resume          | Ctrl-P" : "Pause             | Ctrl-P";
 }
 
 Sprite *ConstructGameMenuSprite() {
-    MenuList *gameMenu = ConstructMenuList(GenUIID(0), _OnGameMenuItemSelected, 5,
+    MenuList *gameMenu = ConstructMenuList(GenUIID(0), _OnGameMenuItemSelected, 6,
                                            "Game",
-                                           "Pause        | Ctrl-P",
-                                           "New Game",
+                                           "Pause             | Ctrl-P",
+                                           "New Game      | Ctrl-N",
                                            "Rank",
-                                           "Exit            | Ctrl-E");
+                                           "Back to Home",
+                                           "Exit                 | Ctrl-E");
     gameMenu->UpdateMenuList = _UpdateGameMenuList;
+    MenuList *mapMenu = ConstructMenuList(GenUIID(0), _OnMapMenuItenSelected, 5,
+                                          "Map",
+                                          "Classic",
+                                          "Love ZJU",
+                                          "Peppa Pig",
+                                          "Pac Ghost");
     MenuList *helpMenu = ConstructMenuList(GenUIID(0), _OnHelpMenuItemSelected, 3,
                                            "Help",
-                                           "How To Play?",
+                                           "Instruction | Ctrl-I",
                                            "About");
     MenuList *styleMenu = ConstructMenuList(GenUIID(0), _OnStyleMenuItemSelected, 2,
-                                           "Style",
-                                           "Skin");
+                                            "Style",
+                                            "Skin");
 
-    Menu *menu = ConstructMenu(3, gameMenu, helpMenu,styleMenu);
+    Menu *menu = ConstructMenu(4, gameMenu, styleMenu, mapMenu, helpMenu);
     menu->heightRatio = 2.;
     menu->style = (Style) {"Wall", "White", "White", "Wall", true};
     Sprite *obj = ConstructMenuSprite(menu);

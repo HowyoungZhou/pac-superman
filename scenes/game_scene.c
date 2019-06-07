@@ -6,11 +6,12 @@
 #include <graphics.h>
 #include <pacman_sprite.h>
 #include <power_pellet_sprite.h>
-#include <example_bitmap_sprite.h>
+#include <ghost_blinky_sprite.h>
 #include <autonav.h>
 #include <autonav_route_sprite.h>
 #include <example_controllable_sprite.h>
 #include "game_scene.h"
+#include "game_controller.h"
 #include <button.h>
 #include <hp.h>
 #include <score.h>
@@ -19,6 +20,10 @@
 #include <game_instruction_scene.h>
 #include <game_RankingList_scene.h>
 #include <about_scene.h>
+#include <ghost_pinky_sprite.h>
+#include <ghost_inky_sprite.h>
+#include <ghost_clyde_sprite.h>
+#include <ghost_sprite.h>
 
 #define PELLET_SIZE_RATIO 0.25
 #define POWER_PELLET_SIZE_RATIO 0.7
@@ -26,15 +31,16 @@
 #define PELLET_TILE 54
 #define POWER_PELLET_TILE 42
 
-static double cx,cy;
+static void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id);
 
-void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id);
-
-void _Initialize(Scene *scene);
+static void _Initialize(Scene *scene);
 
 static Scene *_currentScene = NULL;
+static Sprite *_currentMap = NULL;
+static string _mapName = NULL;
+static const string _ghosts[] = {"Blinky", "Pinky", "Inky", "Clyde"};
 
-void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id) {
+static void _ForEachTile(Sprite *sprite, unsigned int x, unsigned int y, short id) {
     switch (id) {
         case PELLET_TILE:;
             Vector2 size = GetTileSize(sprite);
@@ -64,61 +70,109 @@ void PauseCallback(Sprite *button) {
 }
 
 void ResetCallback(Sprite *button) {
-    ReplaceScene(ConstructGameScene());
+    NewGame();
 }
 
-void _GameToRank(){
-    ReplaceScene(ConstructRankingListScene());
+void _GameToRank() {
+    PushScene(ConstructRankingListScene());
 }
 
-void _GameToAbout(){
-    ReplaceScene(ConstructAboutScene());
+void _GameToAbout() {
+    PushScene(ConstructAboutScene());
 }
 
-void _Initialize(Scene *scene) {
+static inline void _AddGhost() {
+    GameObject blinky, pinky, inky, clyde;
+    FindGameObjectOfMap(_currentMap, "Blinky", &blinky);
+    FindGameObjectOfMap(_currentMap, "Pinky", &pinky);
+    FindGameObjectOfMap(_currentMap, "Inky", &inky);
+    FindGameObjectOfMap(_currentMap, "Clyde", &clyde);
+    AddGameSprite(_currentScene, ConstructGhostBlinkySprite(blinky.position, blinky.size));
+    AddGameSprite(_currentScene, ConstructGhostPinkySprite(pinky.position, pinky.size));
+    AddGameSprite(_currentScene, ConstructGhostInkySprite(inky.position, inky.size));
+    AddGameSprite(_currentScene, ConstructGhostClydeSprite(clyde.position, clyde.size));
+}
+
+static inline void _AddPacMan() {
+    GameObject pacman;
+    FindGameObjectOfMap(_currentMap, "PacMan", &pacman);
+    Sprite *pacmanSprite = ConstructPacmanSprite(pacman.position, pacman.size);
+    AddGameSprite(_currentScene, pacmanSprite);
+}
+
+static inline void _AddPellet() {
+    ForEachTile(_currentMap, _ForEachTile);
+}
+
+static void _Initialize(Scene *scene) {
     _currentScene = scene;
+
+    double cx, cy;
     cx = GetWindowWidth();
     cy = GetWindowHeight();
 
     // 游戏菜单
     Sprite *menu = ConstructGameMenuSprite();
-    AddUISprite(scene, menu);
 
     //添加左上角的按钮
-    AddUISprite(scene, ConstructButtonSprite(1, (Vector2) {0.1, cy-0.9}, (Vector2) {0.8, 0.4}, "Pause", PauseCallback));
-    AddUISprite(scene, ConstructButtonSprite(2, (Vector2) {1.1, cy-0.9}, (Vector2) {0.8, 0.4}, "Reset", ResetCallback));
-    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {2.1, cy-0.9}, (Vector2) {0.8, 0.4}, "Rank", _GameToRank));
-    AddUISprite(scene, ConstructButtonSprite(4, (Vector2) {3.1, cy-0.9}, (Vector2) {0.8, 0.4}, "About", _GameToAbout));
+    AddUISprite(scene,
+                ConstructButtonSprite(1, (Vector2) {0.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Pause", PauseCallback));
+    AddUISprite(scene,
+                ConstructButtonSprite(2, (Vector2) {1.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Reset", ResetCallback));
+    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {2.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Rank", _GameToRank));
+    AddUISprite(scene,
+                ConstructButtonSprite(4, (Vector2) {3.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "About", _GameToAbout));
 
     //添加右上角的分数
-    AddUISprite(scene,ConstructScoreSprite());
+    AddUISprite(scene, ConstructScoreSprite());
 
     //添加左下角生命值
-    AddUISprite(scene,ConstructHPSprite());
+    AddUISprite(scene, ConstructHPSprite());
 
     // 游戏地图
-    Sprite *map = ConstructMapSprite("maps/classic", "colliders_dict.tcd", ZERO_VECTOR,
-                                     (Vector2) {GetWindowWidth(), GetWindowHeight() - menu->size.y});
-    AddGameSprite(scene, map);
+    _currentMap = ConstructMapSprite(_mapName, "colliders_dict.tcd", (Vector2) {0, 0.4},
+                                     (Vector2) {cx, cy - menu->size.y - 0.4 - 0.72});
+    AddGameSprite(scene, _currentMap);
 
-    // 添加吃豆人
-    GameObject pacman;
-    FindGameObjectOfMap(map, "PacMan", &pacman);
-    Sprite *pacmanSprite = ConstructPacmanSprite(pacman.position, pacman.size);
-    AddGameSprite(scene, pacmanSprite);
+    _AddPacMan();
+    _AddPellet();
+    _AddGhost();
 
-    // 添加豆子
-    ForEachTile(map, _ForEachTile);
-
-    // 添加测试鬼
-    Sprite *ghost = ConstructExampleBitmapSprite(pacmanSprite);
-    AddGameSprite(scene, ghost);
-    ChangePathfindingStep(GetTileSize(map).x/2);
-    //AddUISprite(scene, ConstructAutoNavRouteSprite(ghost));
-
+    // 设置寻径步长值
+    ChangePathfindingStep(GetTileSize(_currentMap).x / 2);
+    AddUISprite(scene, menu);
 }
 
-Scene *ConstructGameScene() {
+void RevivePacMan() {
+    Scene *current = GetCurrentScene();
+
+    Sprite *pacmanSprite = FindGameSpriteByName(current, "PacMan");
+    GameObject pacman;
+    FindGameObjectOfMap(_currentMap, "PacMan", &pacman);
+    pacmanSprite->position = pacman.position;
+
+    ResetBlinky(FindGameSpriteByName(current, "Blinky"));
+    ResetClyde(FindGameSpriteByName(current, "Clyde"));
+    ResetInky(FindGameSpriteByName(current, "Inky"));
+    ResetPinky(FindGameSpriteByName(current, "Pinky"));
+}
+
+Scene *ConstructGameScene(string mapName) {
+    _mapName = mapName;
     Scene *obj = ConstructScene(_Initialize);
     return obj;
+}
+
+void NewGame() {
+    ReplaceScene(ConstructGameScene(_mapName));
+}
+
+void PowerModeOn() {
+    for (int i = 0; i < sizeof(_ghosts) / sizeof(string); i++) {
+        Sprite *ghostSprite = FindGameSpriteByName(GetCurrentScene(), _ghosts[i]);
+        if (!ghostSprite) continue;
+        Ghost *ghost = ghostSprite->property;
+        if (ghost->state == CHASING) ghost->state = CHASED_AFTER;
+        ghost->chasedCountDown = GetGameObjectOption().ghostChasedCountDown;
+    }
 }

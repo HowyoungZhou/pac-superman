@@ -3,29 +3,35 @@
 #include <game_menu.h>
 #include <vector2.h>
 #include <engine.h>
-#include <example_bitmap_sprite.h>
+#include <ghost_blinky_sprite.h>
 #include <image.h>
 #include <graphics.h>
 #include "game_level_scene.h"
+#include "game_controller.h"
 #include <game_scene.h>
 #include <imgui.h>
 #include <textbox.h>
 #include <extgraph.h>
 
-static double cx,cy;
+#define DEFAULT_MAP "maps/classic"
+
+static double cx, cy;
 
 static Scene *_CurrentScene;
 
-void _Easy(){
-    AddUISprite(_CurrentScene, ConstructTextBoxSprite());
+void _Easy() {
+    SetDifficulty(EASY);
+    ReplaceScene(ConstructGameScene(DEFAULT_MAP));
 }
 
-void _Normal(){
-    AddUISprite(_CurrentScene, ConstructTextBoxSprite());
+void _Normal() {
+    SetDifficulty(NORMAL);
+    ReplaceScene(ConstructGameScene(DEFAULT_MAP));
 }
 
-void _Hard(){
-    AddUISprite(_CurrentScene, ConstructTextBoxSprite());
+void _Hard() {
+    SetDifficulty(HARD);
+    ReplaceScene(ConstructGameScene(DEFAULT_MAP));
 }
 
 void _Level_Initialize(Scene *scene) {
@@ -33,10 +39,14 @@ void _Level_Initialize(Scene *scene) {
     cx = GetWindowWidth();
     cy = GetWindowHeight();
     _CurrentScene = scene;
-    AddUISprite(scene, ConstructButtonSprite(1, (Vector2) {cx/2-2.5, cy/2-0.75}, (Vector2) {1, 1.5}, "EASY", _Easy));
-    AddUISprite(scene, ConstructButtonSprite(2, (Vector2) {cx/2-0.5, cy/2-0.75}, (Vector2) {1, 1.5}, "NORMAL",_Normal));
-    AddUISprite(scene, ConstructButtonSprite(3, (Vector2) {cx/2+1.5, cy/2-0.75}, (Vector2) {1, 1.5}, "HARD", _Hard));
-    AddUISprite(scene, ConstructImageSprite((Vector2){cx/2-3,cy*0.7},(Vector2){6,2},"LevelSelection/LS_Title.bmp"));
+    AddUISprite(scene,
+                ConstructButtonSprite(1, (Vector2) {cx / 2 - 2.5, cy / 2 - 0.75}, (Vector2) {1, 1.5}, "EASY", _Easy));
+    AddUISprite(scene, ConstructButtonSprite(2, (Vector2) {cx / 2 - 0.5, cy / 2 - 0.75}, (Vector2) {1, 1.5}, "NORMAL",
+                                             _Normal));
+    AddUISprite(scene,
+                ConstructButtonSprite(3, (Vector2) {cx / 2 + 1.5, cy / 2 - 0.75}, (Vector2) {1, 1.5}, "HARD", _Hard));
+    AddUISprite(scene, ConstructImageSprite((Vector2) {cx / 2 - 3, cy * 0.7}, (Vector2) {6, 2},
+                                            "LevelSelection/LS_Title.bmp"));
 
 }
 

@@ -39,6 +39,30 @@ void AddGameSprite(Scene *this, Sprite *sprite);
  */
 void AddUISprite(Scene *this, Sprite *uiSprite);
 
+/**@brief 查找指定名称的游戏 Sprite。
+ *
+ * @param this 要查找的场景
+ * @param name Sprite 名称
+ * @return 如找到则返回 Sprite 对象，否则返回 NULL
+ */
+Sprite *FindGameSpriteByName(Scene *this, string name);
+
+/**@brief 查找指定名称的 UI Sprite。
+ *
+ * @param this 要查找的场景
+ * @param name Sprite 名称
+ * @return 如找到则返回 Sprite 对象，否则返回 NULL
+ */
+Sprite *FindUISpriteByName(Scene *this, string name);
+
+bool _RemoveGameSprite(Scene *this, Sprite *sprite);
+
+bool _RemoveUISprite(Scene *this, Sprite *sprite);
+
+bool RemoveGameSprite(Scene *this, string name);
+
+bool RemoveUISprite(Scene *this, string name);
+
 /**@brief 清除所有 Sprite。
  *
  * 注意：该方法不能在 Render, Animate 或 Update 方法中调用，因为该方法会破坏正常的物理引擎计算和渲染流程。

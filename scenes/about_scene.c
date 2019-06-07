@@ -11,7 +11,7 @@
 static double cx,cy;
 
 void _AboutToHome(){
-    ReplaceScene(ConstructHomeScene());
+    PopScene();
 }
 
 void _About_Initialize(Scene *scene) {

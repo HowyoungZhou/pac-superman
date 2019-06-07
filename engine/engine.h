@@ -65,4 +65,16 @@ void PopScene();
  */
 bool ReplaceScene(Scene *newScene);
 
+/**@brief 从当前场景移除游戏 Sprite。
+ *
+ * @param sprite 要移除的 Sprite
+ */
+void RemoveGameSpriteFromCurrentScene(Sprite *sprite);
+
+/**@brief 从当前场景移除 UI Sprite。
+ *
+ * @param sprite 要移除的 Sprite
+ */
+void RemoveUISpriteFromCurrentScene(Sprite *sprite);
+
 #endif //PAC_SUPERMAN_ENGINE_H

@@ -61,7 +61,7 @@ Sprite *ConstructMapSprite(string mapName, string collidersDictFile, Vector2 pos
     TiledMapAsset *map = LoadTiledMapAsset(mapName, true, true);
     if (map == NULL)return NULL;
     Sprite *obj;
-    if ((double) map->width / map->height > position.x / position.y) {
+    if ((double) map->width / map->height > size.x / size.y) {
         double height = size.x * map->height / map->width;
         obj = ConstructSprite((Vector2) {position.x, position.y + (size.y - height) / 2.},
                               (Vector2) {size.x, height},
@@ -94,6 +94,14 @@ Vector2 GetRelativeTilePosition(Sprite *this, unsigned int x, unsigned int y) {
 
 Vector2 GetTilePosition(Sprite *this, unsigned int x, unsigned int y) {
     return VAdd(this->position, GetRelativeTilePosition(this, x, y));
+}
+
+bool IsTileWalkable(Sprite *this, unsigned int x, unsigned int y) {
+    short tile = GetTileAt(this->property, x, y);
+    for (int i = 0; i < _dict->length; i++) {
+        if (tile == _dict->colliders[i].id) return false;
+    }
+    return true;
 }
 
 bool FindGameObjectOfMap(Sprite *this, string name, GameObject *output) {

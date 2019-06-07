@@ -1,19 +1,67 @@
 #include <stdlib.h>
+#include <string.h>
 #include "sprite.h"
 #include "scene.h"
+#include "engine.h"
 
 static void _DestructSprite(void *sprite);
+
+static bool _SpriteNameIdentifier(void *element, void *param) {
+    return strcmp(((Sprite *) element)->name, param) == 0;
+}
 
 static void _DestructSprite(void *sprite) {
     ((Sprite *) sprite)->Destruct(sprite);
 }
 
 void AddGameSprite(Scene *this, Sprite *sprite) {
-    AddElement(&this->gameSprites, sprite);
+    ListAddElement(&this->gameSprites, sprite);
 }
 
 void AddUISprite(Scene *this, Sprite *uiSprite) {
-    AddElement(&this->uiSprites, uiSprite);
+    ListAddElement(&this->uiSprites, uiSprite);
+}
+
+Sprite *FindGameSpriteByName(Scene *this, string name) {
+    return ListSearchElement(&this->gameSprites, name, _SpriteNameIdentifier);
+}
+
+Sprite *FindUISpriteByName(Scene *this, string name) {
+    return ListSearchElement(&this->uiSprites, name, _SpriteNameIdentifier);
+}
+
+bool _RemoveGameSprite(Scene *this, Sprite *sprite) {
+    if (ListRemoveElement(&this->gameSprites, sprite, PointerIdentifier)) {
+        sprite->Destruct(sprite);
+        return true;
+    }
+    return false;
+}
+
+bool RemoveGameSprite(Scene *this, string name) {
+    Sprite *sprite = FindGameSpriteByName(this, name);
+    if (!sprite)return false;
+    if (GetCurrentScene() == this) {
+        RemoveGameSpriteFromCurrentScene(sprite);
+        return true;
+    } else return _RemoveGameSprite(this, sprite);
+}
+
+bool _RemoveUISprite(Scene *this, Sprite *sprite) {
+    if (ListRemoveElement(&this->gameSprites, sprite, PointerIdentifier)) {
+        sprite->Destruct(sprite);
+        return true;
+    }
+    return false;
+}
+
+bool RemoveUISprite(Scene *this, string name) {
+    Sprite *sprite = FindUISpriteByName(this, name);
+    if (!sprite)return false;
+    if (GetCurrentScene() == this) {
+        RemoveUISpriteFromCurrentScene(sprite);
+        return true;
+    } else return _RemoveUISprite(this, sprite);
 }
 
 void ClearGameSprites(Scene *this) {

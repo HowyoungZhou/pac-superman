@@ -42,6 +42,8 @@ static inline double _UpdateInterval();
 
 static void _MainTimerHandler(int timerID);
 
+static inline void _RemoveSprites(Scene *current);
+
 extern exception NullArgumentException;
 extern exception MethodNotImplementedException;
 
@@ -53,6 +55,8 @@ static SceneStack _scenes = EMPTY_LINKED_LIST;
 static Scene *_newScene = NULL;
 static bool _popScene = false;
 static bool _paused = false;
+static SpritesList _gameSpritesToBeRemoved = EMPTY_LINKED_LIST;
+static SpritesList _uiSpritesToBeRemoved = EMPTY_LINKED_LIST;
 
 void InitEngine() {
     RegisterTimerEvent(_MainTimerHandler);
@@ -81,12 +85,12 @@ bool IsPaused() {
 }
 
 Scene *GetCurrentScene() {
-    return GetLastElement(&_scenes);
+    return ListGetLastElement(&_scenes);
 }
 
 void PushScene(Scene *scene) {
     scene->Initialize(scene);
-    AddElement(&_scenes, scene);
+    ListAddElement(&_scenes, scene);
 }
 
 void PopScene() {
@@ -118,7 +122,8 @@ static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callb
 
 static void _MainTimerHandler(int timerID) {
     _UpdateScene(); // 检测有无场景更新
-    Scene *current = (Scene *) GetLastElement(&_scenes);
+    Scene *current = (Scene *) ListGetLastElement(&_scenes);
+    if (current) _RemoveSprites(current);
     switch (timerID) {
         case RENDERER_TIMER_ID:
             if (current == NULL) {
@@ -148,7 +153,7 @@ static void _MainTimerHandler(int timerID) {
 static inline void _UpdateScene() {
     if (!_popScene) return;
     // 弹出当前场景
-    Scene *scene = PopElement(&_scenes);
+    Scene *scene = ListPopElement(&_scenes);
     if (scene != NULL) scene->Destruct(scene);
     // 如果有新场景则加载新场景
     if (_newScene != NULL) {
@@ -161,6 +166,7 @@ static inline void _UpdateScene() {
 static void _UpdateTimers(Sprite *sprite) {
     for (LinkedListNode *node = sprite->timers.head; node != NULL; node = node->next) {
         Timer *timer = node->element;
+        if (!timer->enable) continue;
         timer->currentTick += _interval;
         if (timer->currentTick >= timer->interval) {
             timer->callback(sprite);
@@ -213,10 +219,9 @@ static inline void _DetectSpriteCollision(Sprite *s1, Sprite *s2) {
 
 static void _DetectCollision(Scene *current) {
     for (SpritesListNode *s1 = current->gameSprites.head; s1 != NULL; s1 = s1->next) {
-        if (!((Sprite *) s1->element)->visible) continue;
         for (SpritesListNode *s2 = s1->next; s2 != NULL; s2 = s2->next) {
-            if (!((Sprite *) s1->element)->visible) continue;
-            _DetectSpriteCollision(s1->element, s2->element);
+            if (((Sprite *) s1->element)->visible && ((Sprite *) s2->element)->visible)
+                _DetectSpriteCollision(s1->element, s2->element);
         }
     }
 }
@@ -261,4 +266,29 @@ static inline double _UpdateInterval() {
     _interval = (timestamp.QuadPart - _lastUpdated.QuadPart) * 1000.0 / _frequency.QuadPart;
     _lastUpdated = timestamp;
     QueryPerformanceFrequency(&_frequency);
+}
+
+static inline void _RemoveSprites(Scene *current) {
+    if (_gameSpritesToBeRemoved.head != NULL) {
+        for (SpritesListNode *node = _gameSpritesToBeRemoved.head; node != NULL; node = node->next) {
+            _RemoveGameSprite(current, node->element);
+        }
+    }
+
+    if (_uiSpritesToBeRemoved.head != NULL) {
+        for (SpritesListNode *node = _uiSpritesToBeRemoved.head; node != NULL; node = node->next) {
+            _RemoveUISprite(current, node->element);
+        }
+    }
+
+    ClearList(&_gameSpritesToBeRemoved, NULL);
+    ClearList(&_uiSpritesToBeRemoved, NULL);
+}
+
+void RemoveGameSpriteFromCurrentScene(Sprite *sprite) {
+    ListAddElement(&_gameSpritesToBeRemoved, sprite);
+}
+
+void RemoveUISpriteFromCurrentScene(Sprite *sprite) {
+    ListAddElement(&_uiSpritesToBeRemoved, sprite);
 }

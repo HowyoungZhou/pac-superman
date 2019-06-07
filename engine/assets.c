@@ -84,7 +84,7 @@ static bool _ReadObjFile(string path, LinkedList *output) {
         if (sscanf(line, "%s %lf %lf %lf %lf", object->name, &object->position.x, &object->position.y, &object->size.x,
                    &object->size.y) != 5)
             return false;
-        AddElement(output, object);
+        ListAddElement(output, object);
     }
     if (fclose(fp)) return false;
     return true;
@@ -142,7 +142,7 @@ static bool _LoadMap(string path, LinkedList *output, unsigned int *height) {
             case ',':;
                 short *pnum = malloc(sizeof(short));
                 *pnum = sign * num;
-                AddElement(output, pnum);
+                ListAddElement(output, pnum);
                 sign = 1;
                 num = 0;
                 break;
@@ -230,7 +230,7 @@ static bool _ReadDictFile(string path, LinkedList *output) {
                     pos += dpos;
                     Collider *bCollider = ConstructCollider(id, BOX_COLLIDER, true);
                     bCollider->shape.boxCollider = (BoxCollider) {(Vector2) {width, height}, (Vector2) {x, y}};
-                    AddElement(output, bCollider);
+                    ListAddElement(output, bCollider);
                     break;
                 case 'C':;
                     double cx, cy, radius;
@@ -238,7 +238,7 @@ static bool _ReadDictFile(string path, LinkedList *output) {
                     pos += dpos;
                     Collider *cCollider = ConstructCollider(id, CIRCLE_COLLIDER, true);
                     cCollider->shape.circleCollider = (CircleCollider) {(Vector2) {cx, cy}, radius};
-                    AddElement(output, cCollider);
+                    ListAddElement(output, cCollider);
                     break;
                 default:
                     return false;

@@ -57,11 +57,11 @@ Sprite *ConstructRankDisplaySprite(){
     player4.score = "60" ;
     player5.name = "Anne" ;
     player5.score = "60" ;
-    AddElement(&testrank, &player1);
-    AddElement(&testrank, &player2);
-    AddElement(&testrank, &player3);
-    AddElement(&testrank, &player4);
-    AddElement(&testrank, &player5);
+    ListAddElement(&testrank, &player1);
+    ListAddElement(&testrank, &player2);
+    ListAddElement(&testrank, &player3);
+    ListAddElement(&testrank, &player4);
+    ListAddElement(&testrank, &player5);
 
     return obj;
 }

@@ -3,7 +3,7 @@
 #include <game_menu.h>
 #include <vector2.h>
 #include <engine.h>
-#include <example_bitmap_sprite.h>
+#include <ghost_blinky_sprite.h>
 #include <image.h>
 #include <graphics.h>
 #include <extgraph.h>
@@ -13,7 +13,7 @@
 static double cx,cy;
 
 void _InsToHome(){
-    ReplaceScene(ConstructHomeScene());
+    PopScene();
 }
 
 void _Instruction_Initialize(Scene *scene) {
