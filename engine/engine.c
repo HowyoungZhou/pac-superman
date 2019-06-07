@@ -85,12 +85,12 @@ bool IsPaused() {
 }
 
 Scene *GetCurrentScene() {
-    return GetLastElement(&_scenes);
+    return ListGetLastElement(&_scenes);
 }
 
 void PushScene(Scene *scene) {
     scene->Initialize(scene);
-    AddElement(&_scenes, scene);
+    ListAddElement(&_scenes, scene);
 }
 
 void PopScene() {
@@ -122,7 +122,7 @@ static inline void _ForEachSprite(SpritesList *list, ForEachSpriteCallback callb
 
 static void _MainTimerHandler(int timerID) {
     _UpdateScene(); // 检测有无场景更新
-    Scene *current = (Scene *) GetLastElement(&_scenes);
+    Scene *current = (Scene *) ListGetLastElement(&_scenes);
     if (current) _RemoveSprites(current);
     switch (timerID) {
         case RENDERER_TIMER_ID:
@@ -153,7 +153,7 @@ static void _MainTimerHandler(int timerID) {
 static inline void _UpdateScene() {
     if (!_popScene) return;
     // 弹出当前场景
-    Scene *scene = PopElement(&_scenes);
+    Scene *scene = ListPopElement(&_scenes);
     if (scene != NULL) scene->Destruct(scene);
     // 如果有新场景则加载新场景
     if (_newScene != NULL) {
@@ -286,9 +286,9 @@ static inline void _RemoveSprites(Scene *current) {
 }
 
 void RemoveGameSpriteFromCurrentScene(Sprite *sprite) {
-    AddElement(&_gameSpritesToBeRemoved, sprite);
+    ListAddElement(&_gameSpritesToBeRemoved, sprite);
 }
 
 void RemoveUISpriteFromCurrentScene(Sprite *sprite) {
-    AddElement(&_uiSpritesToBeRemoved, sprite);
+    ListAddElement(&_uiSpritesToBeRemoved, sprite);
 }

@@ -15,23 +15,23 @@ static void _DestructSprite(void *sprite) {
 }
 
 void AddGameSprite(Scene *this, Sprite *sprite) {
-    AddElement(&this->gameSprites, sprite);
+    ListAddElement(&this->gameSprites, sprite);
 }
 
 void AddUISprite(Scene *this, Sprite *uiSprite) {
-    AddElement(&this->uiSprites, uiSprite);
+    ListAddElement(&this->uiSprites, uiSprite);
 }
 
 Sprite *FindGameSpriteByName(Scene *this, string name) {
-    return SearchElement(&this->gameSprites, name, _SpriteNameIdentifier);
+    return ListSearchElement(&this->gameSprites, name, _SpriteNameIdentifier);
 }
 
 Sprite *FindUISpriteByName(Scene *this, string name) {
-    return SearchElement(&this->uiSprites, name, _SpriteNameIdentifier);
+    return ListSearchElement(&this->uiSprites, name, _SpriteNameIdentifier);
 }
 
 bool _RemoveGameSprite(Scene *this, Sprite *sprite) {
-    if (RemoveElement(&this->gameSprites, sprite, PointerComparer)) {
+    if (ListRemoveElement(&this->gameSprites, sprite, PointerIdentifier)) {
         sprite->Destruct(sprite);
         return true;
     }
@@ -48,7 +48,7 @@ bool RemoveGameSprite(Scene *this, string name) {
 }
 
 bool _RemoveUISprite(Scene *this, Sprite *sprite) {
-    if (RemoveElement(&this->gameSprites, sprite, PointerComparer)) {
+    if (ListRemoveElement(&this->gameSprites, sprite, PointerIdentifier)) {
         sprite->Destruct(sprite);
         return true;
     }

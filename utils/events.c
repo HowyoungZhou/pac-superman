@@ -44,33 +44,33 @@ void InitEvents() {
 }
 
 void RegisterKeyboardEvent(KeyboardEventCallback callback) {
-    AddElement(&_keyboardEvents, callback);
+    ListAddElement(&_keyboardEvents, callback);
 }
 
 void RegisterCharEvent(CharEventCallback callback) {
-    AddElement(&_charEvents, callback);
+    ListAddElement(&_charEvents, callback);
 }
 
 void RegisterMouseEvent(MouseEventCallback callback) {
-    AddElement(&_mouseEvents, callback);
+    ListAddElement(&_mouseEvents, callback);
 }
 
 void RegisterTimerEvent(TimerEventCallback callback) {
-    AddElement(&_timerEvents, callback);
+    ListAddElement(&_timerEvents, callback);
 }
 
 void CancelKeyboardEvent(KeyboardEventCallback callback) {
-    RemoveElement(&_keyboardEvents, callback, PointerComparer);
+    ListRemoveElement(&_keyboardEvents, callback, PointerIdentifier);
 }
 
 void CancelCharEvent(CharEventCallback callback) {
-    RemoveElement(&_charEvents, callback, PointerComparer);
+    ListRemoveElement(&_charEvents, callback, PointerIdentifier);
 }
 
 void CancelMouseEvent(MouseEventCallback callback) {
-    RemoveElement(&_mouseEvents, callback, PointerComparer);
+    ListRemoveElement(&_mouseEvents, callback, PointerIdentifier);
 }
 
 void CancelTimerEvent(TimerEventCallback callback) {
-    RemoveElement(&_timerEvents, callback, PointerComparer);
+    ListRemoveElement(&_timerEvents, callback, PointerIdentifier);
 }

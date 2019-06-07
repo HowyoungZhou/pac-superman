@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "linked_list.h"
 
-void AddElement(LinkedList *list, void *element) {
+void ListAddElement(LinkedList *list, void *element) {
     if (list == NULL) return;
     LinkedListNode *node = malloc(sizeof(LinkedListNode));
     node->element = element;
@@ -15,7 +15,28 @@ void AddElement(LinkedList *list, void *element) {
     list->length++;
 }
 
-void PushElement(LinkedList *list, void *element) {
+void OrderedListAddElement(LinkedList *list, void *element, ElementComparer comparer) {
+    if (list == NULL) return;
+    LinkedListNode *current = list->head, *prev = NULL;
+    while (current != NULL) {
+        if (comparer(element, current->element) < 0)break;
+        prev = current;
+        current = current->next;
+    }
+    LinkedListNode *node = malloc(sizeof(LinkedListNode));
+    node->element = element;
+    if (!prev) {
+        node->next = current;
+        list->head = node;
+    } else {
+        node->next = prev->next;
+        prev->next = node;
+    }
+    if (!node->next) list->tail = node;
+    list->length++;
+}
+
+void ListPushElement(LinkedList *list, void *element) {
     if (list == NULL) return;
     LinkedListNode *node = malloc(sizeof(LinkedListNode));
     node->element = element;
@@ -25,7 +46,7 @@ void PushElement(LinkedList *list, void *element) {
     list->length++;
 }
 
-void *RemoveElement(LinkedList *list, void *param, ElementIdentifier identifier) {
+void *ListRemoveElement(LinkedList *list, void *param, ElementIdentifier identifier) {
     if (list == NULL) return NULL;
     LinkedListNode *current = list->head, *last = NULL;
     while (current) {
@@ -47,7 +68,7 @@ void *RemoveElement(LinkedList *list, void *param, ElementIdentifier identifier)
     return NULL;
 }
 
-void *PopElement(LinkedList *list) {
+void *ListPopElement(LinkedList *list) {
     if (list == NULL) return NULL;
     LinkedListNode *current = list->head, *last = NULL;
     while (current) {
@@ -82,19 +103,19 @@ void ClearList(LinkedList *list, ElementDestructor destruct) {
     list->length = 0;
 }
 
-void ForEachElement(LinkedList *list, ForEachElementCallback callback) {
+void ListForEachElement(LinkedList *list, ForEachElementCallback callback) {
     if (list == NULL) return;
     for (LinkedListNode *node = list->head; node != NULL; node = node->next) {
         callback(node->element);
     }
 }
 
-void *GetLastElement(const LinkedList *list) {
+void *ListGetLastElement(const LinkedList *list) {
     if (list == NULL || list->tail == NULL)return NULL;
     return list->tail->element;
 }
 
-void *SearchElement(const LinkedList *list, void *param, ElementIdentifier identifier) {
+void *ListSearchElement(const LinkedList *list, void *param, ElementIdentifier identifier) {
     if (list->head == NULL)return NULL;
     for (LinkedListNode *node = list->head; node != NULL; node = node->next) {
         if (identifier(node->element, param))return node->element;
@@ -102,7 +123,7 @@ void *SearchElement(const LinkedList *list, void *param, ElementIdentifier ident
     return NULL;
 }
 
-bool PointerComparer(void *e1, void *e2) {
+bool PointerIdentifier(void *e1, void *e2) {
     return e1 == e2;
 }
 

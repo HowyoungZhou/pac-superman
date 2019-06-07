@@ -44,7 +44,7 @@ Sprite *ConstructSprite(Vector2 position, Vector2 size, Vector2 velocity) {
 }
 
 void RegisterCollider(Sprite *sprite, Collider *collider) {
-    AddElement(&sprite->colliders, collider);
+    ListAddElement(&sprite->colliders, collider);
 }
 
 static bool _ColliderIDIdentifier(void *collider, void *id) {
@@ -52,7 +52,7 @@ static bool _ColliderIDIdentifier(void *collider, void *id) {
 }
 
 bool UnregisterCollider(Sprite *sprite, int id) {
-    Collider *collider = RemoveElement(&sprite->colliders, &id, _ColliderIDIdentifier);
+    Collider *collider = ListRemoveElement(&sprite->colliders, &id, _ColliderIDIdentifier);
     if (collider == NULL)return false;
     DestructCollider(collider);
     return true;
@@ -88,7 +88,7 @@ void RegisterTimer(Sprite *this, double interval, TimerCallback callback) {
     timer->interval = interval;
     timer->currentTick = 0;
     timer->callback = callback;
-    AddElement(&this->timers, timer);
+    ListAddElement(&this->timers, timer);
 }
 
 static bool _TimerIdentifier(void *element, void *param) {
@@ -96,7 +96,7 @@ static bool _TimerIdentifier(void *element, void *param) {
 }
 
 bool DisableTimer(Sprite *this, TimerCallback callback) {
-    Timer *timer = SearchElement(&this->timers, callback, _TimerIdentifier);
+    Timer *timer = ListSearchElement(&this->timers, callback, _TimerIdentifier);
     if (!timer) return false;
     timer->enable = false;
     return true;
