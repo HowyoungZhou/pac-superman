@@ -9,4 +9,6 @@ void PowerModeOn();
 
 void NewGame();
 
+Sprite *GetCurrentMap();
+
 #endif //PAC_SUPERMAN_TEST_SCENE_H

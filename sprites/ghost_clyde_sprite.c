@@ -1,16 +1,21 @@
+#include <math.h>
 #include <sprite.h>
 #include <game_controller.h>
 #include <scene.h>
 #include <engine.h>
+#include <game_scene.h>
 #include "ghost_sprite.h"
 #include "ghost_clyde_sprite.h"
 #include "map_sprite.h"
 
+#define CLOSE_DISTANCE 8
 #define DELAY 3000
 
 static void _Go(Sprite *this);
 
 static Vector2 _FindFleePosition(Sprite *map);
+
+static void _UpdateTarget(Sprite *this);
 
 static void _UpdatePath(Sprite *this);
 
@@ -33,16 +38,25 @@ static Vector2 _FindFleePosition(Sprite *map) {
     return resPos;
 }
 
+static void _UpdateTarget(Sprite *this) {
+    Ghost *ghost = this->property;
+    Sprite *pacman = FindGameSpriteByName(GetCurrentScene(), "PacMan");
+    double tileWidth = GetTileSize(GetCurrentMap()).x;
+    if (VLength(VSubtract(pacman->position, this->position)) < CLOSE_DISTANCE * tileWidth) {
+        SetNavTargetPosition(this, ghost->initPos);
+    } else SetNavTargetSprite(this, pacman);
+}
+
 static void _UpdatePath(Sprite *this) {
     Ghost *ghost = this->property;
     switch (ghost->state) {
         case CHASING:
             this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
-            SetNavTargetSprite(this, FindGameSpriteByName(GetCurrentScene(), "PacMan"));
+            _UpdateTarget(this);
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            SetNavTargetPosition(this, _FindFleePosition(FindGameSpriteByName(GetCurrentScene(), "Map")));
+            SetNavTargetPosition(this, _FindFleePosition(GetCurrentMap()));
             break;
         default:
             break;

@@ -183,3 +183,7 @@ void PowerModeOn() {
         ghost->chasedCountDown = GetGameObjectOption().ghostChasedCountDown;
     }
 }
+
+Sprite *GetCurrentMap() {
+    return _currentMap;
+}
