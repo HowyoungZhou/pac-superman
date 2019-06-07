@@ -24,7 +24,7 @@ enum MapMemuItem {
 };
 
 enum StyleMenuItem {
-    YELLOW = 1, GREEN
+    YELLOW = 1, GREEN, PURPLE, RED
 };
 
 static void _OnGameMenuItemSelected(MenuList *sender, int selectedIndex) {
@@ -91,6 +91,12 @@ static void _OnStyleMenuItemSelected(MenuList *sender, int selectedIndex) {
         case GREEN:
             AddGameSprite(current, ConstructPacmanSprite(pacman->position, pacman->size, "PacManGreen"));
             break;
+        case PURPLE:
+            AddGameSprite(current, ConstructPacmanSprite(pacman->position, pacman->size, "PacManPurple"));
+            break;
+        case RED:
+            AddGameSprite(current, ConstructPacmanSprite(pacman->position, pacman->size, "PacManRed"));
+            break;
         default:
             break;
     }
@@ -120,10 +126,12 @@ Sprite *ConstructGameMenuSprite() {
                                            "Help",
                                            "Instruction | Ctrl-I",
                                            "About");
-    MenuList *styleMenu = ConstructMenuList(GenUIID(0), _OnStyleMenuItemSelected, 3,
+    MenuList *styleMenu = ConstructMenuList(GenUIID(0), _OnStyleMenuItemSelected, 5,
                                             "Skin",
-                                            "Yellow",
-                                            "Green");
+                                            "Classic Yellow",
+                                            "Forgive Green",
+                                            "Gay Purple",
+                                            "Hot blooded Red");
 
     Menu *menu = ConstructMenu(4, gameMenu, styleMenu, mapMenu, helpMenu);
     menu->heightRatio = 2.;

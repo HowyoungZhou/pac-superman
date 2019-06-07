@@ -14,5 +14,7 @@ void DefineColors() {
     DefineHexColor("Pellet", 0xffb897);
     DefineHexColor("Wall", 0x2121DE);
     DefineHexColor("PacManYellow", 0xFFFF00);
-    DefineRGBColor("PacManGreen", 97, 234, 199);
+    DefineRGBColor("PacManGreen", 32, 228, 17);
+    DefineRGBColor("PacManPurple",123,38,220);
+    DefineRGBColor("PacManRed",235,0,0);
 }
