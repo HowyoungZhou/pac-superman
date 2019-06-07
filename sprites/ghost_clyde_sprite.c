@@ -15,7 +15,7 @@ static void _Go(Sprite *this);
 
 static Vector2 _FindFleePosition(Sprite *map);
 
-static void _UpdateTarget(Sprite *this);
+static inline void _UpdateTarget(Sprite *this);
 
 static void _UpdatePath(Sprite *this);
 
@@ -38,7 +38,7 @@ static Vector2 _FindFleePosition(Sprite *map) {
     return resPos;
 }
 
-static void _UpdateTarget(Sprite *this) {
+static inline void _UpdateTarget(Sprite *this) {
     Ghost *ghost = this->property;
     Sprite *pacman = FindGameSpriteByName(GetCurrentScene(), "PacMan");
     double tileWidth = GetTileSize(GetCurrentMap()).x;

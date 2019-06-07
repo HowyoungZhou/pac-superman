@@ -7,6 +7,7 @@
 #include "ghost_pinky_sprite.h"
 #include "map_sprite.h"
 
+#define AMBUSH_DIST 4
 #define DELAY 1000
 
 static void _Go(Sprite *this);
@@ -34,12 +35,23 @@ static Vector2 _FindFleePosition(Sprite *map) {
     return resPos;
 }
 
+static inline void _UpdateTarget(Sprite *this) {
+    Scene *current = GetCurrentScene();
+    Sprite *pacman = FindGameSpriteByName(GetCurrentScene(), "PacMan");
+    Sprite *map = GetCurrentMap();
+    double tileLength = GetTileSize(map).x;
+    Vector2 ambushPos = VAdd(pacman->position,
+                             VMultiply(AMBUSH_DIST * tileLength, VNormalize(pacman->velocity)));
+    if (DetectMovable(current, this, ambushPos)) SetNavTargetPosition(this, ambushPos);
+    else SetNavTargetSprite(this, pacman);
+}
+
 static void _UpdatePath(Sprite *this) {
     Ghost *ghost = this->property;
     switch (ghost->state) {
         case CHASING:
             this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
-            SetNavTargetSprite(this, FindGameSpriteByName(GetCurrentScene(), "PacMan"));
+            _UpdateTarget(this);
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;

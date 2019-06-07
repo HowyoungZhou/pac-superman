@@ -21,8 +21,6 @@ static inline Collider _CalcAbsoluteCollider(Collider *collider, Vector2 positio
 
 static inline bool _DetectSpriteCollision(Sprite *s1, Vector2 p1, Sprite *s2, Vector2 p2);
 
-static inline bool _DetectMovable(Scene *scene, Sprite *sprite, Vector2 position);
-
 PathNode *_GetPath(PathNode *last);
 
 static void inline _FreeResources(BinaryHeap *open, BinaryHeap *closed);
@@ -91,7 +89,7 @@ static inline bool _DetectSpriteCollision(Sprite *s1, Vector2 p1, Sprite *s2, Ve
     return false;
 }
 
-static inline bool _DetectMovable(Scene *scene, Sprite *sprite, Vector2 position) {
+bool DetectMovable(Scene *scene, Sprite *sprite, Vector2 position) {
     for (SpritesListNode *node = scene->gameSprites.head; node != NULL; node = node->next) {
         Sprite *s = node->element;
         if (s == sprite || !s->visible) continue;
@@ -183,7 +181,7 @@ static inline PathNode *_AStarFindPath(Scene *scene, Sprite *sprite) {
                 // 如在 closed 列表内则不必检查
                 if (HeapSearchElement(&closed, &neighbor, _PositionEqual)) continue;
                 // 检测该位置是否有障碍物
-                if (!_DetectMovable(scene, sprite, neighbor)) continue;
+                if (!DetectMovable(scene, sprite, neighbor)) continue;
                 // 在 open 列表内查找该节点
                 int neighborIndex = HeapSearchIndexOfElement(&open, &neighbor, _PositionEqual);
                 if (neighborIndex != ELEMENT_NOT_FOUND) {
@@ -258,4 +256,34 @@ void AutoNav(Sprite *sprite, double interval) {
     if (!node) sprite->velocity = ZERO_VECTOR;
         // 否则设置速度方向朝向下一个节点
     else sprite->velocity = VMultiply(sprite->navAgent.speed, VNormalize(VSubtract(node->position, sprite->position)));
+}
+
+bool
+SearchNearestMovable(Scene *scene, Sprite *sprite, Vector2 initPos, double largestDist, double step, Vector2 *output) {
+    if (DetectMovable(scene, sprite, initPos)) {
+        *output = initPos;
+        return true;
+    }
+
+    double x = initPos.x, y = initPos.y;
+    for (int d = 1; d <= largestDist * step; d++) {
+        for (int dy = -d; dy <= d; dy++)
+            for (int dx = -d; dx <= d; dx += 2 * d) {
+                Vector2 newPos = (Vector2) {x + dx * step, y + dy * step};
+                if (DetectMovable(scene, sprite, newPos)) {
+                    *output = newPos;
+                    return true;
+                }
+            }
+
+        for (int dx = -d + 1; dx <= d - 1; dx++)
+            for (int dy = -d; dy <= d; dy += 2 * d) {
+                Vector2 newPos = (Vector2) {x + dx * step, y + dy * step};
+                if (DetectMovable(scene, sprite, newPos)) {
+                    *output = newPos;
+                    return true;
+                }
+            }
+    }
+    return false;
 }

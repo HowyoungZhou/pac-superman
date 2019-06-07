@@ -42,6 +42,8 @@ void ChangePathfindingStep(double step);
  */
 void FreePath(PathNode *path);
 
+bool DetectMovable(Scene *scene, Sprite *sprite, Vector2 position);
+
 /**@brief 更新某 Sprite 的自动导航路径。
  *
  * @param scene 当前场景
@@ -72,5 +74,8 @@ void SetNavDirectTargetPosition(Sprite *sprite, Vector2 position);
  * @param interval 当前渲染周期
  */
 void AutoNav(Sprite *sprite, double interval);
+
+bool
+SearchNearestMovable(Scene *scene, Sprite *sprite, Vector2 initPos, double largestDist, double step, Vector2 *output);
 
 #endif //PAC_SUPERMAN_AUTONAV_H
