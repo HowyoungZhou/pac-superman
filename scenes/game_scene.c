@@ -19,6 +19,7 @@
 #include <game_instruction_scene.h>
 #include <game_RankingList_scene.h>
 #include <about_scene.h>
+#include <eagle_sprite.h>
 
 #define PELLET_SIZE_RATIO 0.25
 #define POWER_PELLET_SIZE_RATIO 0.7
@@ -104,7 +105,7 @@ void _Initialize(Scene *scene) {
     // 添加吃豆人
     GameObject pacman;
     FindGameObjectOfMap(map, "PacMan", &pacman);
-    Sprite *pacmanSprite = ConstructPacmanSprite(pacman.position, pacman.size);
+    Sprite *pacmanSprite = ConstructEagleSprite(pacman.position, pacman.size);
     AddGameSprite(scene, pacmanSprite);
 
     // 添加豆子
