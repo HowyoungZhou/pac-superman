@@ -4,6 +4,7 @@
 #include <scene.h>
 #include <engine.h>
 #include <game_scene.h>
+#include <time.h>
 #include "ghost_sprite.h"
 #include "ghost_clyde_sprite.h"
 #include "map_sprite.h"
@@ -13,41 +14,26 @@
 
 static void _Go(Sprite *this);
 
-static Vector2 _FindFleePosition(Sprite *map);
+static inline int _GetRandNum(int lower, int upper);
 
-static void _UpdateTarget(Sprite *this);
+static inline void _UpdateTarget(Sprite *this);
 
-static void _UpdatePath(Sprite *this);
+static inline void _UpdatePath(Sprite *this);
 
-static Vector2 _FindFleePosition(Sprite *map) {
-    Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    TiledMapAsset *asset = map->property;
-    Vector2 resPos = ZERO_VECTOR;
-    double resDist = -1.;
-    for (int i = 0; i < asset->width; i++) {
-        for (int j = 0; j < asset->height; j++) {
-            if (!IsTileWalkable(map, i, j)) continue;
-            Vector2 tilePos = GetTilePosition(map, i, j);
-            double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
-            if (dist > resDist) {
-                resPos = tilePos;
-                resDist = dist;
-            }
-        }
-    }
-    return resPos;
+static inline int _GetRandNum(int lower, int upper) {
+    return (rand() % (upper - lower + 1)) + lower;
 }
 
-static void _UpdateTarget(Sprite *this) {
+static inline void _UpdateTarget(Sprite *this) {
     Ghost *ghost = this->property;
-    Sprite *pacman = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    double tileWidth = GetTileSize(GetCurrentMap()).x;
+    Sprite *pacman = GetCurrentHeros().pacman;
+    double tileWidth = GetTileSize(GetCurrentHeros().map).x;
     if (VLength(VSubtract(pacman->position, this->position)) < CLOSE_DISTANCE * tileWidth) {
         SetNavTargetPosition(this, ghost->initPos);
     } else SetNavTargetSprite(this, pacman);
 }
 
-static void _UpdatePath(Sprite *this) {
+static inline void _UpdatePath(Sprite *this) {
     Ghost *ghost = this->property;
     switch (ghost->state) {
         case CHASING:
@@ -56,7 +42,9 @@ static void _UpdatePath(Sprite *this) {
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            SetNavTargetPosition(this, _FindFleePosition(GetCurrentMap()));
+            DynamicArray walkableTiles = GetAllWalkableTiles();
+            Vector2 fleePos = *ArrayGetElement(walkableTiles, Vector2*, _GetRandNum(0, walkableTiles.length - 1));
+            SetNavTargetPosition(this, fleePos);
             break;
         default:
             break;
@@ -66,7 +54,7 @@ static void _UpdatePath(Sprite *this) {
 
 static void _Go(Sprite *this) {
     _UpdatePath(this);
-    RegisterTimer(this, PATH_UPDATE_INTERVAL, _UpdatePath);
+    EnableTimer(this, _UpdatePath);
     DisableTimer(this, _Go);
 }
 
@@ -82,11 +70,13 @@ Sprite *ConstructGhostClydeSprite(Vector2 position, Vector2 size) {
     ghost->assets[6] = LoadBitmapAsset("ghost/clyde/clyde-down1.bmp");
     ghost->assets[7] = LoadBitmapAsset("ghost/clyde/clyde-down2.bmp");
 
-    RegisterTimer(obj, DELAY, _Go);
+    RegisterTimer(obj, DELAY, _Go, true);
+    RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
+    srand(time(NULL));
     return obj;
 }
 
 void ResetClyde(Sprite *this) {
     ResetGhost(this);
-    RegisterTimer(this, DELAY, _Go);
+    EnableTimer(this, _Go);
 }

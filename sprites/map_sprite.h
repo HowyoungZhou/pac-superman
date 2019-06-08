@@ -1,7 +1,15 @@
 #ifndef PAC_SUPERMAN_MAP_SPRITE_H
 #define PAC_SUPERMAN_MAP_SPRITE_H
 
+#define PELLET_TILE 54
+#define POWER_PELLET_TILE 42
+
 #include <assets.h>
+
+typedef struct {
+    unsigned int x;
+    unsigned int y;
+} TileCoordinate;
 
 typedef void (*ForEachTileCallback)(Sprite *sprite, unsigned int x, unsigned int y, short id);
 
@@ -14,6 +22,10 @@ Vector2 GetRelativeTilePosition(Sprite *this, unsigned int x, unsigned int y);
 Vector2 GetTilePosition(Sprite *this, unsigned int x, unsigned int y);
 
 bool IsTileWalkable(Sprite *this, unsigned int x, unsigned int y);
+
+TileCoordinate FindTileCoordinate(Sprite *this, Vector2 position);
+
+bool SearchNearestWalkable(Sprite *this, TileCoordinate initPoint, int largestDist, TileCoordinate *output);
 
 bool FindGameObjectOfMap(Sprite *this, string name, GameObject *output);
 

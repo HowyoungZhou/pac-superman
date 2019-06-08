@@ -82,9 +82,9 @@ double CalcIncircleRadius(Sprite *sprite) {
     return fmin(sprite->size.x, sprite->size.y) / 2.;
 }
 
-void RegisterTimer(Sprite *this, double interval, TimerCallback callback) {
+void RegisterTimer(Sprite *this, double interval, TimerCallback callback, bool enable) {
     Timer *timer = malloc(sizeof(Timer));
-    timer->enable = true;
+    timer->enable = enable;
     timer->interval = interval;
     timer->currentTick = 0;
     timer->callback = callback;
@@ -95,19 +95,35 @@ static bool _TimerIdentifier(void *element, void *param) {
     return ((Timer *) element)->callback == param;
 }
 
+bool EnableTimer(Sprite *this, TimerCallback callback) {
+    Timer *timer = ListSearchElement(&this->timers, callback, _TimerIdentifier);
+    if (!timer) return false;
+    timer->enable = true;
+    return true;
+}
+
 bool DisableTimer(Sprite *this, TimerCallback callback) {
     Timer *timer = ListSearchElement(&this->timers, callback, _TimerIdentifier);
     if (!timer) return false;
     timer->enable = false;
+    timer->currentTick = 0;
     return true;
 }
 
-void ClearTimers(Sprite *this){
+void ClearTimers(Sprite *this) {
     ClearList(&this->timers, free);
 }
 
 void ResetTimers(Sprite *this) {
     for (LinkedListNode *node = this->timers.head; node != NULL; node = node->next) {
         ((Timer *) node->element)->currentTick = 0;
+    }
+}
+
+void DisableTimers(Sprite *this) {
+    for (LinkedListNode *node = this->timers.head; node != NULL; node = node->next) {
+        Timer *timer = node->element;
+        timer->enable = false;
+        timer->currentTick = 0;
     }
 }

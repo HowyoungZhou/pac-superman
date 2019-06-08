@@ -28,6 +28,10 @@ typedef struct AutoNavAgent {
     double speed;
 } AutoNavAgent;
 
+void ChangeMaxNodeCounts(long count);
+
+void ChangePathfindingBorder(Vector2 position, Vector2 size);
+
 /**@brief 修改寻径时的步长。
  *
  * 步长较短会导致寻径时间延长，步长较长可能会导致无法找到路径。
@@ -41,6 +45,8 @@ void ChangePathfindingStep(double step);
  * @param path 路径
  */
 void FreePath(PathNode *path);
+
+bool DetectMovable(Scene *scene, Sprite *sprite, Vector2 position);
 
 /**@brief 更新某 Sprite 的自动导航路径。
  *
@@ -72,5 +78,8 @@ void SetNavDirectTargetPosition(Sprite *sprite, Vector2 position);
  * @param interval 当前渲染周期
  */
 void AutoNav(Sprite *sprite, double interval);
+
+bool
+SearchNearestMovable(Scene *scene, Sprite *sprite, Vector2 initPos, double largestDist, double step, Vector2 *output);
 
 #endif //PAC_SUPERMAN_AUTONAV_H

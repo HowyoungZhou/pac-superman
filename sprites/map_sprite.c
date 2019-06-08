@@ -104,6 +104,19 @@ bool IsTileWalkable(Sprite *this, unsigned int x, unsigned int y) {
     return true;
 }
 
+TileCoordinate FindTileCoordinate(Sprite *this, Vector2 position) {
+    TiledMapAsset *map = this->property;
+    Vector2 relativePos = VSubtract(position, this->position);
+    Vector2 tileSize = GetTileSize(this);
+    int x = relativePos.x / tileSize.x;
+    int y = relativePos.y / tileSize.y;
+    x = x < 0 ? 0 : x;
+    y = y < 0 ? 0 : y;
+    x = x > map->width - 1 ? map->width - 1 : x;
+    y = y > map->height - 1 ? map->height - 1 : y;
+    return (TileCoordinate) {x, y};
+}
+
 bool FindGameObjectOfMap(Sprite *this, string name, GameObject *output) {
     TiledMapAsset *map = this->property;
     GameObject obj;

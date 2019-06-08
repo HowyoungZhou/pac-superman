@@ -66,6 +66,7 @@ void InitEngine() {
     startTimer(RENDERER_TIMER_ID, RENDERER_TIMER_INTERVAL);
     startTimer(PHYSICAL_ENGINE_TIMER_ID, PHYSICAL_ENGINE_TIMER_INTERVAL);
     _InitUI();
+    ChangePathfindingBorder(ZERO_VECTOR, (Vector2) {GetWindowWidth(), GetWindowHeight()});
 }
 
 void PauseGame() {
