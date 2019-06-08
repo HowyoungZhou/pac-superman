@@ -12,14 +12,7 @@
 
 static void _Go(Sprite *this);
 
-static inline void _UpdateFleeTarget(Sprite *this);
-
 static void _UpdatePath(Sprite *this);
-
-static inline void _UpdateFleeTarget(Sprite *this) {
-    SetNavTargetPosition(this, GetFleePosition());
-    UpdatePath(GetCurrentScene(), this);
-}
 
 static inline void _UpdateTarget(Sprite *this) {
     Scene *current = GetCurrentScene();
@@ -42,7 +35,8 @@ static void _UpdatePath(Sprite *this) {
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            _UpdateFleeTarget(this);
+            SetNavTargetPosition(this, GetFleePosition());
+            UpdatePath(GetCurrentScene(), this);
             break;
         default:
             break;

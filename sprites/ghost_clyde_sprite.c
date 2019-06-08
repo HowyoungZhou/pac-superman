@@ -4,6 +4,7 @@
 #include <scene.h>
 #include <engine.h>
 #include <game_scene.h>
+#include <time.h>
 #include "ghost_sprite.h"
 #include "ghost_clyde_sprite.h"
 #include "map_sprite.h"
@@ -13,9 +14,15 @@
 
 static void _Go(Sprite *this);
 
+static inline int _GetRandNum(int lower, int upper);
+
 static inline void _UpdateTarget(Sprite *this);
 
-static void _UpdatePath(Sprite *this);
+static inline void _UpdatePath(Sprite *this);
+
+static inline int _GetRandNum(int lower, int upper) {
+    return (rand() % (upper - lower + 1)) + lower;
+}
 
 static inline void _UpdateTarget(Sprite *this) {
     Ghost *ghost = this->property;
@@ -26,7 +33,7 @@ static inline void _UpdateTarget(Sprite *this) {
     } else SetNavTargetSprite(this, pacman);
 }
 
-static void _UpdatePath(Sprite *this) {
+static inline void _UpdatePath(Sprite *this) {
     Ghost *ghost = this->property;
     switch (ghost->state) {
         case CHASING:
@@ -35,7 +42,9 @@ static void _UpdatePath(Sprite *this) {
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            SetNavTargetPosition(this, GetFleePosition());
+            DynamicArray walkableTiles = GetAllWalkableTiles();
+            Vector2 fleePos = *ArrayGetElement(walkableTiles, Vector2*, _GetRandNum(0, walkableTiles.length - 1));
+            SetNavTargetPosition(this, fleePos);
             break;
         default:
             break;
@@ -63,6 +72,7 @@ Sprite *ConstructGhostClydeSprite(Vector2 position, Vector2 size) {
 
     RegisterTimer(obj, DELAY, _Go, true);
     RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
+    srand(time(NULL));
     return obj;
 }
 
