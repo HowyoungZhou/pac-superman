@@ -25,6 +25,7 @@
 #include <ghost_clyde_sprite.h>
 #include <ghost_sprite.h>
 #include "game_controller.h"
+#include <eagle_sprite.h>
 
 #define WALKABLE_TILES_PAGE_SIZE 1000
 #define PELLET_SIZE_RATIO 0.25
