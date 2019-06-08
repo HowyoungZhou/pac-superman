@@ -37,9 +37,8 @@ static void _AddPellets(Sprite *sprite, unsigned int x, unsigned int y, short id
 static void _Initialize(Scene *scene);
 
 static Scene *_currentScene = NULL;
-static Sprite *_currentMap = NULL;
 static string _mapName = NULL;
-static const string _ghosts[] = {"Blinky", "Pinky", "Inky", "Clyde"};
+static Heros _heros;
 static DynamicArray _walkableTiles;
 
 void PauseCallback(Sprite *button) {
@@ -128,59 +127,63 @@ static void _Initialize(Scene *scene) {
     AddUISprite(scene, ConstructHPSprite());
 
     // 游戏地图
-    _currentMap = ConstructMapSprite(_mapName, "colliders_dict.tcd", (Vector2) {0, 0.4},
-                                     (Vector2) {cx, cy - menu->size.y - 0.4 - 0.72});
-    AddGameSprite(scene, _currentMap);
+    _heros.map = ConstructMapSprite(_mapName, "colliders_dict.tcd", (Vector2) {0, 0.4},
+                                    (Vector2) {cx, cy - menu->size.y - 0.4 - 0.72});
+    AddGameSprite(scene, _heros.map);
 
     // 添加吃豆人
     GameObject pacman;
-    FindGameObjectOfMap(_currentMap, "PacMan", &pacman);
-    Sprite *pacmanSprite = ConstructPacmanSprite(pacman.position, pacman.size, DEFAULT_PAC_MAN_COLOR);
-    AddGameSprite(_currentScene, pacmanSprite);
+    FindGameObjectOfMap(_heros.map, "PacMan", &pacman);
+    _heros.pacman = ConstructPacmanSprite(pacman.position, pacman.size, DEFAULT_PAC_MAN_COLOR);
+    AddGameSprite(_currentScene, _heros.pacman);
 
     // 添加豆子
-    ForEachTile(_currentMap, _AddPellets);
+    ForEachTile(_heros.map, _AddPellets);
 
     // 缓存所有的可到达位置
     if (_walkableTiles.length) FreeDynamicArray(&_walkableTiles, free);
     InitDynamicArray(&_walkableTiles, WALKABLE_TILES_PAGE_SIZE);
-    ForEachTile(_currentMap, _FindAllWalkable);
+    ForEachTile(_heros.map, _FindAllWalkable);
 
     // 添加鬼
     GameObject blinky, pinky, inky, clyde;
-    FindGameObjectOfMap(_currentMap, "Blinky", &blinky);
-    FindGameObjectOfMap(_currentMap, "Pinky", &pinky);
-    FindGameObjectOfMap(_currentMap, "Inky", &inky);
-    FindGameObjectOfMap(_currentMap, "Clyde", &clyde);
-    AddGameSprite(_currentScene, ConstructGhostBlinkySprite(blinky.position, blinky.size));
-    AddGameSprite(_currentScene, ConstructGhostPinkySprite(pinky.position, pinky.size));
-    AddGameSprite(_currentScene, ConstructGhostInkySprite(inky.position, inky.size));
-    AddGameSprite(_currentScene, ConstructGhostClydeSprite(clyde.position, clyde.size));
+    FindGameObjectOfMap(_heros.map, "Blinky", &blinky);
+    FindGameObjectOfMap(_heros.map, "Pinky", &pinky);
+    FindGameObjectOfMap(_heros.map, "Inky", &inky);
+    FindGameObjectOfMap(_heros.map, "Clyde", &clyde);
+    _heros.blinky = ConstructGhostBlinkySprite(blinky.position, blinky.size);
+    _heros.pinky = ConstructGhostPinkySprite(pinky.position, pinky.size);
+    _heros.inky = ConstructGhostInkySprite(inky.position, inky.size);
+    _heros.clyde = ConstructGhostClydeSprite(clyde.position, clyde.size);
+    AddGameSprite(_currentScene, _heros.blinky);
+    AddGameSprite(_currentScene, _heros.pinky);
+    AddGameSprite(_currentScene, _heros.inky);
+    AddGameSprite(_currentScene, _heros.clyde);
 
     // 设置寻径步长值
-    double step = GetTileSize(_currentMap).x / 2;
+    double step = GetTileSize(_heros.map).x / 2;
     ChangePathfindingStep(step);
-    ChangeMaxNodeCounts((_currentMap->size.x / step) * (_currentMap->size.y / step));
-    ChangePathfindingBorder(_currentMap->position, _currentMap->size);
+    ChangeMaxNodeCounts((_heros.map->size.x / step) * (_heros.map->size.y / step));
+    ChangePathfindingBorder(_heros.map->position, _heros.map->size);
     AddUISprite(scene, menu);
 }
 
-DynamicArray GetAllWalkableTiles(){
+DynamicArray GetAllWalkableTiles() {
     return _walkableTiles;
 }
 
 void RevivePacMan() {
     Scene *current = GetCurrentScene();
 
-    Sprite *pacmanSprite = FindGameSpriteByName(current, "PacMan");
+    Sprite *pacmanSprite = _heros.pacman;
     GameObject pacman;
-    FindGameObjectOfMap(_currentMap, "PacMan", &pacman);
+    FindGameObjectOfMap(_heros.map, "PacMan", &pacman);
     pacmanSprite->position = pacman.position;
 
-    ResetBlinky(FindGameSpriteByName(current, "Blinky"));
-    ResetClyde(FindGameSpriteByName(current, "Clyde"));
-    ResetInky(FindGameSpriteByName(current, "Inky"));
-    ResetPinky(FindGameSpriteByName(current, "Pinky"));
+    ResetBlinky(_heros.blinky);
+    ResetClyde(_heros.clyde);
+    ResetInky(_heros.inky);
+    ResetPinky(_heros.pinky);
 }
 
 static void _Destruct(Scene *this) {
@@ -199,8 +202,9 @@ void NewGame() {
 }
 
 void PowerModeOn() {
-    for (int i = 0; i < sizeof(_ghosts) / sizeof(string); i++) {
-        Sprite *ghostSprite = FindGameSpriteByName(GetCurrentScene(), _ghosts[i]);
+    Sprite *ghosts[] = {_heros.clyde, _heros.inky, _heros.pinky, _heros.blinky};
+    for (int i = 0; i < sizeof(ghosts) / sizeof(Sprite *); i++) {
+        Sprite *ghostSprite = ghosts[i];
         if (!ghostSprite) continue;
         Ghost *ghost = ghostSprite->property;
         if (ghost->state == CHASING) ghost->state = CHASED_AFTER;
@@ -208,6 +212,6 @@ void PowerModeOn() {
     }
 }
 
-Sprite *GetCurrentMap() {
-    return _currentMap;
+Heros GetCurrentHeros() {
+    return _heros;
 }

@@ -3,6 +3,7 @@
 #include <scene.h>
 #include <engine.h>
 #include <game_scene.h>
+#include <autonav.h>
 #include "ghost_sprite.h"
 #include "ghost_inky_sprite.h"
 #include "map_sprite.h"
@@ -11,30 +12,19 @@
 
 static void _Go(Sprite *this);
 
-static Vector2 _FindFleePosition(Sprite *map);
+static inline void _UpdateFleeTarget(Sprite *this);
 
 static void _UpdatePath(Sprite *this);
 
-static Vector2 _FindFleePosition(Sprite *map) {
-    Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    DynamicArray walkableTiles = GetAllWalkableTiles();
-    Vector2 resPos = ZERO_VECTOR;
-    double resDist = -1.;
-    for (int i = 0; i < walkableTiles.length; i++) {
-        Vector2 tilePos = *ArrayGetElement(walkableTiles, Vector2*, i);
-        double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
-        if (dist > resDist) {
-            resPos = tilePos;
-            resDist = dist;
-        }
-    }
-    return resPos;
+static inline void _UpdateFleeTarget(Sprite *this) {
+    SetNavTargetPosition(this, GetFleePosition());
+    UpdatePath(GetCurrentScene(), this);
 }
 
 static inline void _UpdateTarget(Sprite *this) {
     Scene *current = GetCurrentScene();
-    Sprite *blinky = FindGameSpriteByName(current, "Blinky");
-    Sprite *pacman = FindGameSpriteByName(current, "PacMan");
+    Sprite *blinky = GetCurrentHeros().blinky;
+    Sprite *pacman = GetCurrentHeros().pacman;
     Vector2 target = VAdd(pacman->position, VSubtract(pacman->position, blinky->position));
     SetNavTargetPosition(this, target);
     if (!UpdatePath(current, this)) {
@@ -52,8 +42,7 @@ static void _UpdatePath(Sprite *this) {
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            SetNavTargetPosition(this, _FindFleePosition(GetCurrentMap()));
-            UpdatePath(GetCurrentScene(), this);
+            _UpdateFleeTarget(this);
             break;
         default:
             break;
@@ -62,7 +51,7 @@ static void _UpdatePath(Sprite *this) {
 
 static void _Go(Sprite *this) {
     _UpdatePath(this);
-    RegisterTimer(this, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath);
+    EnableTimer(this, _UpdatePath);
     DisableTimer(this, _Go);
 }
 
@@ -78,11 +67,12 @@ Sprite *ConstructGhostInkySprite(Vector2 position, Vector2 size) {
     ghost->assets[6] = LoadBitmapAsset("ghost/inky/inky-down1.bmp");
     ghost->assets[7] = LoadBitmapAsset("ghost/inky/inky-down2.bmp");
 
-    RegisterTimer(obj, DELAY, _Go);
+    RegisterTimer(obj, DELAY, _Go, true);
+    RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
     return obj;
 }
 
 void ResetInky(Sprite *this) {
     ResetGhost(this);
-    RegisterTimer(this, DELAY, _Go);
+    EnableTimer(this, _Go);
 }

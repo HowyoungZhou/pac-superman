@@ -10,38 +10,20 @@
 
 #define DELAY 0
 
-static Vector2 _FindFleePosition(Sprite *map);
-
 static void _UpdatePath(Sprite *this);
 
 static void _Go(Sprite *this);
-
-static Vector2 _FindFleePosition(Sprite *map) {
-    Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    DynamicArray walkableTiles = GetAllWalkableTiles();
-    Vector2 resPos = ZERO_VECTOR;
-    double resDist = -1.;
-    for (int i = 0; i < walkableTiles.length; i++) {
-        Vector2 tilePos = *ArrayGetElement(walkableTiles, Vector2*, i);
-        double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
-        if (dist > resDist) {
-            resPos = tilePos;
-            resDist = dist;
-        }
-    }
-    return resPos;
-}
 
 static void _UpdatePath(Sprite *this) {
     Ghost *ghost = this->property;
     switch (ghost->state) {
         case CHASING:
             this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
-            SetNavTargetSprite(this, FindGameSpriteByName(GetCurrentScene(), "PacMan"));
+            SetNavTargetSprite(this, GetCurrentHeros().pacman);
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            SetNavTargetPosition(this, _FindFleePosition(GetCurrentMap()));
+            SetNavTargetPosition(this, GetFleePosition());
             break;
         default:
             break;
@@ -51,7 +33,7 @@ static void _UpdatePath(Sprite *this) {
 
 static void _Go(Sprite *this) {
     _UpdatePath(this);
-    RegisterTimer(this, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath);
+    EnableTimer(this, _UpdatePath);
     DisableTimer(this, _Go);
 }
 
@@ -67,11 +49,13 @@ Sprite *ConstructGhostBlinkySprite(Vector2 position, Vector2 size) {
     ghost->assets[6] = LoadBitmapAsset("ghost/blinky/blinky-down1.bmp");
     ghost->assets[7] = LoadBitmapAsset("ghost/blinky/blinky-down2.bmp");
 
-    RegisterTimer(obj, DELAY, _Go);
+    RegisterTimer(obj, DELAY, _Go, true);
+    RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
+
     return obj;
 }
 
 void ResetBlinky(Sprite *this) {
     ResetGhost(this);
-    RegisterTimer(this, DELAY, _Go);
+    EnableTimer(this,_Go);
 }

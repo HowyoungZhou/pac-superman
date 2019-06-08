@@ -3,6 +3,15 @@
 
 #include <dynamic_array.h>
 
+typedef struct {
+    Sprite *map;
+    Sprite *pacman;
+    Sprite *blinky;
+    Sprite *pinky;
+    Sprite *inky;
+    Sprite *clyde;
+} Heros;
+
 Scene *ConstructGameScene(string mapName);
 
 DynamicArray GetAllWalkableTiles();
@@ -13,6 +22,6 @@ void PowerModeOn();
 
 void NewGame();
 
-Sprite *GetCurrentMap();
+Heros GetCurrentHeros();
 
 #endif //PAC_SUPERMAN_TEST_SCENE_H

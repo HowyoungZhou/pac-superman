@@ -12,30 +12,12 @@
 
 static void _Go(Sprite *this);
 
-static Vector2 _FindFleePosition(Sprite *map);
-
 static void _UpdatePath(Sprite *this);
-
-static Vector2 _FindFleePosition(Sprite *map) {
-    Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    DynamicArray walkableTiles = GetAllWalkableTiles();
-    Vector2 resPos = ZERO_VECTOR;
-    double resDist = -1.;
-    for (int i = 0; i < walkableTiles.length; i++) {
-        Vector2 tilePos = *ArrayGetElement(walkableTiles, Vector2*, i);
-        double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
-        if (dist > resDist) {
-            resPos = tilePos;
-            resDist = dist;
-        }
-    }
-    return resPos;
-}
 
 static inline void _UpdateTarget(Sprite *this) {
     Scene *current = GetCurrentScene();
-    Sprite *pacman = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    Sprite *map = GetCurrentMap();
+    Sprite *pacman = GetCurrentHeros().pacman;
+    Sprite *map = GetCurrentHeros().map;
     double tileLength = GetTileSize(map).x;
     Vector2 ambushPos = VAdd(pacman->position,
                              VMultiply(AMBUSH_DIST * tileLength, VNormalize(pacman->velocity)));
@@ -55,7 +37,7 @@ static void _UpdatePath(Sprite *this) {
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            SetNavTargetPosition(this, _FindFleePosition(GetCurrentMap()));
+            SetNavTargetPosition(this, GetFleePosition());
             UpdatePath(GetCurrentScene(), this);
             break;
         default:
@@ -65,7 +47,7 @@ static void _UpdatePath(Sprite *this) {
 
 static void _Go(Sprite *this) {
     _UpdatePath(this);
-    RegisterTimer(this, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath);
+    EnableTimer(this, _UpdatePath);
     DisableTimer(this, _Go);
 }
 
@@ -81,11 +63,12 @@ Sprite *ConstructGhostPinkySprite(Vector2 position, Vector2 size) {
     ghost->assets[6] = LoadBitmapAsset("ghost/pinky/pinky-down1.bmp");
     ghost->assets[7] = LoadBitmapAsset("ghost/pinky/pinky-down2.bmp");
 
-    RegisterTimer(obj, DELAY, _Go);
+    RegisterTimer(obj, DELAY, _Go, true);
+    RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
     return obj;
 }
 
 void ResetPinky(Sprite *this) {
     ResetGhost(this);
-    RegisterTimer(this, DELAY, _Go);
+    EnableTimer(this, _Go);
 }

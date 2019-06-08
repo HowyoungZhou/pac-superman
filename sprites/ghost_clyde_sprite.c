@@ -13,32 +13,14 @@
 
 static void _Go(Sprite *this);
 
-static Vector2 _FindFleePosition(Sprite *map);
-
 static inline void _UpdateTarget(Sprite *this);
 
 static void _UpdatePath(Sprite *this);
 
-static Vector2 _FindFleePosition(Sprite *map) {
-    Sprite *pacMan = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    DynamicArray walkableTiles = GetAllWalkableTiles();
-    Vector2 resPos = ZERO_VECTOR;
-    double resDist = -1.;
-    for (int i = 0; i < walkableTiles.length; i++) {
-        Vector2 tilePos = *ArrayGetElement(walkableTiles, Vector2*, i);
-        double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
-        if (dist > resDist) {
-            resPos = tilePos;
-            resDist = dist;
-        }
-    }
-    return resPos;
-}
-
 static inline void _UpdateTarget(Sprite *this) {
     Ghost *ghost = this->property;
-    Sprite *pacman = FindGameSpriteByName(GetCurrentScene(), "PacMan");
-    double tileWidth = GetTileSize(GetCurrentMap()).x;
+    Sprite *pacman = GetCurrentHeros().pacman;
+    double tileWidth = GetTileSize(GetCurrentHeros().map).x;
     if (VLength(VSubtract(pacman->position, this->position)) < CLOSE_DISTANCE * tileWidth) {
         SetNavTargetPosition(this, ghost->initPos);
     } else SetNavTargetSprite(this, pacman);
@@ -53,7 +35,7 @@ static void _UpdatePath(Sprite *this) {
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
-            SetNavTargetPosition(this, _FindFleePosition(GetCurrentMap()));
+            SetNavTargetPosition(this, GetFleePosition());
             break;
         default:
             break;
@@ -63,7 +45,7 @@ static void _UpdatePath(Sprite *this) {
 
 static void _Go(Sprite *this) {
     _UpdatePath(this);
-    RegisterTimer(this, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath);
+    EnableTimer(this, _UpdatePath);
     DisableTimer(this, _Go);
 }
 
@@ -79,11 +61,12 @@ Sprite *ConstructGhostClydeSprite(Vector2 position, Vector2 size) {
     ghost->assets[6] = LoadBitmapAsset("ghost/clyde/clyde-down1.bmp");
     ghost->assets[7] = LoadBitmapAsset("ghost/clyde/clyde-down2.bmp");
 
-    RegisterTimer(obj, DELAY, _Go);
+    RegisterTimer(obj, DELAY, _Go, true);
+    RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
     return obj;
 }
 
 void ResetClyde(Sprite *this) {
     ResetGhost(this);
-    RegisterTimer(this, DELAY, _Go);
+    EnableTimer(this, _Go);
 }

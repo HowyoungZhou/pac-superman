@@ -23,4 +23,6 @@ Sprite *ConstructGhostSprite(Vector2 position, Vector2 size, string name);
 
 void ResetGhost(Sprite *this);
 
+Vector2 GetFleePosition();
+
 #endif //PAC_SUPERMAN_GHOST_H

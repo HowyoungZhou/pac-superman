@@ -20,5 +20,6 @@ void ArrayAddElement(DynamicArray *array, void *element) {
 void FreeDynamicArray(DynamicArray *array, ElementDestructor destructor) {
     for (long i = 0L; i < array->length; i++) destructor(array->elements[i]);
     free(array->elements);
+    array->capacity = 0;
     array->length = 0;
 }

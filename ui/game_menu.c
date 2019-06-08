@@ -83,7 +83,7 @@ static void _OnMapMenuItenSelected(MenuList *sender, int selectedIndex) {
 
 static void _OnStyleMenuItemSelected(MenuList *sender, int selectedIndex) {
     Scene *current = GetCurrentScene();
-    Sprite *pacman = FindGameSpriteByName(current, "PacMan");
+    Sprite *pacman = GetCurrentHeros().pacman;
     switch (selectedIndex) {
         case YELLOW:
             AddGameSprite(current, ConstructPacmanSprite(pacman->position, pacman->size, "PacManYellow"));

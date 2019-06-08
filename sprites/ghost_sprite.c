@@ -10,7 +10,9 @@
 #include "pacman_sprite.h"
 #include <ghost_sprite.h>
 #include <game_scene.h>
+#include <time.h>
 
+#define INIT_TIME -1
 #define FLASH_COUNTDOWN 3000
 #define GHOST_SCORE 200
 #define EYES_SPEED 3
@@ -31,8 +33,12 @@ static void _Collide(Sprite *this, int id, Sprite *other);
 
 static void _Update(Sprite *this, double interval);
 
+static inline Vector2 _FindFleePosition(Sprite *map);
+
 static int _objCount = 0;
 static BitmapAsset *_pubicAssets[6];
+static clock_t _lastUpdate = INIT_TIME;
+static Vector2 _fleePos = ZERO_VECTOR;
 
 static inline Ghost *_ConstructGhost(Vector2 initPos) {
     Ghost *obj = malloc(sizeof(Ghost));
@@ -182,6 +188,7 @@ Sprite *ConstructGhostSprite(Vector2 position, Vector2 size, string name) {
     obj->Update = _Update;
     if (_objCount == 0) _LoadPublicAssets();
     _objCount++;
+    _lastUpdate = INIT_TIME;
     return obj;
 }
 
@@ -189,9 +196,33 @@ void ResetGhost(Sprite *this) {
     Ghost *ghost = this->property;
     this->position = ghost->initPos;
     this->velocity = ZERO_VECTOR;
-    ClearTimers(this);
+    DisableTimers(this);
     FreePath(this->navAgent.path);
     this->navAgent.path = NULL;
     ghost->state = CHASING;
     ghost->lookingAt = UP;
+}
+
+static inline Vector2 _FindFleePosition(Sprite *map) {
+    Sprite *pacMan = GetCurrentHeros().pacman;
+    DynamicArray walkableTiles = GetAllWalkableTiles();
+    Vector2 resPos = ZERO_VECTOR;
+    double resDist = -1.;
+    for (int i = 0; i < walkableTiles.length; i++) {
+        Vector2 tilePos = *ArrayGetElement(walkableTiles, Vector2*, i);
+        double dist = VLengthSquared(VSubtract(pacMan->position, tilePos));
+        if (dist > resDist) {
+            resPos = tilePos;
+            resDist = dist;
+        }
+    }
+    return resPos;
+}
+
+Vector2 GetFleePosition() {
+    // 检查上次更新时间是否已超出了更新间隔
+    if (_lastUpdate == INIT_TIME ||
+        (double) (clock() - _lastUpdate) / CLOCKS_PER_SEC * 1000 > GetGameObjectOption().ghostPathfindingInterval)
+        _fleePos = _FindFleePosition(GetCurrentHeros().map);
+    return _fleePos;
 }
