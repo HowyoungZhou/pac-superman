@@ -129,7 +129,7 @@ static void _Initialize(Scene *scene) {
 
     // 游戏地图
     Sprite *map = ConstructMapSprite(_mapName, "colliders_dict.tcd", (Vector2) {0, 0.4},
-                                    (Vector2) {cx, cy - menu->size.y - 0.4 - 0.72});
+                                     (Vector2) {cx, cy - menu->size.y - 0.4 - 0.72});
     AddGameSprite(scene, map);
 
     // 添加吃豆人
@@ -162,6 +162,8 @@ static void _Initialize(Scene *scene) {
     ChangeMaxNodeCounts((map->size.x / step) * (map->size.y / step));
     ChangePathfindingBorder(map->position, map->size);
     AddUISprite(scene, menu);
+
+    if (IsPaused()) ResumeGame();
 }
 
 DynamicArray GetAllWalkableTiles() {
@@ -208,6 +210,6 @@ void PowerModeOn() {
     }
 }
 
-Heros * GetCurrentHeros() {
+Heros *GetCurrentHeros() {
     return &_heros;
 }

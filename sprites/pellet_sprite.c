@@ -20,6 +20,7 @@ static void _Collide(Sprite *this, int id, Sprite *other) {
         this->visible = false;
         ChangeScore(PELLET_SCORE);
         ChangeRemainingPellets(-1);
+        if(GetRemainingPellets()==0) EndGame(WIN);
     }
 }
 

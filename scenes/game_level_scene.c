@@ -10,7 +10,7 @@
 #include "game_controller.h"
 #include <game_scene.h>
 #include <imgui.h>
-#include <textbox.h>
+#include <end_game_box.h>
 #include <extgraph.h>
 
 #define DEFAULT_MAP "maps/classic"

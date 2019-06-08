@@ -1,6 +1,6 @@
 #ifndef PAC_SUPERMAN_TEXTBOX_H
 #define PAC_SUPERMAN_TEXTBOX_H
 
-Sprite *ConstructTextBoxSprite();
+Sprite *ConstructEndGameBoxSprite(EndGameResult result);
 
 #endif //PAC_SUPERMAN_TEXTBOX_H

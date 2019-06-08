@@ -4,6 +4,7 @@
 #define MAX_NAME_LENGTH 100
 #define RANK_FILE "rank.dat"
 #define MAX_RANK_LENGTH 5
+#define MAX_SCORE_LENGTH 8
 
 typedef enum {
     EASY = 0, NORMAL, HARD
@@ -21,6 +22,10 @@ typedef struct {
     char name[MAX_NAME_LENGTH];
     int score;
 } RankListItem;
+
+typedef enum {
+    LOSE, WIN, NEW_RECORD
+} EndGameResult;
 
 typedef LinkedList RankList;
 typedef LinkedListNode RankListNode;
@@ -50,5 +55,7 @@ void InitGameController();
 RankList GetRank();
 
 bool AddToRank(string name, int score);
+
+void EndGame(EndGameResult result);
 
 #endif //PAC_SUPERMAN_GAME_STATE_H

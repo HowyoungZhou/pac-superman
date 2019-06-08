@@ -15,8 +15,11 @@ static void _Render(Sprite *this) {
     char score[MAX_SCORE_LENGTH + 1];
     sprintf(score, "%0*d", MAX_SCORE_LENGTH, GetScore());
     MovePen(0.3, cy - 0.75);
+    int size = GetPointSize();
+    SetPointSize(18);
     DrawTextString("SCORE  ");
     DrawTextString(score);
+    SetPointSize(size);
 }
 
 static void _Destruct(Sprite *this) {

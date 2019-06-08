@@ -18,6 +18,7 @@ static void _Collide(Sprite *this, int id, Sprite *other) {
         PowerModeOn();
         ChangeScore(POWER_PELLET_SCORE);
         ChangeRemainingPellets(-1);
+        if (GetRemainingPellets() == 0) EndGame(WIN);
     }
 }
 

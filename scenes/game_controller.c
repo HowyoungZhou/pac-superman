@@ -4,6 +4,7 @@
 #include <assets.h>
 #include <extgraph.h>
 #include "game_controller.h"
+#include <end_game_box.h>
 
 static inline bool _WriteRankList();
 
@@ -129,10 +130,15 @@ static int _ScoreComparer(void *item1, void *item2) {
 }
 
 bool AddToRank(string name, int score) {
+    OrderedListAddElement(&_rank, _ConstructRankListItem(name, score), _ScoreComparer);
+    if (_rank.length > MAX_RANK_LENGTH) free(ListPopElement(&_rank)); // 移除最后一名
+    return _WriteRankList();
+}
+
+void EndGame(EndGameResult result) {
+    PauseGame();
     RankListItem *last = ListGetLastElement(&_rank);
-    if (_rank.length < MAX_RANK_LENGTH || score > last->score) {
-        OrderedListAddElement(&_rank, _ConstructRankListItem(name, score), _ScoreComparer);
-        if (_rank.length > MAX_RANK_LENGTH) free(ListPopElement(&_rank)); // 移除最后一名
-        return _WriteRankList();
-    } else return false;
+    unsigned int score = _state.score;
+    if (result == WIN && (!last || _rank.length < MAX_RANK_LENGTH || score > last->score)) result = NEW_RECORD;
+    AddUISprite(GetCurrentScene(), ConstructEndGameBoxSprite(result));
 }

@@ -11,6 +11,7 @@
 #include <ghost_sprite.h>
 #include <game_scene.h>
 #include <time.h>
+#include <end_game_box.h>
 
 #define INIT_TIME -1
 #define FLASH_COUNTDOWN 3000
@@ -134,7 +135,7 @@ static void _Collide(Sprite *this, int id, Sprite *other) {
         case CHASING:
             ChangeLife(-1);
             if (GetLife() == 0) {
-                //TODO: 显示游戏失败提示
+                EndGame(WIN);
             } else {
                 RevivePacMan();
             }
