@@ -61,7 +61,7 @@ Sprite *ConstructPacmanSprite(Vector2 position, Vector2 size, string color) {
     obj->Update = _Update;
     obj->foreColor = color;
     RegisterCircleCollider(obj, DEFAULT_COLLIDER_ID, true, CalcRelativeCentre(obj), CalcIncircleRadius(obj));
-    GetCurrentHeros()->pacman = obj;
+    GetCurrentHeroes()->pacman = obj;
     return obj;
 }
 

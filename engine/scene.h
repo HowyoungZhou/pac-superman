@@ -55,12 +55,44 @@ Sprite *FindGameSpriteByName(Scene *this, string name);
  */
 Sprite *FindUISpriteByName(Scene *this, string name);
 
+/**@brief 从场景中直接移除某游戏 Sprite。
+ *
+ * 注意：该方法不能在 Render, Animate 或 Update 方法中调用，因为该方法会破坏正常的物理引擎计算和渲染流程。
+ *
+ * @param this 当前场景
+ * @param sprite 目标 Sprite
+ * @return 如成功移除则返回 true，否则返回 false
+ */
 bool _RemoveGameSprite(Scene *this, Sprite *sprite);
 
+/**@brief 从场景中直接移除某 UI Sprite。
+ *
+ * 注意：该方法不能在 Render, Animate 或 Update 方法中调用，因为该方法会破坏正常的物理引擎计算和渲染流程。
+ *
+ * @param this 当前场景
+ * @param sprite 目标 Sprite
+ * @return 如成功移除则返回 true，否则返回 false
+ */
 bool _RemoveUISprite(Scene *this, Sprite *sprite);
 
+/**@brief 从场景中移除某游戏 Sprite。
+ *
+ * 该方法可在一个渲染周期内被安全调用（通常为 Render, Animate 或 Update 方法中）。
+ *
+ * @param this 当前场景
+ * @param name 目标 Sprite 的名字
+ * @return 如成功移除则返回 true，否则返回 false
+ */
 bool RemoveGameSprite(Scene *this, string name);
 
+/**@brief 从场景中移除某 UI Sprite。
+ *
+ * 该方法可在一个渲染周期内被安全调用（通常为 Render, Animate 或 Update 方法中）。
+ *
+ * @param this 当前场景
+ * @param name 目标 Sprite 的名字
+ * @return 如成功移除则返回 true，否则返回 false
+ */
 bool RemoveUISprite(Scene *this, string name);
 
 /**@brief 清除所有 Sprite。

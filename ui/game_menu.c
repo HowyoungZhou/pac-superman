@@ -1,7 +1,7 @@
 #include <sprite.h>
 #include <extgraph.h>
 #include <engine.h>
-#include <game_RankingList_scene.h>
+#include <game_ranking_list_scene.h>
 #include <about_scene.h>
 #include <game_instruction_scene.h>
 #include <game_home_scene.h>
@@ -84,7 +84,7 @@ static void _OnMapMenuItenSelected(MenuList *sender, int selectedIndex) {
 
 static void _OnStyleMenuItemSelected(MenuList *sender, int selectedIndex) {
     Scene *current = GetCurrentScene();
-    Sprite *pacman = GetCurrentHeros()->pacman;
+    Sprite *pacman = GetCurrentHeroes()->pacman;
     switch (selectedIndex) {
         case YELLOW:
             AddGameSprite(current, ConstructPacmanSprite(pacman->position, pacman->size, "PacManYellow"));

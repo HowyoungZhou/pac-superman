@@ -48,7 +48,7 @@ Sprite *ConstructEagleSprite(Vector2 position, Vector2 size) {
 
     _eagleAssets[0] = LoadBitmapAsset("eagle/eagle-right.bmp");
     _eagleAssets[1] = LoadBitmapAsset("eagle/eagle-left.bmp");
-    GetCurrentHeros()->pacman = obj;
+    GetCurrentHeroes()->pacman = obj;
     return obj;
 }
 

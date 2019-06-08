@@ -18,7 +18,7 @@
 #include <scene.h>
 #include <engine.h>
 #include <game_instruction_scene.h>
-#include <game_RankingList_scene.h>
+#include <game_ranking_list_scene.h>
 #include <about_scene.h>
 #include <ghost_pinky_sprite.h>
 #include <ghost_inky_sprite.h>
@@ -40,7 +40,7 @@ static void _Initialize(Scene *scene);
 
 static Scene *_currentScene = NULL;
 static string _mapName = NULL;
-static Heros _heros;
+static Heroes _heros;
 static DynamicArray _walkableTiles;
 
 void ResetCallback(Sprite *button) {
@@ -199,6 +199,6 @@ void PowerModeOn() {
     }
 }
 
-Heros *GetCurrentHeros() {
+Heroes *GetCurrentHeroes() {
     return &_heros;
 }

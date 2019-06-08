@@ -80,7 +80,7 @@ Sprite *ConstructMapSprite(string mapName, string collidersDictFile, Vector2 pos
     obj->Collide = _Collide;
     if (_dict == NULL) _dict = LoadTileCollidersDictAsset(collidersDictFile);
     _RegisterColliders(obj);
-    GetCurrentHeros()->map = obj;
+    GetCurrentHeroes()->map = obj;
     return obj;
 }
 

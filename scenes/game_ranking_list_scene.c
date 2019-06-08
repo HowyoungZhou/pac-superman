@@ -6,7 +6,7 @@
 #include <ghost_blinky_sprite.h>
 #include <image.h>
 #include <graphics.h>
-#include "game_RankingList_scene.h"
+#include "game_ranking_list_scene.h"
 #include <game_home_scene.h>
 #include <rank_display.h>
 

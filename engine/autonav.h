@@ -28,8 +28,17 @@ typedef struct AutoNavAgent {
     double speed;
 } AutoNavAgent;
 
+/**@brief 修改寻径时搜寻节点的最大数目限制。
+ *
+ * @param count 搜寻节点的最大数目
+ */
 void ChangeMaxNodeCounts(long count);
 
+/** @brief 修改寻径时搜索路径的边界。
+ *
+ * @param position 边界矩形的的位置
+ * @param size 边界矩形的的大小
+ */
 void ChangePathfindingBorder(Vector2 position, Vector2 size);
 
 /**@brief 修改寻径时的步长。
@@ -46,6 +55,13 @@ void ChangePathfindingStep(double step);
  */
 void FreePath(PathNode *path);
 
+/**@brief 检测某 Sprite 在某位置是否会和其他 Sprite 碰撞（即是否可以到达）。
+ *
+ * @param scene 目标场景
+ * @param sprite 目标 Sprite
+ * @param position 指定位置
+ * @return 如果可以到达则返回 true，否则返回 false
+ */
 bool DetectMovable(Scene *scene, Sprite *sprite, Vector2 position);
 
 /**@brief 更新某 Sprite 的自动导航路径。

@@ -7,7 +7,7 @@
 #include "game_home_scene.h"
 #include "image.h"
 #include <game_level_scene.h>
-#include <game_RankingList_scene.h>
+#include <game_ranking_list_scene.h>
 #include <game_instruction_scene.h>
 #include <about_scene.h>
 

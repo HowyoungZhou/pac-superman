@@ -19,7 +19,7 @@ static void _UpdatePath(Sprite *this) {
     switch (ghost->state) {
         case CHASING:
             this->navAgent.speed = GetGameObjectOption().ghostChasingSpeed;
-            SetNavTargetSprite(this, GetCurrentHeros()->pacman);
+            SetNavTargetSprite(this, GetCurrentHeroes()->pacman);
             break;
         case CHASED_AFTER:
             this->navAgent.speed = GetGameObjectOption().ghostChasedSpeed;
@@ -52,7 +52,7 @@ Sprite *ConstructGhostBlinkySprite(Vector2 position, Vector2 size) {
     RegisterTimer(obj, DELAY, _Go, true);
     RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
 
-    GetCurrentHeros()->blinky = obj;
+    GetCurrentHeroes()->blinky = obj;
     return obj;
 }
 

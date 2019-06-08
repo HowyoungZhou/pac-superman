@@ -17,7 +17,7 @@ set(SOURCE_FILES libgraphics/exceptio.c libgraphics/genlib.c libgraphics/graphic
         sprites/walls.c sprites/walls.h
         sprites/map_sprite.c sprites/map_sprite.h ui/image.c ui/image.h sprites/power_pellet_sprite.c
         sprites/power_pellet_sprite.h ui/image.c ui/image.h scenes/game_home_scene.c scenes/game_home_scene.h
-        scenes/game_RankingList_scene.c scenes/game_RankingList_scene.h scenes/game_instruction_scene.c
+        scenes/game_ranking_list_scene.c scenes/game_ranking_list_scene.h scenes/game_instruction_scene.c
         scenes/game_instruction_scene.h scenes/game_level_scene.c scenes/game_level_scene.h utils/binary_heap.c
         utils/binary_heap.h engine/autonav.c engine/autonav.h sprites/autonav_route_sprite.c
         sprites/autonav_route_sprite.h scenes/game_controller.c scenes/game_controller.h scenes/game_instruction_scene.h

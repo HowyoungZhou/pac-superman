@@ -127,12 +127,20 @@ double CalcIncircleRadius(Sprite *sprite);
 
 /**@brief 注册计时器。
  *
- * @param this 计时器所述 Sprite
+ * @param this 计时器所属 Sprite
  * @param interval 计时器事件触发时间间隔
  * @param callback 回调函数
  */
 void RegisterTimer(Sprite *this, double interval, TimerCallback callback, bool enable);
 
+/**@brief 启动计时器。
+ *
+ * 计时器必须已经通过 RegisterTimer() 注册。
+ *
+ * @param this 计时器所属 Sprite
+ * @param callback 回调函数
+ * @return 如果未找到计时器则返回 false，否则返回 true
+ */
 bool EnableTimer(Sprite *this, TimerCallback callback);
 
 /**@brief 停止计时器。
@@ -143,10 +151,24 @@ bool EnableTimer(Sprite *this, TimerCallback callback);
  */
 bool DisableTimer(Sprite *this, TimerCallback callback);
 
+/**@brief 清除 Sprite 的所有计时器。
+ *
+ * @param this 计时器所属 Sprite
+ */
 void ClearTimers(Sprite *this);
 
+/**@brief 重置 Sprite 的所有计时器。
+ *
+ * 所有计时器的时间都将被置为 0。
+ *
+ * @param this 计时器所属 Sprite
+ */
 void ResetTimers(Sprite *this);
 
+/**@brief 禁用所有计时器。
+ *
+ * @param this 计时器所属 Sprite
+ */
 void DisableTimers(Sprite *this);
 
 #endif //PAC_SUPERMAN_SPRITE_H

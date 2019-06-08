@@ -26,8 +26,8 @@ static inline int _GetRandNum(int lower, int upper) {
 
 static inline void _UpdateTarget(Sprite *this) {
     Ghost *ghost = this->property;
-    Sprite *pacman = GetCurrentHeros()->pacman;
-    double tileWidth = GetTileSize(GetCurrentHeros()->map).x;
+    Sprite *pacman = GetCurrentHeroes()->pacman;
+    double tileWidth = GetTileSize(GetCurrentHeroes()->map).x;
     if (VLength(VSubtract(pacman->position, this->position)) < CLOSE_DISTANCE * tileWidth) {
         SetNavTargetPosition(this, ghost->initPos);
     } else SetNavTargetSprite(this, pacman);
@@ -74,7 +74,7 @@ Sprite *ConstructGhostClydeSprite(Vector2 position, Vector2 size) {
     RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
     srand(time(NULL));
 
-    GetCurrentHeros()->clyde = obj;
+    GetCurrentHeroes()->clyde = obj;
     return obj;
 }
 

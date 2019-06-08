@@ -31,10 +31,10 @@ static void _Render(Sprite *this) {
     int i, n = GetLife();
 
     MovePen(0.1, 0.15);
-    DrawTextString("HP");
+    DrawTextString("LIFE");
 
     for (i = 1; i <= n; i++) {
-        MovePen(0.25 + 0.3 * i, 0.225);
+        MovePen(0.3 + 0.3 * i, 0.225);
         DrawPac();
     }
 
