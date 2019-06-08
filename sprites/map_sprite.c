@@ -2,6 +2,7 @@
 #include <assets.h>
 #include <collider.h>
 #include <drawing.h>
+#include <game_scene.h>
 #include "map_sprite.h"
 
 static void _Render(Sprite *this);
@@ -79,6 +80,7 @@ Sprite *ConstructMapSprite(string mapName, string collidersDictFile, Vector2 pos
     obj->Collide = _Collide;
     if (_dict == NULL) _dict = LoadTileCollidersDictAsset(collidersDictFile);
     _RegisterColliders(obj);
+    GetCurrentHeros()->map = obj;
     return obj;
 }
 

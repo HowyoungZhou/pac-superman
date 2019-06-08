@@ -22,6 +22,6 @@ void PowerModeOn();
 
 void NewGame();
 
-Heros GetCurrentHeros();
+Heros * GetCurrentHeros();
 
 #endif //PAC_SUPERMAN_TEST_SCENE_H

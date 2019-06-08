@@ -7,6 +7,7 @@
 #include <game_home_scene.h>
 #include <game_scene.h>
 #include <pacman_sprite.h>
+#include <eagle_sprite.h>
 #include "game_menu.h"
 #include "menu.h"
 #include "imgui.h"
@@ -24,7 +25,7 @@ enum MapMemuItem {
 };
 
 enum StyleMenuItem {
-    YELLOW = 1, GREEN, PURPLE, RED
+    YELLOW = 1, GREEN, PURPLE, RED, EAGLE
 };
 
 static void _OnGameMenuItemSelected(MenuList *sender, int selectedIndex) {
@@ -83,7 +84,7 @@ static void _OnMapMenuItenSelected(MenuList *sender, int selectedIndex) {
 
 static void _OnStyleMenuItemSelected(MenuList *sender, int selectedIndex) {
     Scene *current = GetCurrentScene();
-    Sprite *pacman = GetCurrentHeros().pacman;
+    Sprite *pacman = GetCurrentHeros()->pacman;
     switch (selectedIndex) {
         case YELLOW:
             AddGameSprite(current, ConstructPacmanSprite(pacman->position, pacman->size, "PacManYellow"));
@@ -96,6 +97,9 @@ static void _OnStyleMenuItemSelected(MenuList *sender, int selectedIndex) {
             break;
         case RED:
             AddGameSprite(current, ConstructPacmanSprite(pacman->position, pacman->size, "PacManRed"));
+            break;
+        case EAGLE:
+            AddGameSprite(current, ConstructEagleSprite(pacman->position, pacman->size));
             break;
         default:
             break;
@@ -126,12 +130,13 @@ Sprite *ConstructGameMenuSprite() {
                                            "Help",
                                            "Instruction | Ctrl-I",
                                            "About");
-    MenuList *styleMenu = ConstructMenuList(GenUIID(0), _OnStyleMenuItemSelected, 5,
+    MenuList *styleMenu = ConstructMenuList(GenUIID(0), _OnStyleMenuItemSelected, 6,
                                             "Skin",
                                             "Classic Yellow",
-                                            "Forgive Green",
+                                            "Forgiving Green",
                                             "Gay Purple",
-                                            "Hot blooded Red");
+                                            "Hot-blooded Red",
+                                            "Qiushi Eagle");
 
     Menu *menu = ConstructMenu(4, gameMenu, styleMenu, mapMenu, helpMenu);
     menu->heightRatio = 2.;

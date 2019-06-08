@@ -4,6 +4,7 @@
 #include <drawing.h>
 #include <animator.h>
 #include <controller.h>
+#include <game_scene.h>
 #include "pacman_sprite.h"
 
 #define ANGLE 30
@@ -60,6 +61,7 @@ Sprite *ConstructPacmanSprite(Vector2 position, Vector2 size, string color) {
     obj->Update = _Update;
     obj->foreColor = color;
     RegisterCircleCollider(obj, DEFAULT_COLLIDER_ID, true, CalcRelativeCentre(obj), CalcIncircleRadius(obj));
+    GetCurrentHeros()->pacman = obj;
     return obj;
 }
 

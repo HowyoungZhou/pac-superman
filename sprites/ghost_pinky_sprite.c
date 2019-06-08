@@ -16,8 +16,8 @@ static void _UpdatePath(Sprite *this);
 
 static inline void _UpdateTarget(Sprite *this) {
     Scene *current = GetCurrentScene();
-    Sprite *pacman = GetCurrentHeros().pacman;
-    Sprite *map = GetCurrentHeros().map;
+    Sprite *pacman = GetCurrentHeros()->pacman;
+    Sprite *map = GetCurrentHeros()->map;
     double tileLength = GetTileSize(map).x;
     Vector2 ambushPos = VAdd(pacman->position,
                              VMultiply(AMBUSH_DIST * tileLength, VNormalize(pacman->velocity)));
@@ -65,6 +65,7 @@ Sprite *ConstructGhostPinkySprite(Vector2 position, Vector2 size) {
 
     RegisterTimer(obj, DELAY, _Go, true);
     RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
+    GetCurrentHeros()->pinky = obj;
     return obj;
 }
 

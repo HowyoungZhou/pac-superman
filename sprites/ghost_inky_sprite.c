@@ -16,8 +16,8 @@ static void _UpdatePath(Sprite *this);
 
 static inline void _UpdateTarget(Sprite *this) {
     Scene *current = GetCurrentScene();
-    Sprite *blinky = GetCurrentHeros().blinky;
-    Sprite *pacman = GetCurrentHeros().pacman;
+    Sprite *blinky = GetCurrentHeros()->blinky;
+    Sprite *pacman = GetCurrentHeros()->pacman;
     Vector2 target = VAdd(pacman->position, VSubtract(pacman->position, blinky->position));
     SetNavTargetPosition(this, target);
     if (!UpdatePath(current, this)) {
@@ -63,6 +63,7 @@ Sprite *ConstructGhostInkySprite(Vector2 position, Vector2 size) {
 
     RegisterTimer(obj, DELAY, _Go, true);
     RegisterTimer(obj, GetGameObjectOption().ghostPathfindingInterval, _UpdatePath, false);
+    GetCurrentHeros()->inky = obj;
     return obj;
 }
 

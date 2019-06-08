@@ -204,7 +204,7 @@ void ResetGhost(Sprite *this) {
 }
 
 static inline Vector2 _FindFleePosition(Sprite *map) {
-    Sprite *pacMan = GetCurrentHeros().pacman;
+    Sprite *pacMan = GetCurrentHeros()->pacman;
     DynamicArray walkableTiles = GetAllWalkableTiles();
     Vector2 resPos = ZERO_VECTOR;
     double resDist = -1.;
@@ -223,6 +223,6 @@ Vector2 GetFleePosition() {
     // 检查上次更新时间是否已超出了更新间隔
     if (_lastUpdate == INIT_TIME ||
         (double) (clock() - _lastUpdate) / CLOCKS_PER_SEC * 1000 > GetGameObjectOption().ghostPathfindingInterval)
-        _fleePos = _FindFleePosition(GetCurrentHeros().map);
+        _fleePos = _FindFleePosition(GetCurrentHeros()->map);
     return _fleePos;
 }
