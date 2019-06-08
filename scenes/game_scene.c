@@ -26,6 +26,7 @@
 #include <ghost_sprite.h>
 #include "game_controller.h"
 #include <eagle_sprite.h>
+#include <pause_button.h>
 
 #define WALKABLE_TILES_PAGE_SIZE 1000
 #define PELLET_SIZE_RATIO 0.25
@@ -41,16 +42,6 @@ static Scene *_currentScene = NULL;
 static string _mapName = NULL;
 static Heros _heros;
 static DynamicArray _walkableTiles;
-
-void PauseCallback(Sprite *button) {
-    if (IsPaused()) {
-        ResumeGame();
-        ((Button *) button->property)->label = "Pause";
-    } else {
-        PauseGame();
-        ((Button *) button->property)->label = "Resume";
-    }
-}
 
 void ResetCallback(Sprite *button) {
     NewGame();
@@ -109,9 +100,7 @@ static void _Initialize(Scene *scene) {
     Sprite *menu = ConstructGameMenuSprite();
 
     //添加右上角的按钮
-    AddUISprite(scene,
-                ConstructButtonSprite(1, (Vector2) {cx - 4 + 0.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Pause",
-                                      PauseCallback));
+    AddUISprite(scene, ConstructPauseButtonSprite((Vector2) {cx - 4 + 0.1, cy - 0.9}, (Vector2) {0.8, 0.4}));
     AddUISprite(scene,
                 ConstructButtonSprite(2, (Vector2) {cx - 4 + 1.1, cy - 0.9}, (Vector2) {0.8, 0.4}, "Reset",
                                       ResetCallback));

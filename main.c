@@ -8,7 +8,6 @@
 #include "game_home_scene.h"
 
 void Main() {
-    InitConsole();
     InitGraphics();
     InitEvents();
     DefineColors();

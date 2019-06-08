@@ -128,14 +128,15 @@ static void _Destruct(Sprite *this) {
 }
 
 static void _Collide(Sprite *this, int id, Sprite *other) {
-    other->velocity = ZERO_VECTOR;
-    if (!other->name || strcmp(other->name, "PacMan") != 0) return;
     Ghost *ghost = this->property;
+    if (ghost->state != EATEN) other->velocity = ZERO_VECTOR;
+    if (!other->name || strcmp(other->name, "PacMan") != 0) return;
+
     switch (ghost->state) {
         case CHASING:
             ChangeLife(-1);
             if (GetLife() == 0) {
-                EndGame(WIN);
+                EndGame(LOSE);
             } else {
                 RevivePacMan();
             }
